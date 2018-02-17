@@ -5,21 +5,23 @@
     "description": "Makes for easy access to recently viewed PDF files, great for students",
     "homepage_url": "https://github.com/alexweininger/recent-pdfs",
     "icons": {
-      "48": "icons/pdficon32.png"
+        "16": "icons/icon16.png",
+        "48": "icons/icon48.png",
+        "128": "icons/icon128.png"
     },
     "default_locale": "en",
     "browser_action": {
-      "default_icon": "icons/pdficon32.png",
-      "default_title": "recent pdfs",
-      "default_popup": "src/browser_action/index.html"
+        "default_icon": "icons/icon48.png",
+        "default_title": "recent pdfs",
+        "default_popup": "src/browser_action/index.html"
     },
     "permissions": [
-      "chrome://favicon/",
-      "clipboardWrite",
-      "contextMenus",
-      "history",
-      "tabs"
+        "chrome://favicon/",
+        "clipboardWrite",
+        "contextMenus",
+        "history",
+        "tabs"
     ],
     "content_security_policy": "img-src chrome://favicon; script-src 'self'; object-src 'self'",
     "offline_enabled": true
-  }
+}
