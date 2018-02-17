@@ -1,6 +1,6 @@
 var maxResults = 1000; // number of pages to search
 
-chrome.history.search({ text: '.pdf', maxResults: maxResults }, function (data) { 
+chrome.history.search({ text: '.pdf', maxResults: maxResults }, function (data) {
     data.forEach(function (page) {
 
         var maxUrlLength = 30;
@@ -14,16 +14,19 @@ chrome.history.search({ text: '.pdf', maxResults: maxResults }, function (data) 
             var wrapper = document.createElement("div");
 
             wrapper.className = "li-wrapper";
-            wrapper.appendChild(listItem);
 
             listItem.innerHTML = " <img src='chrome://favicon/" + page.url + "' class='link-thumb'><a href='" + page.url +
                 "' class='link-url' target='_blank'><p class='link-title'>" + trimmedUrl +
                 "</p><p class='link-url'>" + page.url + "</p></a>";
+                
+            wrapper.appendChild(listItem);
 
             element.appendChild(wrapper);
         }
     });
 });
+
+
 
 function trimUrl(url, maxUrlLength) {
     var urlPrefix = "";
