@@ -17,7 +17,7 @@ chrome.history.search({ text: '.pdf', maxResults: maxResults }, function (data) 
             wrapper.appendChild(listItem);
 
             listItem.innerHTML = " <img src='chrome://favicon/" + page.url + "' class='link-thumb'><a href='" + page.url +
-                "' class='link-url' target='_newtab'><p class='link-title'>" + trimmedUrl +
+                "' class='link-url' target='_blank'><p class='link-title'>" + trimmedUrl +
                 "</p><p class='link-url'>" + page.url + "</p></a>";
 
             element.appendChild(wrapper);
