@@ -1,6 +1,6 @@
 {
     "name": "Recent PDF",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "manifest_version": 2,
     "description": "Makes for easy access to recently viewed PDF files, great for students",
     "homepage_url": "https://github.com/alexweininger/recent-pdfs",
