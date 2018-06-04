@@ -9,12 +9,14 @@ chrome.history.search({
 
         var maxUrlLength = 30;
         var element = document.getElementById("link-list");
+        var fileElement = document.getElementById('file-list');
 
         if (page.url.endsWith(".pdf")) { // check if page is a .pdf
 
             var trimmedUrl = trimUrl(page.url, maxUrlLength); // trim the url to make user-readable 
 
             var listItem = document.createElement("li");
+            listItem.classList.add('list-item');
             var wrapper = document.createElement("div");
 
             wrapper.className = "li-wrapper";
@@ -22,21 +24,20 @@ chrome.history.search({
             if (page.url.startsWith("file:")) {
                 count++;
                 let stringId = 'url-text-' + count;
-                listItem.innerHTML = "<img src='chrome://favicon/" + page.url + "' class='link-thumb'><p id='" + stringId + "' class='file-url'>" + page.url + "</p>";
+                listItem.innerHTML = "<p class='file-title'> Local file - click to select url </p><p id='" + stringId + "' class='file-url'>" + page.url + "</p>";
 
                 listItem.addEventListener("click", function () {
-                    var clickable = document.getElementById(stringId);
-                    console.log(clickable);
-                    clickable.addEventListener('click', () => selectText(stringId));
+                    selectText(stringId);
                 });
+                wrapper.appendChild(listItem);
+            fileElement.appendChild(wrapper);
             } else {
                 listItem.innerHTML = " <img src='chrome://favicon/" + page.url + "' class='link-thumb'><a href='" + page.url +
                     "' class='link-url' target='_blank'><p class='link-title'>" + trimmedUrl +
                     "</p><p class='link-url'>" + page.url + "</p></a>";
+                    wrapper.appendChild(listItem);
+                    element.appendChild(wrapper);
             }
-
-            wrapper.appendChild(listItem);
-            element.appendChild(wrapper);
         }
     });
 });
@@ -81,3 +82,37 @@ function selectText(node) {
         console.warn("Could not select text in node: Unsupported browser.");
     }
 }
+
+function openTab(evt, tabName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(tabName).style.display = "block";
+    evt.currentTarget.className += " active";
+}
+
+let onlineTabLink = document.getElementById('online-tab-link');
+let localTabLink = document.getElementById('local-tab-link');
+let settingsTabLink = document.getElementById('settings-tab-link');
+
+
+
+onlineTabLink.addEventListener('click', function(){
+    openTab(event, 'online');
+});
+
+localTabLink.addEventListener('click', function(){
+    openTab(event, 'local');
+});
+
+settingsTabLink.addEventListener('click', function(){
+    openTab(event, 'settings');
+});
+
+onlineTabLink.click();

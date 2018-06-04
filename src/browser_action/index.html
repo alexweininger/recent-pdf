@@ -1,33 +1,64 @@
 <html>
+
 <head>
-  <script src="../../js/script.js"></script>
+
 </head>
+
 <body>
-  <div id="link-div" style="height: 100px;">
-    <ul id="link-list">
-    </ul>
+
+  <div class="tab">
+    <button id="online-tab-link" class="tablinks" onclick="openTab(event, 'online')">Online</button>
+    <button id="local-tab-link" class="tablinks" onclick="openTab(event, 'local')">Local</button>
+    <button id="settings-tab-link" class="tablinks" onclick="openTab(event, 'settings')">Settings</button>
   </div>
+
+  <div id="online" class="tabcontent">
+    <div id="link-div" style="height: 100px;">
+      <ul id="link-list">
+      </ul>
+    </div>
+  </div>
+  <div id="local" class="tabcontent">
+      <div id="local-div" style="height: 100px;">
+          <ul id="file-list">
+          </ul>
+        </div>
+    </div>
+  </div>
+  <div id="settings" class="tabcontent">
+      <div id="settings-div" style="height: 100px;">
+    <h2>Settings coming soon!</h2>
+    </div>
+  </div>
+
 </body>
 <style>
   body {
     height: fit-content;
-    margin: none;
+    margin: 0px;
+    padding: none;
+    font-family: sans-serif;
   }
 
   html {
     height: fit-content;
+    padding: none;
   }
 
-  #link-list {
+  #header {
+    background: #eee;
+  }
+
+  #link-list, #file-list {
     font-size: 14px;
     list-style-type: none;
-    padding: 0px 0 5px 0;
+    padding: 0px 0 0px 0;
     margin: 0px;
     width: 100%;
     min-width: 180px;
   }
 
-  #link-div {
+  #link-div, #file-div {
     margin: 0px;
     padding: 0px;
     margin-right: 0px;
@@ -41,30 +72,32 @@
   }
 
   .link-title {
-    font: bold 18px/1.5 Helvetica, Verdana, sans-serif;
+    font: bold 18px/1.5 sans-serif;
     padding: 0px;
     margin: 0px;
     line-height: normal;
     padding-top: 5px;
+    display: inline-block;
+  }
+
+  .tabcontent{
+    width: 350px;
+    font-family: sans-serif;
+    font-size: 14px;
   }
 
   .link-thumb {
-    float: left;
-    margin: 0 10px 0 0;
+    display: inline-block;
     padding-top: 5px;
     margin-left: 5px;
   }
 
   li {
-    font: 200 12px/1.5 Georgia, Times New Roman, serif;
-    padding: 0px;
-    margin: 0px;
+    font: 200 14px/1.5 sans-serif;
     width: 350px;
-  }
-
-  li:hover {
-    background: #eee;
-    cursor: auto;
+    padding: 0px, 10px, 0px, 10px;
+    margin: 0 10px 0 10px;
+    word-wrap:break-word;
   }
 
   .link-url {
@@ -74,7 +107,7 @@
     white-space: wrap;
     word-break: break-all;
     padding-bottom: 5px;
-    font-size: 11px;
+    font-size: 14px;
     text-decoration: none;
     margin-left: 2px;
     margin-right: 2px;
@@ -91,9 +124,82 @@
   }
 
   .li-wrapper {
+    padding: 0px, 50px, 0, 50px;
+    margin: 0px;
+  }
+
+  .li-wrapper:hover {
+    background: #eee;
+    cursor: auto;
+  }
+
+  .file-title {
+    font: bold 18px/1.5 sans-serif;
+    padding: 0px;
+    margin: 0px;
+    line-height: normal;
+    padding-top: 5px;
+    margin-left: 5px;
+  }
+
+  .file-url {
     padding: none;
     margin: none;
+    margin: 0px;
+    white-space: wrap;
+    word-break: break-all;
+    padding-bottom: 5px;
+    font-size: 14px;
+    text-decoration: none;
+    margin-left: 2px;
+    margin-right: 2px;
+
+  }
+
+
+
+  /* Style the tab */
+
+  .tab {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+  }
+
+  /* Style the buttons inside the tab */
+
+  .tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font-size: 17px;
+  }
+
+  /* Change background color of buttons on hover */
+
+  .tab button:hover {
+    background-color: #ddd;
+  }
+
+  /* Create an active/current tablink class */
+
+  .tab button.active {
+    background-color: #ccc;
+  }
+
+  /* Style the tab content */
+
+  .tabcontent {
+    display: none;
+    padding: none;
+    border: none;
+
   }
 </style>
+<script src="../../js/script.js"></script>
 
 </html>
