@@ -20,6 +20,11 @@
 
 ![error][screenshot]
 
+## Upcoming Features
+
+- choose how many items to show in the list
+- themes
+
 ## Contact
 
 Please feel free to contact me with any comments, improvements, or if you would like to help me with this profect or any others.

@@ -1,33 +1,40 @@
 <html>
 
 <head>
-
 </head>
 
 <body>
 
-  <div class="tab">
-    <button id="online-tab-link" class="tablinks" onclick="openTab(event, 'online')">Online</button>
-    <button id="local-tab-link" class="tablinks" onclick="openTab(event, 'local')">Local</button>
-    <button id="settings-tab-link" class="tablinks" onclick="openTab(event, 'settings')">Settings</button>
+  <div class="tab-header">
+    <button id="online-tab-link" class="tablinks">Online</button>
+    <button id="local-tab-link" class="tablinks">Local</button>
+    <button id="settings-tab-link" class="tablinks">Settings</button>
   </div>
+  <div class="tabcontent-container">
+    <div id="online" class="tabcontent">
+      <div id="link-div" style="min-height: 100px;">
+        <ul id="link-list">
+        </ul>
+      </div>
 
-  <div id="online" class="tabcontent">
-    <div id="link-div" style="height: 100px;">
-      <ul id="link-list">
-      </ul>
+    </div>
+    <div id="local" class="tabcontent">
+      <div id="local-div" style="min-height: 100px;">
+        <ul id="file-list">
+        </ul>
+      </div>
+    </div>
+    <div id="settings" class="tabcontent">
+      <div id="settings-div" style="min-height: 100px;">
+        <p>Settings coming soon!</p>
+        <a href="" >Submit bugs and suggestions here.</a>
+        <p>Created by Alex Weininger</p>
+      </div>
     </div>
   </div>
-  <div id="local" class="tabcontent">
-      <div id="local-div" style="height: 100px;">
-          <ul id="file-list">
-          </ul>
-        </div>
-    </div>
-  </div>
-  <div id="settings" class="tabcontent">
-      <div id="settings-div" style="height: 100px;">
-    <h2>Settings coming soon!</h2>
+  <br>
+  <div class="footer">
+    <div id="online-footer" class="footer">
     </div>
   </div>
 
@@ -43,25 +50,32 @@
   html {
     height: fit-content;
     padding: none;
+    min-width: 300px;
   }
 
   #header {
     background: #eee;
   }
 
-  #link-list, #file-list {
+  #link-list,
+  #file-list {
     font-size: 14px;
     list-style-type: none;
     padding: 0px 0 0px 0;
     margin: 0px;
     width: 100%;
     min-width: 180px;
+    display: inline-block;
+    height: fit-content;
+    width: fit-content;
   }
 
-  #link-div, #file-div {
+  #link-div,
+  #file-div {
     margin: 0px;
     padding: 0px;
     margin-right: 0px;
+    display: inline-block;
   }
 
   #p1 {
@@ -80,16 +94,23 @@
     display: inline-block;
   }
 
-  .tabcontent{
+  .tabcontent {
     width: 350px;
     font-family: sans-serif;
     font-size: 14px;
+    min-height: 100px;
+    display: inline-block;
+    height: fit-content;
+    height: -webkit-fit-content;
+    height: -moz-fit-content;
+
   }
 
   .link-thumb {
     display: inline-block;
     padding-top: 5px;
-    margin-left: 5px;
+    padding-left: 3px;
+    padding-right: 3px;
   }
 
   li {
@@ -97,7 +118,8 @@
     width: 350px;
     padding: 0px, 10px, 0px, 10px;
     margin: 0 10px 0 10px;
-    word-wrap:break-word;
+    word-wrap: break-word;
+    display: inline-block;
   }
 
   .link-url {
@@ -105,12 +127,21 @@
     margin: none;
     margin: 0px;
     white-space: wrap;
-    word-break: break-all;
+    word-wrap: none;
     padding-bottom: 5px;
     font-size: 14px;
     text-decoration: none;
     margin-left: 2px;
     margin-right: 2px;
+    line-height: 1.3;
+    width: max-content;
+    display: inline-block;
+
+  }
+
+  /* a.a {
+    display: inline-block;
+    text-decoration: none;
   }
 
   a:visited {
@@ -118,14 +149,15 @@
     color: black;
   }
 
-  a:hover {
+  a.a :hover {
     text-decoration: none;
     color: black;
-  }
+  } */
 
   .li-wrapper {
     padding: 0px, 50px, 0, 50px;
     margin: 0px;
+    display: inline-block;
   }
 
   .li-wrapper:hover {
@@ -142,6 +174,8 @@
     margin-left: 5px;
   }
 
+
+
   .file-url {
     padding: none;
     margin: none;
@@ -156,38 +190,50 @@
 
   }
 
+  .list-item {
+    height: auto;
+    display: inline-block;
+    cursor:pointer;
+    margin: 0px;
+  }
 
+  .list-item:hover {
+    background: #eee;
+  }
 
   /* Style the tab */
 
-  .tab {
+  .tab-header {
     overflow: hidden;
     border: 1px solid #ccc;
     background-color: #f1f1f1;
+    margin: 0px;
   }
 
   /* Style the buttons inside the tab */
 
-  .tab button {
+  .tab-header button {
     background-color: inherit;
     float: left;
     border: none;
     outline: none;
     cursor: pointer;
-    padding: 14px 16px;
+    padding: 8px 12px;
     transition: 0.3s;
     font-size: 17px;
+    height: min-content;
+    width: 33.33%;
   }
 
   /* Change background color of buttons on hover */
 
-  .tab button:hover {
+  .tab-header button:hover {
     background-color: #ddd;
   }
 
   /* Create an active/current tablink class */
 
-  .tab button.active {
+  .tab-header button.active {
     background-color: #ccc;
   }
 
@@ -197,9 +243,20 @@
     display: none;
     padding: none;
     border: none;
+    min-height: fit-content;
+  }
 
+  .tabcontent-container {
+    min-height: fit-content;
+  }
+
+  .footer {
+    padding: 3px;
+    margin: 0px;
+    font-size: 14px;
   }
 </style>
+
 <script src="../../js/script.js"></script>
 
 </html>

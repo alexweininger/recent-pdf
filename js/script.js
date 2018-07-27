@@ -1,49 +1,171 @@
-var maxResults = 1000; // number of pages to search
+// Alex Weininger 2018
+var maxResults = 10000; // number of pages to search
 
-chrome.history.search({
-    text: '.pdf',
-    maxResults: maxResults
-}, function (data) {
-    var count = 0;
-    data.forEach(function (page) {
+let localCount = 0;
+let onlineCount = 0;
+searchHistory(maxResults);
 
-        var maxUrlLength = 30;
-        var element = document.getElementById("link-list");
-        var fileElement = document.getElementById('file-list');
 
-        if (page.url.endsWith(".pdf")) { // check if page is a .pdf
+let element = document.getElementById("link-list");
+let fileElement = document.getElementById('file-list');
 
-            var trimmedUrl = trimUrl(page.url, maxUrlLength); // trim the url to make user-readable 
+function searchHistory(maxResults) {
+    chrome.history.search({
+        text: '.pdf',
+        maxResults: maxResults
+    }, function (data) {
+        localCount = 0;
+        onlineCount = 0;
 
-            var listItem = document.createElement("li");
-            listItem.classList.add('list-item');
-            var wrapper = document.createElement("div");
+        data.forEach(function (page) {
 
-            wrapper.className = "li-wrapper";
+            var maxUrlLength = 30;
 
-            if (page.url.startsWith("file:")) {
-                count++;
-                let stringId = 'url-text-' + count;
-                listItem.innerHTML = "<p class='file-title'> Local file - click to select url </p><p id='" + stringId + "' class='file-url'>" + page.url + "</p>";
+            if (page.url.endsWith(".pdf")) { // check if page is a .pdf
 
-                listItem.addEventListener("click", function () {
-                    selectText(stringId);
-                });
-                wrapper.appendChild(listItem);
-            fileElement.appendChild(wrapper);
-            } else {
-                listItem.innerHTML = " <img src='chrome://favicon/" + page.url + "' class='link-thumb'><a href='" + page.url +
-                    "' class='link-url' target='_blank'><p class='link-title'>" + trimmedUrl +
-                    "</p><p class='link-url'>" + page.url + "</p></a>";
-                    wrapper.appendChild(listItem);
-                    element.appendChild(wrapper);
+                var trimmedUrl = trimUrl(page.url, maxUrlLength); // trim the url to make user-readable 
+
+                let localTrimmedUrl = trimLocalUrl(page.url);
+
+                var listitem = document.createElement("li");
+
+                listitem.classList.add('list-item');
+
+                if (page.url.startsWith("file:")) {
+                    localCount++;
+
+                    let stringId = 'url-text-' + localCount;
+                    listitem.innerHTML = "<p class='file-title'> " + localTrimmedUrl + " - click to select url </p><p id='" + stringId + "' class='file-url'>" + page.url + "</p>";
+
+                    listitem.addEventListener("click", function () {
+                        selectText(stringId);
+                    });
+
+                    //  fileElement.appendChild(listitem);
+                } else {
+
+                    let linkTitle = lastStr(page.url);
+                    let linkDetailed = decodeURI(page.url).substring(0, 50).replace(' ', '');
+
+                    onlineCount++;
+
+                    let link = document.createElement('a');
+
+                    link.href = page.url;
+                    link.classList.add('a');
+                    link.target = '_blank';
+
+                    let title = document.createElement('p');
+                    title.classList.add('link-title');
+                    title.innerText = lastStr(page.url);
+
+                    let linkUrl = document.createElement('p');
+                    linkUrl.classList.add('link-url');
+                    linkUrl.innerHTML = decodeURI(page.url).substring(0, 50).replace(' ', '');
+
+                    let icon = document.createElement('img');
+                    icon.classList.add('link-thumb');
+                    icon.src = 'chrome://favicon/' + page.url;
+
+                    link.appendChild(icon);
+                    link.appendChild(title);
+                    link.appendChild(linkUrl);
+
+                    // listitem.innerHTML = strA;
+                    listitem.appendChild(icon);
+                    listitem.appendChild(title);
+                    listitem.appendChild(document.createElement('br'));
+                    listitem.appendChild(linkUrl);
+
+                    // wrapper.appendChild(listitem);
+
+                    listitem.addEventListener('click', function () {
+                        window.open(page.url);
+                    })
+
+                    element.appendChild(listitem);
+                }
             }
-        }
-    });
-});
+        });
 
+        let plural = (onlineCount > 1 ? 's' : '');
+
+        let onlineFooter = document.createElement('p');
+        onlineFooter.innerHTML = 'Showing ' + onlineCount + ' online PDF' + plural + '.';
+        onlineFooter.classList.add('footer');
+        onlineFooter.id = 'online-footer';
+        element.appendChild(onlineFooter);
+
+        plural = (localCount > 1 ? 's' : '');
+
+        let localFooter = document.createElement('p');
+        localFooter.innerHTML = 'Showing ' + localCount + ' local PDF' + plural + '.';
+        localFooter.classList.add('footer');
+        localFooter.id = 'local-footer';
+        fileElement.appendChild(localFooter);
+    });
+}
+
+searchDownloads();
+let downloadCount = 0;
+
+function searchDownloads() {
+    chrome.downloads.search({
+        limit: 100,
+        orderBy: ['-startTime']
+    }, function (data) {
+        data.forEach(function (file, i) {
+
+            if (file.filename.endsWith('.pdf')) {
+                downloadCount++;
+                console.log(file.filename);
+
+                var fileItem = document.createElement("li");
+                fileItem.classList.add('list-item', 'file-item');
+
+
+                let icon = document.createElement('img');
+                icon.classList.add('link-thumb');
+                chrome.downloads.getFileIcon(file.id, {size: 16}, function(iconUrl){
+                    icon.src = iconUrl;
+                });
+
+                let title = document.createElement('p');
+                title.classList.add('link-title');
+                title.innerText = file.filename.substring(file.filename.lastIndexOf('\\') + 1, file.filename.length - 4);
+
+                let linkUrl = document.createElement('p');
+                linkUrl.classList.add('link-url');
+                linkUrl.innerHTML = file.filename;
+
+                fileItem.appendChild(icon);
+                fileItem.appendChild(title);
+                fileItem.appendChild(linkUrl);
+
+
+                fileItem.addEventListener('click', function () {
+                    chrome.downloads.open(file.id);
+                })
+
+                fileElement.appendChild(fileItem);
+            }
+        });
+    });
+}
+
+function lastStr(url) {
+    url = decodeURI(url);
+    url = url.substring(url.lastIndexOf('/') + 1, url.length - 4)
+    return url;
+}
+
+function trimLocalUrl(url) {
+    let i = url.lastIndexOf('/');
+    return url.substring(i + 1, url.length - 4);
+}
 
 function trimUrl(url, maxUrlLength) {
+    url = decodeURI(url);
     var urlPrefix = "";
 
     if (url.startsWith("file:")) {
@@ -93,7 +215,7 @@ function openTab(evt, tabName) {
     for (i = 0; i < tablinks.length; i++) {
         tablinks[i].className = tablinks[i].className.replace(" active", "");
     }
-    document.getElementById(tabName).style.display = "block";
+    document.getElementById(tabName).style.display = "inline-block";
     evt.currentTarget.className += " active";
 }
 
@@ -101,17 +223,15 @@ let onlineTabLink = document.getElementById('online-tab-link');
 let localTabLink = document.getElementById('local-tab-link');
 let settingsTabLink = document.getElementById('settings-tab-link');
 
-
-
-onlineTabLink.addEventListener('click', function(){
+onlineTabLink.addEventListener('click', function () {
     openTab(event, 'online');
 });
 
-localTabLink.addEventListener('click', function(){
+localTabLink.addEventListener('click', function () {
     openTab(event, 'local');
 });
 
-settingsTabLink.addEventListener('click', function(){
+settingsTabLink.addEventListener('click', function () {
     openTab(event, 'settings');
 });
 

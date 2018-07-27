@@ -1,6 +1,6 @@
 {
     "name": "Recent PDF",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "manifest_version": 2,
     "description": "Makes for easy access to recently viewed PDF files, great for students",
     "homepage_url": "https://github.com/alexweininger/recent-pdfs",
@@ -20,8 +20,10 @@
         "clipboardWrite",
         "contextMenus",
         "history",
-        "tabs"
+        "tabs",
+        "downloads",
+        "downloads.open"
     ],
-    "content_security_policy": "img-src chrome://favicon; script-src 'self'; object-src 'self'",
+    "content_security_policy": "img-src data: chrome://favicon; script-src 'self'; object-src 'self'",
     "offline_enabled": true
 }
