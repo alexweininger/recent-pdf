@@ -1,18 +1,16 @@
 // Alex Weininger 2018
-var maxResults = 10000; // number of pages to search
-
 let localCount = 0;
 let onlineCount = 0;
-searchHistory(maxResults);
-
 
 let element = document.getElementById("link-list");
 let fileElement = document.getElementById('file-list');
 
-function searchHistory(maxResults) {
+searchHistory();
+
+function searchHistory() {
     chrome.history.search({
         text: '.pdf',
-        maxResults: maxResults
+        maxResults: 10000
     }, function (data) {
         localCount = 0;
         onlineCount = 0;
@@ -126,7 +124,9 @@ function searchDownloads() {
 
                 let icon = document.createElement('img');
                 icon.classList.add('link-thumb');
-                chrome.downloads.getFileIcon(file.id, {size: 16}, function(iconUrl){
+                chrome.downloads.getFileIcon(file.id, {
+                    size: 16
+                }, function (iconUrl) {
                     icon.src = iconUrl;
                 });
 
@@ -136,7 +136,7 @@ function searchDownloads() {
 
                 let linkUrl = document.createElement('p');
                 linkUrl.classList.add('link-url');
-                linkUrl.innerHTML = file.filename;
+                linkUrl.innerHTML = file.filename.substring(0, file.filename.lastIndexOf('\\') + 1);
 
                 fileItem.appendChild(icon);
                 fileItem.appendChild(title);
