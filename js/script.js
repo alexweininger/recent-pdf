@@ -23,39 +23,24 @@ function searchHistory() {
 
             var maxUrlLength = 30;
 
-            if (page.url.endsWith(".pdf")) { // check if page is a .pdf
+            if (page.url.endsWith('.pdf')) { // check if page is a .pdf
 
                 // var trimmedUrl = trimUrl(page.url, maxUrlLength); // trim the url to make user-readable 
 
                 // let localTrimmedUrl = trimLocalUrl(page.url);
 
-                var listitem = document.createElement("li");
+                var listitem = document.createElement('li');
 
                 listitem.classList.add('list-item');
 
-                if (page.url.startsWith("file:")) {
-                    //     localCount++;
+                if (!page.url.startsWith('file:')) {
 
-                    //     let stringId = 'url-text-' + localCount;
-                    //     listitem.innerHTML = "<p class='file-title'> " + localTrimmedUrl + " - click to select url </p><p id='" + stringId + "' class='file-url'>" + page.url + "</p>";
 
-                    //     listitem.addEventListener("click", function () {
-                    //         selectText(stringId);
-                    //     });
-
-                    //  fileElement.appendChild(listitem);
-                } else {
 
                     let linkTitle = lastStr(page.url);
                     let linkDetailed = decodeURI(page.url).substring(0, 50).replace(' ', '');
 
                     onlineCount++;
-
-                    let link = document.createElement('a');
-
-                    link.href = page.url;
-                    link.classList.add('a');
-                    link.target = '_blank';
 
                     let title = document.createElement('p');
                     title.classList.add('link-title');
@@ -69,9 +54,6 @@ function searchHistory() {
                     icon.classList.add('link-thumb');
                     icon.src = 'chrome://favicon/' + page.url;
 
-                    link.appendChild(icon);
-                    link.appendChild(title);
-                    link.appendChild(linkUrl);
 
                     // listitem.innerHTML = strA;
                     listitem.appendChild(icon);
@@ -193,24 +175,24 @@ function trimUrl(url, maxUrlLength) {
     return urlPrefix + url;
 }
 
-function selectText(node) {
-    console.log(node);
-    node = document.getElementById(node);
+// function selectText(node) {
+//     console.log(node);
+//     node = document.getElementById(node);
 
-    if (document.body.createTextRange) {
-        const range = document.body.createTextRange();
-        range.moveToElementText(node);
-        range.select();
-    } else if (window.getSelection) {
-        const selection = window.getSelection();
-        const range = document.createRange();
-        range.selectNodeContents(node);
-        selection.removeAllRanges();
-        selection.addRange(range);
-    } else {
-        console.warn("Could not select text in node: Unsupported browser.");
-    }
-}
+//     if (document.body.createTextRange) {
+//         const range = document.body.createTextRange();
+//         range.moveToElementText(node);
+//         range.select();
+//     } else if (window.getSelection) {
+//         const selection = window.getSelection();
+//         const range = document.createRange();
+//         range.selectNodeContents(node);
+//         selection.removeAllRanges();
+//         selection.addRange(range);
+//     } else {
+//         console.warn("Could not select text in node: Unsupported browser.");
+//     }
+// }
 
 function openTab(evt, tabName) {
     var i, tabcontent, tablinks;
