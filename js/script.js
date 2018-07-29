@@ -82,7 +82,6 @@ function searchDownloads() {
                 let fileItem = document.createElement("li");
                 fileItem.classList.add('list-item', 'file-item');
 
-
                 let icon = document.createElement('img');
                 icon.classList.add('link-thumb');
                 chrome.downloads.getFileIcon(file.id, {
