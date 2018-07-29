@@ -5,7 +5,7 @@
   <div class="tab-header">
     <button id="online-tab-link" class="tablinks">Online</button>
     <button id="local-tab-link" class="tablinks">Local</button>
-    <button id="settings-tab-link" class="tablinks">Settings</button>
+    <button id="settings-tab-link" class="tablinks"><img src="../../assets/settings_icon.jpeg" id="settings-icon"></button>
   </div>
   <div class="tabcontent-container">
     <div id="online" class="tabcontent">
@@ -49,6 +49,18 @@
     padding: none;
     min-width: 300px;
   }
+#settings-icon {
+  width: 16px;
+}
+
+#settings-icon:hover {
+  
+}
+
+#settings-tab-link {
+  width: 10%;
+  height: 32px;
+}
 
   #header {
     background: #eee;
@@ -92,7 +104,7 @@
   }
 
   .tabcontent {
-    width: 350px;
+    width: 360px;
     font-family: sans-serif;
     font-size: 14px;
     min-height: 15%;
@@ -190,6 +202,7 @@
     border: 1px solid #ccc;
     background-color: #f1f1f1;
     margin: 0px;
+    height: 32px;
   }
 
   /* Style the buttons inside the tab */
@@ -204,7 +217,8 @@
     transition: 0.3s;
     font-size: 17px;
     height: min-content;
-    width: 33.33%;
+    width: 45%;
+    height: 100%;
   }
 
   /* Change background color of buttons on hover */

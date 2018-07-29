@@ -1,15 +1,21 @@
 // Alex Weininger 2018
 
+let localPdfCount = 0;
+let onlineCount = 0;
+let element = document.getElementById('link-list');
+let fileElement = document.getElementById('file-list');
+
 searchHistory();
+searchDownloads();
 
 function searchHistory() {
-    let element = document.getElementById('link-list');
-    let onlineCount = 0;
+
+
     chrome.history.search({
         text: '.pdf',
         maxResults: 10000
     }, function (data) {
-        onlineCount = 0;
+ 
 
         data.forEach(function (page) {
 
@@ -24,7 +30,7 @@ function searchHistory() {
 
                     let title = document.createElement('p');
                     title.classList.add('link-title');
-                    title.innerText =  decodeURI(page.url).substring(page.url.lastIndexOf('/') + 1, page.url.length - 4);
+                    title.innerText = decodeURI(page.url).substring(page.url.lastIndexOf('/') + 1, page.url.length - 4);
 
                     let linkUrl = document.createElement('p');
                     linkUrl.classList.add('link-url');
@@ -60,17 +66,10 @@ function searchHistory() {
         onlineFooter.id = 'online-footer';
         element.appendChild(onlineFooter);
 
-
     });
 }
 
-let localPdfCount = 0;
-
-searchDownloads();
-
 function searchDownloads() {
-    let fileElement = document.getElementById('file-list');
-
     chrome.downloads.search({
         limit: 100,
         orderBy: ['-startTime']
@@ -113,14 +112,18 @@ function searchDownloads() {
             }
         });
 
-        let plural = (localPdfCount > 1 ? 's' : '');
-
-        let localFooter = document.createElement('p');
-        localFooter.innerHTML = 'Showing ' + localPdfCount + ' local PDF' + plural + '.';
-        localFooter.classList.add('footer');
-        localFooter.id = 'local-footer';
-        fileElement.appendChild(localFooter);
+        footer();
     });
+}
+
+function footer(){
+    let plural = (localPdfCount > 1 ? 's' : '');
+
+    let localFooter = document.createElement('p');
+    localFooter.innerHTML = 'Showing ' + localPdfCount + ' local PDF' + plural + '.';
+    localFooter.classList.add('footer');
+    localFooter.id = 'local-footer';
+    fileElement.appendChild(localFooter);
 }
 
 function lastStr(url) {
