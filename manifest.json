@@ -1,8 +1,10 @@
 {
     "name": "Recent PDF",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "manifest_version": 2,
     "description": "Makes for easy access to recently viewed PDF files, great for students",
+    "author": "Alex Weininger",
+    "short_name" : "Recent PDF",
     "homepage_url": "https://github.com/alexweininger/recent-pdfs",
     "icons": {
         "16": "icons/icon16.png",
