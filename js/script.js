@@ -24,7 +24,7 @@ function searchHistory() {
 
                     let title = document.createElement('p');
                     title.classList.add('link-title');
-                    title.innerText = lastStr(page.url);
+                    title.innerText =  decodeURI(page.url).substring(page.url.lastIndexOf('/') + 1, page.url.length - 4);
 
                     let linkUrl = document.createElement('p');
                     linkUrl.classList.add('link-url');
@@ -134,46 +134,12 @@ function trimLocalUrl(url) {
     return url.substring(i + 1, url.length - 4);
 }
 
-function trimUrl(url, maxUrlLength) {
-    url = decodeURI(url);
-    var urlPrefix = "";
-
-    if (url.startsWith("file:")) {
-        urlPrefix = "file:";
-    }
-
-    var url = url.substring(5);
-
-    if (url.length > maxUrlLength) {
-        url = url.substring(url.lastIndexOf('/'), url.length);
-    }
-
-    if (url.length > maxUrlLength) {
-        url = url.substring(url.length - maxUrlLength, url.length);
-    }
-    url = url.substring(0, url.length - 4);
-
-    return urlPrefix + url;
-}
-
-function openTab(evt, tabName) {
-    var i, tabcontent, tablinks;
-    tabcontent = document.getElementsByClassName("tabcontent");
-    for (i = 0; i < tabcontent.length; i++) {
-        tabcontent[i].style.display = "none";
-    }
-    tablinks = document.getElementsByClassName("tablinks");
-    for (i = 0; i < tablinks.length; i++) {
-        tablinks[i].className = tablinks[i].className.replace(" active", "");
-    }
-    document.getElementById(tabName).style.display = "inline-block";
-    evt.currentTarget.className += " active";
-}
-
+// tab buttons
 let onlineTabLink = document.getElementById('online-tab-link');
 let localTabLink = document.getElementById('local-tab-link');
 let settingsTabLink = document.getElementById('settings-tab-link');
 
+// event handlers for tab buttons
 onlineTabLink.addEventListener('click', function () {
     openTab(event, 'online');
 });
@@ -187,3 +153,18 @@ settingsTabLink.addEventListener('click', function () {
 });
 
 onlineTabLink.click();
+
+// function that handles switching between tabs
+function openTab(evt, tabName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(tabName).style.display = "inline-block";
+    evt.currentTarget.className += " active";
+}
