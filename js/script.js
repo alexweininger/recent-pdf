@@ -1,44 +1,24 @@
 // Alex Weininger 2018
-let localCount = 0;
-let onlineCount = 0;
-
-let element = document.getElementById("link-list");
-let fileElement = document.getElementById('file-list');
 
 searchHistory();
 
-
-
-
-
 function searchHistory() {
+    let element = document.getElementById('link-list');
+    let onlineCount = 0;
     chrome.history.search({
         text: '.pdf',
         maxResults: 10000
     }, function (data) {
-        localCount = 0;
         onlineCount = 0;
 
         data.forEach(function (page) {
 
-            var maxUrlLength = 30;
-
             if (page.url.endsWith('.pdf')) { // check if page is a .pdf
 
-                // var trimmedUrl = trimUrl(page.url, maxUrlLength); // trim the url to make user-readable 
-
-                // let localTrimmedUrl = trimLocalUrl(page.url);
-
-                var listitem = document.createElement('li');
-
-                listitem.classList.add('list-item');
+                let listItem = document.createElement('li');
+                listItem.classList.add('list-item');
 
                 if (!page.url.startsWith('file:')) {
-
-
-
-                    let linkTitle = lastStr(page.url);
-                    let linkDetailed = decodeURI(page.url).substring(0, 50).replace(' ', '');
 
                     onlineCount++;
 
@@ -55,19 +35,19 @@ function searchHistory() {
                     icon.src = 'chrome://favicon/' + page.url;
 
 
-                    // listitem.innerHTML = strA;
-                    listitem.appendChild(icon);
-                    listitem.appendChild(title);
-                    listitem.appendChild(document.createElement('br'));
-                    listitem.appendChild(linkUrl);
+                    // listItem.innerHTML = strA;
+                    listItem.appendChild(icon);
+                    listItem.appendChild(title);
+                    listItem.appendChild(document.createElement('br'));
+                    listItem.appendChild(linkUrl);
 
-                    // wrapper.appendChild(listitem);
+                    // wrapper.appendChild(listItem);
 
-                    listitem.addEventListener('click', function () {
+                    listItem.addEventListener('click', function () {
                         window.open(page.url);
-                    })
+                    });
 
-                    element.appendChild(listitem);
+                    element.appendChild(listItem);
                 }
             }
         });
@@ -89,6 +69,7 @@ let localPdfCount = 0;
 searchDownloads();
 
 function searchDownloads() {
+    let fileElement = document.getElementById('file-list');
 
     chrome.downloads.search({
         limit: 100,
@@ -99,7 +80,7 @@ function searchDownloads() {
             if (file.filename.endsWith('.pdf')) {
                 localPdfCount++;
 
-                var fileItem = document.createElement("li");
+                let fileItem = document.createElement("li");
                 fileItem.classList.add('list-item', 'file-item');
 
 
@@ -174,25 +155,6 @@ function trimUrl(url, maxUrlLength) {
 
     return urlPrefix + url;
 }
-
-// function selectText(node) {
-//     console.log(node);
-//     node = document.getElementById(node);
-
-//     if (document.body.createTextRange) {
-//         const range = document.body.createTextRange();
-//         range.moveToElementText(node);
-//         range.select();
-//     } else if (window.getSelection) {
-//         const selection = window.getSelection();
-//         const range = document.createRange();
-//         range.selectNodeContents(node);
-//         selection.removeAllRanges();
-//         selection.addRange(range);
-//     } else {
-//         console.warn("Could not select text in node: Unsupported browser.");
-//     }
-// }
 
 function openTab(evt, tabName) {
     var i, tabcontent, tablinks;
