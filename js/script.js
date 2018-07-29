@@ -7,6 +7,10 @@ let fileElement = document.getElementById('file-list');
 
 searchHistory();
 
+
+
+
+
 function searchHistory() {
     chrome.history.search({
         text: '.pdf',
@@ -21,23 +25,23 @@ function searchHistory() {
 
             if (page.url.endsWith(".pdf")) { // check if page is a .pdf
 
-                var trimmedUrl = trimUrl(page.url, maxUrlLength); // trim the url to make user-readable 
+                // var trimmedUrl = trimUrl(page.url, maxUrlLength); // trim the url to make user-readable 
 
-                let localTrimmedUrl = trimLocalUrl(page.url);
+                // let localTrimmedUrl = trimLocalUrl(page.url);
 
                 var listitem = document.createElement("li");
 
                 listitem.classList.add('list-item');
 
                 if (page.url.startsWith("file:")) {
-                    localCount++;
+                    //     localCount++;
 
-                    let stringId = 'url-text-' + localCount;
-                    listitem.innerHTML = "<p class='file-title'> " + localTrimmedUrl + " - click to select url </p><p id='" + stringId + "' class='file-url'>" + page.url + "</p>";
+                    //     let stringId = 'url-text-' + localCount;
+                    //     listitem.innerHTML = "<p class='file-title'> " + localTrimmedUrl + " - click to select url </p><p id='" + stringId + "' class='file-url'>" + page.url + "</p>";
 
-                    listitem.addEventListener("click", function () {
-                        selectText(stringId);
-                    });
+                    //     listitem.addEventListener("click", function () {
+                    //         selectText(stringId);
+                    //     });
 
                     //  fileElement.appendChild(listitem);
                 } else {
@@ -94,20 +98,16 @@ function searchHistory() {
         onlineFooter.id = 'online-footer';
         element.appendChild(onlineFooter);
 
-        plural = (localCount > 1 ? 's' : '');
 
-        let localFooter = document.createElement('p');
-        localFooter.innerHTML = 'Showing ' + localCount + ' local PDF' + plural + '.';
-        localFooter.classList.add('footer');
-        localFooter.id = 'local-footer';
-        fileElement.appendChild(localFooter);
     });
 }
 
+let localPdfCount = 0;
+
 searchDownloads();
-let downloadCount = 0;
 
 function searchDownloads() {
+
     chrome.downloads.search({
         limit: 100,
         orderBy: ['-startTime']
@@ -115,8 +115,7 @@ function searchDownloads() {
         data.forEach(function (file, i) {
 
             if (file.filename.endsWith('.pdf')) {
-                downloadCount++;
-                console.log(file.filename);
+                localPdfCount++;
 
                 var fileItem = document.createElement("li");
                 fileItem.classList.add('list-item', 'file-item');
@@ -150,6 +149,14 @@ function searchDownloads() {
                 fileElement.appendChild(fileItem);
             }
         });
+
+        let plural = (localPdfCount > 1 ? 's' : '');
+
+        let localFooter = document.createElement('p');
+        localFooter.innerHTML = 'Showing ' + localPdfCount + ' local PDF' + plural + '.';
+        localFooter.classList.add('footer');
+        localFooter.id = 'local-footer';
+        fileElement.appendChild(localFooter);
     });
 }
 
