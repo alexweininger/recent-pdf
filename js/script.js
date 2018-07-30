@@ -13,7 +13,7 @@ function searchHistory() {
         text: '.pdf',
         maxResults: 10000
     }, function (data) {
- 
+
 
         data.forEach(function (page) {
 
@@ -49,11 +49,11 @@ function searchHistory() {
                     leftDiv.appendChild(document.createElement('br'));
                     leftDiv.appendChild(linkUrl);
 
-                    let more = document.createElement('img');
-                    more.id = 'more_icon';
-                    more.src = '../../assets/More.png';
+                    // let more = document.createElement('img');
+                    // more.id = 'more_icon';
+                    // more.src = '../../assets/More.png';
 
-                    rightDiv.appendChild(more);
+                    //rightDiv.appendChild(more);
 
                     leftDiv.addEventListener('click', function () {
                         window.open(page.url);
@@ -87,6 +87,11 @@ function searchDownloads() {
             if (file.filename.endsWith('.pdf')) {
                 localPdfCount++;
 
+                let leftDiv = document.createElement('div');
+                let rightDiv = document.createElement('div');
+                leftDiv.classList.add('list-div', 'left');
+                rightDiv.classList.add('list-div', 'right');
+
                 let fileItem = document.createElement("li");
                 fileItem.classList.add('list-item', 'file-item');
 
@@ -106,15 +111,26 @@ function searchDownloads() {
                 linkUrl.classList.add('link-url');
                 linkUrl.innerHTML = file.filename.substring(0, file.filename.lastIndexOf('\\') + 1);
 
-                fileItem.appendChild(icon);
-                fileItem.appendChild(title);
-                fileItem.appendChild(document.createElement('br'));
-                fileItem.appendChild(linkUrl);
+                leftDiv.appendChild(icon);
+                leftDiv.appendChild(title);
+                leftDiv.appendChild(document.createElement('br'));
+                leftDiv.appendChild(linkUrl);
 
-                fileItem.addEventListener('click', function () {
+                leftDiv.addEventListener('click', function () {
                     chrome.downloads.open(file.id);
-                })
+                });
 
+                let more = document.createElement('img');
+                more.id = 'more_icon';
+                more.src = '../../assets/More.png';
+                more.addEventListener('click', function(){
+                    chrome.downloads.show(file.id);
+                });
+
+                rightDiv.appendChild(more);
+
+                fileItem.appendChild(leftDiv);
+                fileItem.appendChild(rightDiv);
                 fileElement.appendChild(fileItem);
             }
         });
@@ -123,7 +139,7 @@ function searchDownloads() {
     });
 }
 
-function footer(){
+function footer() {
     let plural = (localPdfCount > 1 ? 's' : '');
 
     let localFooter = document.createElement('p');
