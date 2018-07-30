@@ -9,8 +9,6 @@ searchHistory();
 searchDownloads();
 
 function searchHistory() {
-
-
     chrome.history.search({
         text: '.pdf',
         maxResults: 10000
@@ -39,7 +37,6 @@ function searchHistory() {
                     let icon = document.createElement('img');
                     icon.classList.add('link-thumb');
                     icon.src = 'chrome://favicon/' + page.url;
-
 
                     // listItem.innerHTML = strA;
                     listItem.appendChild(icon);
