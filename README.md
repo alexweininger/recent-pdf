@@ -23,7 +23,9 @@
 ## Upcoming Features
 
 - choose how many items to show in the list
-- themes
+- dark theme
+- pages
+- ability to pin pdfs
 
 ## Contact
 
