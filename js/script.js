@@ -97,6 +97,7 @@ function searchDownloads() {
 
                 fileItem.appendChild(icon);
                 fileItem.appendChild(title);
+                fileItem.appendChild(document.createElement('br'));
                 fileItem.appendChild(linkUrl);
 
 
