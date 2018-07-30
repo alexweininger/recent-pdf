@@ -3,7 +3,7 @@ import sys
 import datetime
 import os
 
-fl = ["js", "src", "asstes", "icons", "_locales"]
+fl = ["js", "src", "assets", "icons", "_locales"]
 
 info = open("info.txt","w+")
 
