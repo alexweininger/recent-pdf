@@ -64,12 +64,32 @@
   }
 
   #more_icon {
-    width: 16px;
+    width: 32px;
+    height: 32px;
+    margin-top: 5px;
+  }
+
+  #more_icon:hover {
+    filter: brightness(75%);
   }
 
   #settings-tab-link {
     height: 32px;
     width: 32px;
+  }
+
+  .list-div {
+    float: left;
+    overflow: hidden;
+    margin: 0px;
+    height: 42px;
+  }
+
+  div.right {
+    width: 32px;
+  }
+  div.left {
+    width: 368px;
   }
 
   .tab-header {
@@ -100,7 +120,7 @@
   }
 
   .tab-header button.active {
-    background-color: #ccc;
+    background-color: #cccccc;
   }
 
   .tabcontent {
@@ -139,12 +159,12 @@
   }
 
   .list-item {
-    height: auto;
+    height: 42px;
     display: inline-block;
     cursor: pointer;
     margin: 0px;
-    padding: 3px 0 3px 0px;
-    width: 368px;
+    padding: 0px 0 0px 0px;
+    width: 400px;
   }
 
   .link-thumb {
@@ -180,8 +200,6 @@
     width: 368px;
     word-wrap: break-word;
   }
-
-  
 
   .list-item:hover {
     background: #eee;

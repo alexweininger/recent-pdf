@@ -26,6 +26,11 @@ function searchHistory() {
 
                     onlineCount++;
 
+                    let leftDiv = document.createElement('div');
+                    let rightDiv = document.createElement('div');
+                    leftDiv.classList.add('list-div', 'left');
+                    rightDiv.classList.add('list-div', 'right');
+
                     let title = document.createElement('p');
                     title.classList.add('link-title');
                     title.innerText = decodeURI(page.url).substring(page.url.lastIndexOf('/') + 1, page.url.length - 4);
@@ -39,17 +44,23 @@ function searchHistory() {
                     icon.src = 'chrome://favicon/' + page.url;
 
                     // listItem.innerHTML = strA;
-                    listItem.appendChild(icon);
-                    listItem.appendChild(title);
-                    listItem.appendChild(document.createElement('br'));
-                    listItem.appendChild(linkUrl);
+                    leftDiv.appendChild(icon);
+                    leftDiv.appendChild(title);
+                    leftDiv.appendChild(document.createElement('br'));
+                    leftDiv.appendChild(linkUrl);
 
-                    // wrapper.appendChild(listItem);
+                    let more = document.createElement('img');
+                    more.id = 'more_icon';
+                    more.src = '../../assets/More.png';
 
-                    listItem.addEventListener('click', function () {
+                    rightDiv.appendChild(more);
+
+                    leftDiv.addEventListener('click', function () {
                         window.open(page.url);
                     });
 
+                    listItem.appendChild(leftDiv);
+                    listItem.appendChild(rightDiv);
                     element.appendChild(listItem);
                 }
             }
