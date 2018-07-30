@@ -100,7 +100,6 @@ function searchDownloads() {
                 fileItem.appendChild(document.createElement('br'));
                 fileItem.appendChild(linkUrl);
 
-
                 fileItem.addEventListener('click', function () {
                     chrome.downloads.open(file.id);
                 })
