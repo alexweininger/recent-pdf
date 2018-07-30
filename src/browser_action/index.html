@@ -42,42 +42,52 @@
 
 </body>
 <style>
+  html {
+    height: fit-content;
+  }
+
   body {
     margin: 0px;
     height: fit-content;
     min-width: 300px;
     font-family: sans-serif;
     margin: 0px;
+    width: 400px;
   }
 
   #settings-icon {
     width: 16px;
   }
 
+  #more_icon {
+    width: 16px;
+  }
+
   #settings-tab-link {
     height: 32px;
-    width: 10%;
+    width: 32px;
   }
 
   .tab-header {
-    border: 1px solid #ccc;
+    border-bottom: 1px solid #ddd;
     background-color: #f1f1f1;
     height: 32px;
     overflow: hidden;
-    margin: 0px;
+    margin: 0 0 0 0px;
+    width: 400px;
   }
 
   .tab-header button {
     background-color: inherit;
     float: left;
-    border: none;
+    border: 4px black;
     outline: none;
     cursor: pointer;
     padding: 4px 8px;
     transition: 0.3s;
     font-size: 17px;
     height: min-content;
-    width: 45%;
+    width: 184px;
     height: 100%;
   }
 
@@ -94,7 +104,7 @@
     padding: 0px;
     border: none;
     min-height: fit-content;
-    max-width: 350px;
+    max-width: 400px;
   }
 
   .tabcontent-container {
@@ -111,19 +121,11 @@
     min-width: 180px;
     display: inline-block;
     height: fit-content;
-    width: fit-content;
-  }
-
-  .link-title {
-    display: inline-block;
-    font: 18px/1.5 sans-serif;
-    line-height: normal;
-    padding: 5px 0 0 3px;
-    margin: 0px;
+    width: 368px;
   }
 
   .tabcontent {
-    width: 360px;
+    width: 400px;
     font-size: 14px;
     min-height: 15%;
     display: inline-block;
@@ -132,39 +134,50 @@
     height: -moz-fit-content;
   }
 
-  .link-thumb {
+  .list-item {
+    height: auto;
     display: inline-block;
-    padding-top: 5px 3px 3px;
+    cursor: pointer;
+    margin: 0px;
+    padding: 3px 0 3px 0px;
+    width: 368px;
   }
 
-  li {
+  .link-thumb {
     display: inline-block;
-    font: 200 14px/1.5 sans-serif;
-    margin: 0 10px 0 10px;
-    padding: 0px, 10px, 0px, 10px;
-    width: 350px;
-    word-wrap: break-word;
+    margin:0 4px 0 4px;
+  }
+
+  .link-title {
+    display: inline-block;
+    font: 20px/1.5 sans-serif;
+    color: black;
+    line-height: normal;
+    margin: 0px;
   }
 
   .link-url {
     display: inline-block;
     font-size: 14px;
     line-height: 1.3;
-    margin: 0px 2px 0px 2px;
-    padding: 0px 0px 5px 0px;
+    margin: 0px 3px 0px 4px;
+    padding: 0px 0px 0px 0px;
     text-decoration: none;
     white-space: wrap;
     width: max-content;
     word-wrap: break-word;
   }
 
-  .list-item {
-    height: auto;
+  li {
     display: inline-block;
-    cursor: pointer;
-    margin: 0px;
-    padding: 0 0 0 3px;
+    font: 15px/1.5 sans-serif;
+    margin: 0 10px 0 10px;
+    padding: 0px, 10px, 0px, 10px;
+    width: 368px;
+    word-wrap: break-word;
   }
+
+  
 
   .list-item:hover {
     background: #eee;
