@@ -1,6 +1,6 @@
 {
     "name": "Recent PDF",
-    "version": "1.1.1",
+    "version": "0.0.8",
     "manifest_version": 2,
     "description": "Makes for easy access to recently viewed PDF files, great for students",
     "author": "Alex Weininger",
