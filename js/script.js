@@ -68,13 +68,13 @@ function searchHistory() {
 
         doneLoading++;
 
-        let plural = (onlineCount > 1 ? 's' : '');
+        // let plural = (onlineCount > 1 ? 's' : '');
 
-        let onlineFooter = document.createElement('p');
-        onlineFooter.innerHTML = `Showing ${onlineCount} online PDF${plural}.`;
-        onlineFooter.classList.add('footer');
-        onlineFooter.id = 'online-footer';
-        element.appendChild(onlineFooter);
+        // let onlineFooter = document.createElement('p');
+        // onlineFooter.innerHTML = `Showing ${onlineCount} online PDF${plural}.`;
+        // onlineFooter.classList.add('footer');
+        // onlineFooter.id = 'online-footer';
+        // element.appendChild(onlineFooter);
 
         searchDownloads();
         console.log(`${onlineCount} online PDFs found.`);
@@ -140,9 +140,10 @@ function searchDownloads() {
 
         console.log(`${localPdfCount} local PDFs found.`);
 
-        localFooter();
+        //localFooter();
         doneLoading++;
         loadSettings();
+        footer(2);
     });
 }
 
@@ -150,11 +151,19 @@ function footer(count) {
     let plural = (count > 1 ? 's' : '');
 
     let footerDivs = document.getElementsByClassName('footer');
-    let localFooter = document.createElement('p');
-    localFooter.innerHTML = `Showing ${localPdfCount} locally saved PDF${plural}.`;
-    localFooter.classList.add('footer');
-    localFooter.id = 'local-footer';
-    fileElement.appendChild(localFooter);
+    let footerLeft = document.getElementById('footer-left');
+
+    let countDisplay = document.createElement('p');
+    countDisplay.id = 'count-display';
+    countDisplay.innerHTML = 'placeholder for count display';
+    
+    footerLeft.appendChild(countDisplay);
+
+    let settingsIcon;
+    for (e of footerDivs) {
+        console.log(e);
+        
+    }
 }
 
 function localFooter() {
@@ -170,7 +179,7 @@ function localFooter() {
 // tab buttons
 let onlineTabLink = document.getElementById('online-tab-link');
 let localTabLink = document.getElementById('local-tab-link');
-let settingsTabLink = document.getElementById('settings-tab-link');
+let settingsTabLink = document.getElementById('settings-link');
 
 // event handlers for tab buttons
 onlineTabLink.addEventListener('click', function () {

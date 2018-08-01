@@ -20,9 +20,6 @@
   <div class="tab-header">
     <button id="online-tab-link" class="tablinks">Online</button>
     <button id="local-tab-link" class="tablinks">Local</button>
-    <button id="settings-tab-link" class="tablinks">
-      <img src="../../assets/settings_icon.jpeg" id="settings-icon">
-    </button>
   </div>
 
   <div class="tabcontent-container">
@@ -32,7 +29,6 @@
         <ul id="link-list">
         </ul>
       </div>
-      <div class="footer"></div>
     </div>
 
     <div id="local" class="tabcontent">
@@ -40,7 +36,6 @@
         <ul id="file-list">
         </ul>
       </div>
-      <div class="footer"></div>
     </div>
 
     <div id="settings" class="tabcontent">
@@ -52,6 +47,16 @@
     </div>
   </div>
 
+  <div class="footer">
+    <div class="" id="footer-left"></div>
+    <div class="" id="footer-right">
+      <button id="settings-link" class="">
+        <img src="../../assets/settings_icon.jpeg" id="settings-icon">
+      </button>
+    </div>
+
+  </div>
+
 </body>
 
 <style>
@@ -60,12 +65,24 @@
   }
 
   body {
-    margin: 0px;
-    height: fit-content;
-    min-width: 300px;
     font-family: sans-serif;
-    margin: 0px;
+    height: inherit;
+    margin: 0;
+    min-width: 300px;
     width: 400px;
+  }
+
+#footer-left{
+  float: left;
+  width: 90%;
+}
+  #footer-right{
+    width: 10%;
+    float: left;
+  }
+
+  #count-display {
+    display: inline-block;
   }
 
   #settings-icon {
@@ -87,22 +104,20 @@
     width: 32px;
   }
 
-  .list-div {
-    float: left;
-    overflow: hidden;
-    margin: 0px;
-    padding: 0 0px 0 0px;
-    height: 42px;
-  }
-
-  div.right {
+  #settings-link {
+    height: 32px;
     width: 32px;
+    background-color: inherit;
+    border: 4px black;
+    cursor: pointer;
+    float: left;
+    outline: none;
+    padding: 4px 8px;
+    transition: 0.3s;
+
   }
 
-  div.left {
-    width: 368px;
-    padding: 0 0 0 0;
-  }
+  /* Tab header */
 
   .tab-header {
     border-bottom: 1px solid #ddd;
@@ -115,15 +130,15 @@
 
   .tab-header button {
     background-color: inherit;
-    float: left;
     border: 4px black;
-    outline: none;
     cursor: pointer;
+    float: left;
+    font-size: 17px;
+    height: 100%;
+    outline: none;
     padding: 4px 8px;
     transition: 0.3s;
-    font-size: 17px;
-    width: 184px;
-    height: 100%;
+    width: 50%;
   }
 
   .tab-header button:hover {
@@ -134,44 +149,64 @@
     background-color: #cccccc;
   }
 
-  .tabcontent {
-    display: none;
-    padding: 0;
-    border: none;
-    min-height: fit-content;
-    max-width: 400px;
-  }
+  /* List item sections */
 
-  .tabcontent-container {
-    min-height: fit-content;
-  }
-
-  #link-list,
-  #file-list {
-    font-size: 14px;
-    list-style-type: none;
-    padding: 0px 0px 0px 0px;
+  .list-div {
+    float: left;
+    height: 42px;
     margin: 0;
-    min-width: 180px;
-    display: inline-block;
-    height: fit-content;
+    overflow: hidden;
+    padding: 0 0px 0 0px;
+  }
+
+  div.right {
+    width: 32px;
+  }
+
+  div.left {
+    padding: 0 0 0 0;
     width: 368px;
   }
 
   .tabcontent {
-    width: 400px;
-    font-size: 14px;
-    min-height: 15%;
+    border: none;
+    display: none;
+    max-width: 400px;
+    min-height: fit-content;
+    padding: 0;
+    height: auto;
+  }
+
+  .tabcontent-container {
+    min-height: auto;
+  }
+
+  #link-list,
+  #file-list {
     display: inline-block;
-    height: fit-content;
-    height: -webkit-fit-content;
+    font-size: 14px;
+    height: auto;
+    list-style-type: none;
+    margin: 0;
+    min-width: 180px;
+    padding: 0px 0px 0px 0px;
+    width: 100%;
+  }
+
+  .tabcontent {
+    display: inline-block;
+    font-size: 14px;
     height: -moz-fit-content;
+    height: -webkit-fit-content;
+    height: auto;
+    min-height: 15%;
+    width: 400px;
   }
 
   .list-item {
-    height: auto;
-    display: inline-block;
     cursor: pointer;
+    display: inline-block;
+    height: auto;
     margin: 0;
     padding: 3px 0 3px 0px;
     width: 400px;
@@ -187,9 +222,9 @@
   }
 
   .link-title {
+    color: black;
     display: inline-block;
     font: 20px/1.5 sans-serif;
-    color: black;
     line-height: normal;
     margin: 0px;
   }
@@ -215,12 +250,10 @@
     word-wrap: break-word;
   }
 
-
-
   .footer {
-    padding: 3px 0 0 0;
-    margin: 0;
     font-size: 14px;
+    margin: 0;
+    padding: 3px 0 0 0;
     width: 400px;
   }
 </style>
