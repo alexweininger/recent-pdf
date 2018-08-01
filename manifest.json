@@ -24,8 +24,10 @@
         "history",
         "tabs",
         "downloads",
-        "downloads.open"
+        "downloads.open",
+        "storage"
     ],
     "content_security_policy": "img-src data: chrome://favicon; script-src 'self'; object-src 'self'",
-    "offline_enabled": true
+    "offline_enabled": true,
+    "options_page": "src/options/options.html"
 }

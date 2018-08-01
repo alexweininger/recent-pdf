@@ -1,6 +1,15 @@
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+</head>
+<body>
   
+</body>
+</html>
+<html>
+
+<head>
+
 </head>
 
 <body>
@@ -20,6 +29,7 @@
         <ul id="link-list">
         </ul>
       </div>
+      <div class="footer"></div>
     </div>
 
     <div id="local" class="tabcontent">
@@ -27,6 +37,7 @@
         <ul id="file-list">
         </ul>
       </div>
+      <div class="footer"></div>
     </div>
 
     <div id="settings" class="tabcontent">
@@ -37,6 +48,7 @@
       </div>
     </div>
   </div>
+  
 </body>
 
 <style>
@@ -83,8 +95,10 @@
   div.right {
     width: 32px;
   }
+
   div.left {
     width: 368px;
+    padding: 3px 0 3px 0;
   }
 
   .tab-header {
@@ -105,7 +119,6 @@
     padding: 4px 8px;
     transition: 0.3s;
     font-size: 17px;
-    height: min-content;
     width: 184px;
     height: 100%;
   }
@@ -120,7 +133,7 @@
 
   .tabcontent {
     display: none;
-    padding: 0px;
+    padding: 0;
     border: none;
     min-height: fit-content;
     max-width: 400px;
@@ -135,8 +148,7 @@
     font-size: 14px;
     list-style-type: none;
     padding: 0px 0px 0px 0px;
-    margin: 0px;
-    width: 100%;
+    margin: 0;
     min-width: 180px;
     display: inline-block;
     height: fit-content;
@@ -164,7 +176,7 @@
 
   .link-thumb {
     display: inline-block;
-    margin:0 4px 0 4px;
+    margin: 0 4px 0 4px;
   }
 
   .link-title {
@@ -201,12 +213,11 @@
   }
 
   .footer {
-    padding: 3px;
-    margin: 0px;
+    padding: 3px 0 0 0;
+    margin: 0;
     font-size: 14px;
     width: 400px;
   }
-
 </style>
 <script src="../../js/script.js"></script>
 

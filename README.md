@@ -20,7 +20,7 @@
 
 ![error][screenshot]
 
-## Upcoming Features
+## Upcoming Features/Improvements
 
 - choose how many items to show in the list
 - dark theme

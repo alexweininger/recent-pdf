@@ -5,8 +5,9 @@ let onlineCount = 0;
 let element = document.getElementById('link-list');
 let fileElement = document.getElementById('file-list');
 
+let doneLoading = 0;
+
 searchHistory();
-searchDownloads();
 
 function searchHistory() {
     chrome.history.search({
@@ -65,6 +66,8 @@ function searchHistory() {
             }
         });
 
+        doneLoading++;
+
         let plural = (onlineCount > 1 ? 's' : '');
 
         let onlineFooter = document.createElement('p');
@@ -73,16 +76,17 @@ function searchHistory() {
         onlineFooter.id = 'online-footer';
         element.appendChild(onlineFooter);
 
+        searchDownloads();
+        console.log(`${onlineCount} online PDFs found.`);
     });
 }
 
 function searchDownloads() {
     chrome.downloads.search({
-        limit: 100,
+        limit: 1000,
         orderBy: ['-startTime']
     }, function (data) {
         data.forEach(function (file, i) {
-
             if (file.filename.endsWith('.pdf')) {
                 localPdfCount++;
 
@@ -122,7 +126,7 @@ function searchDownloads() {
                 let more = document.createElement('img');
                 more.id = 'more_icon';
                 more.src = '../../assets/More.png';
-                more.addEventListener('click', function(){
+                more.addEventListener('click', function () {
                     chrome.downloads.show(file.id);
                 });
 
@@ -134,8 +138,23 @@ function searchDownloads() {
             }
         });
 
+        console.log(`${localPdfCount} local PDFs found.`);
+
         localFooter();
+        doneLoading++;
+        loadSettings();
     });
+}
+
+function footer(count) {
+    let plural = (count > 1 ? 's' : '');
+
+    let footerDivs = document.getElementsByClassName('footer');
+    let localFooter = document.createElement('p');
+    localFooter.innerHTML = `Showing ${localPdfCount} locally saved PDF${plural}.`;
+    localFooter.classList.add('footer');
+    localFooter.id = 'local-footer';
+    fileElement.appendChild(localFooter);
 }
 
 function localFooter() {
@@ -163,7 +182,7 @@ localTabLink.addEventListener('click', function () {
 });
 
 settingsTabLink.addEventListener('click', function () {
-    openTab(event, 'settings');
+    open('../options/options.html');
 });
 
 onlineTabLink.click();
@@ -181,4 +200,13 @@ function openTab(evt, tabName) {
     }
     document.getElementById(tabName).style.display = "inline-block";
     evt.currentTarget.className += " active";
+}
+
+function loadSettings() {
+    chrome.storage.sync.get(['savedTab'], function (result) {
+        console.log('Value currently is ' + result.savedTab);
+        if (result.savedTab) {
+            document.getElementById('online-footer').style = 'color: red';
+        }
+    });
 }
