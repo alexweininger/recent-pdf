@@ -2,7 +2,7 @@
 function save_options() {
 	var isSavedTab = document.getElementById('saved-tab').checked;
 	chrome.storage.sync.set({
-		savedTab: isSavedTab
+		savedTab: isSavedTab,
 	}, function () {
 		// Update status to let user know options were saved.
 		var status = document.getElementById('status');
@@ -18,7 +18,8 @@ function save_options() {
 function restore_options() {
 	// Use default value color = 'red' and likesColor = true.
 	chrome.storage.sync.get({
-		savedTab: false
+		savedTab: false,
+		darkTheme: false
 	}, function (items) {
 		document.getElementById('saved-tab').checked = items.savedTab;
 	});

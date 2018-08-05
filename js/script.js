@@ -213,7 +213,7 @@ function openTab(evt, tabName) {
 
 function loadSettings() {
     chrome.storage.sync.get(['savedTab'], function (result) {
-        console.log('Value currently is ' + result.savedTab);
+        console.log(result);
         if (result.savedTab) {
             document.getElementById('online-footer').style = 'color: red';
         }
