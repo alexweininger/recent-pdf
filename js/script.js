@@ -1,16 +1,20 @@
-/** Script.js 
- * 
+/** Script.js
+ *
  * Contains the main program logic for recent-pdf
  *  - loads pdf files from downloads api
- * 
+ *
  *  author: Alex Weininger
  *  last modified: 9/24/2018
  */
+let load = include('load.js');
 
 let localPdfCount = 0;
 let onlineCount = 0;
 
-let element = document.getElementById('link-list');
+// online file list
+let onlineList = document.getElementById('link-list');
+
+// offline (local) file list
 let fileElement = document.getElementById('file-list');
 
 let maxLocalFilesPerPage = 11; // setting; set to 11 by default
@@ -34,7 +38,6 @@ function searchHistory() {
                 listItem.classList.add('list-item');
 
                 if (!page.url.startsWith('file:')) {
-
                     onlineCount++;
 
                     let leftDiv = document.createElement('div');
@@ -44,11 +47,13 @@ function searchHistory() {
 
                     let title = document.createElement('p');
                     title.classList.add('link-title');
-                    title.innerText = decodeURI(page.url).substring(page.url.lastIndexOf('/') + 1, page.url.length - 4);
+                    title.innerText = decodeURI(page.url).substring(
+                        page.url.lastIndexOf('/') + 1, page.url.length - 4);
 
                     let linkUrl = document.createElement('p');
                     linkUrl.classList.add('link-url');
-                    linkUrl.innerHTML = decodeURI(page.url).substring(0, 50).replace(' ', '');
+                    linkUrl.innerHTML =
+                        decodeURI(page.url).substring(0, 50).replace(' ', '');
 
                     let icon = document.createElement('img');
                     icon.classList.add('link-thumb');
@@ -59,13 +64,14 @@ function searchHistory() {
                     leftDiv.appendChild(document.createElement('br'));
                     leftDiv.appendChild(linkUrl);
 
-                    leftDiv.addEventListener('click', function () {
-                        window.open(page.url);
-                    });
+                    leftDiv.addEventListener('click',
+                        function () {
+                            window.open(page.url);
+                        });
 
                     listItem.appendChild(leftDiv);
                     listItem.appendChild(rightDiv);
-                    element.appendChild(listItem);
+                    onlineList.appendChild(listItem);
                 }
             }
         });
@@ -81,12 +87,12 @@ function searchDownloads() {
     chrome.downloads.search({
         limit: 1000,
         orderBy: ['-startTime']
-    }, function (data) {
+    }, function (
+        data) {
         data.forEach(function (file, i) {
             if (file.filename.endsWith('.pdf')) {
-
-
-                if (!localFiles.includes(file.filename) && localPdfCount < maxLocalFilesPerPage) {
+                if (!localFiles.includes(file.filename) &&
+                    localPdfCount < maxLocalFilesPerPage) {
                     localFiles.push(file.filename);
 
 
@@ -102,35 +108,42 @@ function searchDownloads() {
 
                     let icon = document.createElement('img');
                     icon.classList.add('link-thumb');
-                    chrome.downloads.getFileIcon(file.id, {
-                        size: 16
-                    }, function (iconUrl) {
-                        icon.src = iconUrl;
-                    });
+                    chrome.downloads.getFileIcon(
+                        file.id, {
+                            size: 16
+                        },
+                        function (iconUrl) {
+                            icon.src = iconUrl;
+                        });
 
                     let title = document.createElement('p');
                     title.classList.add('link-title');
-                    title.innerText = file.filename.substring(file.filename.lastIndexOf('\\') + 1, file.filename.length - 4);
+                    title.innerText = file.filename.substring(
+                        file.filename.lastIndexOf('\\') + 1, file.filename.length - 4);
 
                     let linkUrl = document.createElement('p');
                     linkUrl.classList.add('link-url');
-                    linkUrl.innerHTML = file.filename.substring(0, file.filename.lastIndexOf('\\') + 1);
+                    linkUrl.innerHTML =
+                        file.filename.substring(0, file.filename.lastIndexOf('\\') + 1);
 
                     leftDiv.appendChild(icon);
                     leftDiv.appendChild(title);
                     leftDiv.appendChild(document.createElement('br'));
                     leftDiv.appendChild(linkUrl);
 
-                    leftDiv.addEventListener('click', function () {
-                        chrome.downloads.open(file.id);
-                    });
+                    leftDiv.addEventListener(
+                        'click',
+                        function () {
+                            chrome.downloads.open(file.id);
+                        });
 
                     let more = document.createElement('img');
                     more.id = 'more_icon';
                     more.src = '../../assets/More.png';
-                    more.addEventListener('click', function () {
-                        chrome.downloads.show(file.id);
-                    });
+                    more.addEventListener('click',
+                        function () {
+                            chrome.downloads.show(file.id);
+                        });
 
                     rightDiv.appendChild(more);
 
@@ -165,7 +178,6 @@ function footer(count) {
     let settingsIcon;
     for (e of footerDivs) {
         console.log(e);
-
     }
 }
 
@@ -173,7 +185,8 @@ function localFooter() {
     let plural = (localPdfCount > 1 ? 's' : '');
 
     let localFooter = document.createElement('p');
-    localFooter.innerHTML = `Showing ${localPdfCount} locally saved PDF${plural}.`;
+    localFooter.innerHTML =
+        `Showing ${localPdfCount} locally saved PDF${plural}.`;
     localFooter.classList.add('footer');
     localFooter.id = 'local-footer';
     fileElement.appendChild(localFooter);
@@ -185,17 +198,20 @@ let localTabLink = document.getElementById('local-tab-link');
 let settingsTabLink = document.getElementById('settings-link');
 
 // event handlers for tab buttons
-onlineTabLink.addEventListener('click', function () {
-    openTab(event, 'online');
-});
+onlineTabLink.addEventListener('click',
+    function () {
+        openTab(event, 'online');
+    });
 
 localTabLink.addEventListener('click', function () {
     openTab(event, 'local');
 });
 
-settingsTabLink.addEventListener('click', function () {
-    open('../options/options.html');
-});
+settingsTabLink.addEventListener(
+    'click',
+    function () {
+        open('../options/options.html');
+    });
 
 onlineTabLink.click();
 
@@ -214,6 +230,7 @@ function openTab(evt, tabName) {
     evt.currentTarget.className += ' active';
 }
 
+// function that loads the settings from the options.js script
 function loadSettings() {
     chrome.storage.sync.get(['savedTab', 'filesPerPage'], function (result) {
         console.log(result);
