@@ -30,3 +30,10 @@
 ## Contact
 
 Please feel free to contact me with any comments, improvements, or if you would like to help me with this profect or any others.
+
+## License
+
+---
+
+Recent PDF is licensed under the [MIT](LICENSE) license.  
+Copyright &copy; 2018, Alex Weininger
