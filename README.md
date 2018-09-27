@@ -2,7 +2,7 @@
 
 [screenshot]: https://github.com/alexweininger/recent-pdfs/blob/master/content/screenshots/global-sc-v2.png?raw=true ""
 
-# RecentPDF
+# RecentPDF ![license](https://github.com/ellerbrock/open-source-badges/blob/master/badges/licence-mit/mit.png?raw=true)
 
 ![error][logo]
 
