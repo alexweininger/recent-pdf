@@ -2,7 +2,7 @@
 
 [screenshot]: https://github.com/alexweininger/recent-pdfs/blob/master/content/screenshots/global-sc-v2.png?raw=true ""
 
-# RecentPDF ![license](https://github.com/ellerbrock/open-source-badges/blob/master/badges/licence-mit/mit.png?raw=true)
+# RecentPDF [![MIT Licence](https://badges.frapsoft.com/os/mit/mit.png?v=103)](https://opensource.org/licenses/mit-license.php)
 
 ![error][logo]
 
