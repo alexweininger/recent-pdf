@@ -4,9 +4,23 @@
 
 # RecentPDF [![MIT Licence](https://badges.frapsoft.com/os/mit/mit.png?v=103)](https://opensource.org/licenses/mit-license.php)
 
+
+
+<!-- TOC -->
+
+- [Features](#features)
+- [Screenshot](#screenshot)
+- [Upcoming Features/Improvements](#upcoming-featuresimprovements)
+- [Contact](#contact)
+- [License](#license)
+
+<!-- /TOC -->
+
+
+
 ![error][logo]
 
-## [Get it here!](https://chrome.google.com/webstore/detail/recent-pdf/ihjgdammecebcjinfmllgniaeneabkdk)
+[Get it here!](https://chrome.google.com/webstore/detail/recent-pdf/ihjgdammecebcjinfmllgniaeneabkdk)
 
 ---
 
