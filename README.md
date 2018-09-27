@@ -33,7 +33,5 @@ Please feel free to contact me with any comments, improvements, or if you would 
 
 ## License
 
----
-
-Recent PDF is licensed under the [MIT](LICENSE) license.  
+Recent PDF is licensed under the [MIT](LICENSE) license.
 Copyright &copy; 2018, Alex Weininger
