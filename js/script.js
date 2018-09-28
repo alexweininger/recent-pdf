@@ -6,7 +6,8 @@
  *  author: Alex Weininger
  *  last modified: 9/24/2018
  */
-let load = include('load.js');
+
+ getDownloads();
 
 let localPdfCount = 0;
 let onlineCount = 0;

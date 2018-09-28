@@ -19,15 +19,14 @@ function getDownloads() {
 	chrome.downloads.search({
 		limit: 1000,
 		orderBy: ['-startTime']
-	}, downloadsParser(data));
-}
+	}, function (data) {
+		data.forEach(function (page) {
 
-function downloadsParser(data) {
-	data.forEach(function (page) {
+			if (page.url.endsWith('.pdf')) { // check if page is a .pdf
 
-		if (page.url.endsWith('.pdf')) { // check if page is a .pdf
-
-			pdfList.push(page);
-		}
+				pdfList.push(page);
+				console.log(`${page}`);
+			}
+		});
 	});
 }
