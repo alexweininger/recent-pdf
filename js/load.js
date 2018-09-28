@@ -15,30 +15,29 @@
 
 // regex for matching pdfs only, can be used with search function of chrome.downloads
 // .+\.([pP][dD][fF])
-<reference path="chrome-api-vsdoc.js"/>
 
-var pdfList = []; // list of all pdf objects
+	var pdfList = []; // list of all pdf objects
 
 function getDownloads() {
 	chrome.downloads.search({
-		urlRegex: 
+		urlRegex: '.+\.([pP][dD][fF])',
 		limit: 1000,
 		orderBy: ['-startTime']
 	}, (data) => {
 		data.forEach(function (page) {
 
-			if (page.url.endsWith('.pdf')) { // check if page is a .pdf
+			//if (page.url.endsWith('.pdf')) { // check if page is a .pdf
 
-				if (!pdfList.includes(page)) { // check if page already in list
-					pdfList.push(page); // add it to the array list
+			if (!pdfList.includes(page)) { // check if page already in list
+				pdfList.push(page); // add it to the array list
 
-					if (page.finalUrl === page.url) {
-						console.log(`[INFO] url and final url do not match\nurl: ${page.url}, finalUrl: ${page.finalUrl}`);
-					}
-
-					
+				if (page.finalUrl === page.url) {
+					console.log(`[INFO] url and final url do not match\nurl: ${page.url}, finalUrl: ${page.finalUrl}`);
 				}
+
+
 			}
+			//	}
 		});
 	})
 }
