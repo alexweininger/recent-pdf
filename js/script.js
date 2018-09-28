@@ -6,7 +6,7 @@
  *  author: Alex Weininger
  *  last modified: 9/24/2018
  */
-
+<reference path="chrome-api-vsdoc.js"/>
  getDownloads();
 
 let localPdfCount = 0;
