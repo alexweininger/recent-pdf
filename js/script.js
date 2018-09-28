@@ -152,12 +152,12 @@ function searchDownloads() {
                     fileItem.appendChild(rightDiv);
                     fileElement.appendChild(fileItem);
                 } else {
-                    console.log(`skipped duplicate file: ${file.filename}.`);
+                    //console.log(`[INFO] skipped duplicate file: ${file.filename}.`);
                 }
             }
         });
 
-        console.log(`${localPdfCount} local PDFs found.`);
+        //console.log(`[INFO] ${localPdfCount} local PDFs found.`);
 
         loadSettings();
         footer(2);
