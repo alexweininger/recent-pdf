@@ -2,7 +2,7 @@
     "name": "Recent PDF",
     "version": "0.0.8",
     "manifest_version": 2,
-    "description": "Makes for easy access to recently viewed PDF files, great for students",
+    "description": "Easy access to recently viewed or downloaded PDF files.",
     "author": "Alex Weininger",
     "short_name": "Recent PDF",
     "homepage_url": "https://github.com/alexweininger/recent-pdfs",
