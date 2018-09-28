@@ -24,9 +24,10 @@ function getDownloads() {
 
 			if (page.url.endsWith('.pdf')) { // check if page is a .pdf
 
-				pdfList.push(page); // add it to the array list
-				
-				console.log(`${page}`);
+				if (!pdfList.includes(page)) { // check if page already in list
+					pdfList.push(page); // add it to the array list
+					console.log(`${page.url}`);
+				}
 			}
 		});
 	});
