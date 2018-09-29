@@ -1,8 +1,9 @@
-<<<<<<< HEAD
 {
-	"python.pythonPath": "C:\\Users\\alexw\\AppData\\Local\\Programs\\Python\\Python37-32\\python.exe"
-=======
-{
-	"python.pythonPath": "C:\\Users\\Alex\\AppData\\Local\\Programs\\Python\\Python37-32\\python.exe"
->>>>>>> test
+	"python.pythonPath": "C:\\Users\\alexw\\AppData\\Local\\Programs\\Python\\Python37-32\\python.exe",
+	"editor.tabSize": 2,
+	"prettier.tabWidth": 2,
+	"javascript.format.enable": false,
+	"prettier.eslintIntegration": true,
+	"prettier.printWidth": 120,
+	"prettier.singleQuote": true
 }
