@@ -162,7 +162,6 @@ function searchDownloads() {
         //console.log(`[INFO] ${localPdfCount} local PDFs found.`)
 
         loadSettings()
-        footer(2)
     })
 }
 
@@ -172,27 +171,22 @@ function footer(count) {
     let footerDivs = document.getElementsByClassName('footer')
     let footerLeft = document.getElementById('footer-left')
 
-    let countDisplay = document.createElement('p')
-    countDisplay.id = 'count-display'
-    countDisplay.innerHTML = 'placeholder for count display'
+    let countDisplay = document.getElementById('count-display')
 
-    footerLeft.appendChild(countDisplay)
+    countDisplay.innerHTML = `Found ${count} online PDF files.`
 
-    let settingsIcon
-    for (e of footerDivs) {
-        console.log(e)
-    }
 }
 
-function localFooter() {
-    let plural = (localPdfCount > 1 ? 's' : '')
+function localFooter(count) {
+    let plural = (count > 1 ? 's' : '')
 
-    let localFooter = document.createElement('p')
-    localFooter.innerHTML =
-        `Showing ${localPdfCount} locally saved PDF${plural}.`
-    localFooter.classList.add('footer')
-    localFooter.id = 'local-footer'
-    fileElement.appendChild(localFooter)
+    let footerDivs = document.getElementsByClassName('footer')
+    let footerLeft = document.getElementById('footer-left')
+
+    let countDisplay = document.getElementById('count-display')
+
+    countDisplay.innerHTML = `Found ${count} local PDF files.`
+
 }
 
 // tab buttons
@@ -203,10 +197,12 @@ let settingsTabLink = document.getElementById('settings-link')
 // event handlers for tab buttons
 onlineTabLink.addEventListener('click',
     function () {
+        footer(onlineCount)
         openTab(event, 'online')
     })
 
 localTabLink.addEventListener('click', function () {
+    localFooter(localPdfCount)
     openTab(event, 'local')
 })
 
@@ -217,6 +213,7 @@ settingsTabLink.addEventListener(
     })
 
 onlineTabLink.click()
+footer(onlineCount)
 
 // function that handles switching between tabs
 function openTab(evt, tabName) {
