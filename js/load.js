@@ -17,7 +17,7 @@
 // chrome.downloads
 // .+\.([pP][dD][fF])
 
-var pdfList = []; // list of all pdf objects
+var pdfList = [] // list of all pdf objects
 
 function getDownloads() {
 	chrome.downloads.search({
@@ -29,12 +29,12 @@ function getDownloads() {
 			data.forEach(function (page) {
 
 				if (!pdfList.includes(page)) { // check if page already in list
-					pdfList.push(page); // add it to the array list
+					pdfList.push(page) // add it to the array list
 					if (page.finalUrl != page.url) {
-						console.log(`[INFO] url and final url do not match`);
-						console.log(`url: ${page.url}, finalUrl: ${page.finalUrl}`);
+						console.log(`[INFO] url and final url do not match`)
+						console.log(`url: ${page.url}, finalUrl: ${page.finalUrl}`)
 					}
 				}
-			});
-		});
+			})
+		})
 }
