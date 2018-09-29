@@ -2,46 +2,65 @@
 
 [screenshot]: https://github.com/alexweininger/recent-pdfs/blob/master/content/screenshots/global-sc-v2.png?raw=true ""
 
-# RecentPDF [![MIT Licence](https://badges.frapsoft.com/os/mit/mit.png?v=103)](https://opensource.org/licenses/mit-license.php)
+# ![error][logo]
 
-<!-- TOC -->
+[![MIT Licence](https://badges.frapsoft.com/os/mit/mit.png?v=103)](https://opensource.org/licenses/mit-license.php) 
 
-- [Features](#features)
-- [Screenshot](#screenshot)
-- [Upcoming Features/Improvements](#upcoming-featuresimprovements)
-- [Contact](#contact)
-- [License](#license)
+RecentPDF is a simple and helpful Chrome extension to make accessing PDF files quick and easy.
 
-<!-- /TOC -->
-
-![error][logo]
-
-[Get it here!](https://chrome.google.com/webstore/detail/recent-pdf/ihjgdammecebcjinfmllgniaeneabkdk)
-
----
+**You can download and install RecentPDF from the Chrome webstore [here](https://chrome.google.com/webstore/detail/recent-pdf/ihjgdammecebcjinfmllgniaeneabkdk).**
 
 ## Features
 
-- Chrome popup window lists recently viewed PDFs
-- Can click to open file in a new tab
-- Shows local and online PDF files that have recenly been viewed
+- Pop up displaying recently view or downloaded **local** and **online** PDF files.
+- Ability to open local PDF file in file explorer.
+- Open PDF file in PDF viewer of choice.
 
-## Screenshot
+## Getting Started
 
-![error][screenshot]
+1. Fork or clone the this repository.
 
-## Upcoming Features/Improvements
+2. open Chrome, and then go to your extensions page. [chrome://extensions/](chrome://extensions/)
 
-- choose how many items to show in the list
-- dark theme
-- pages
-- ability to pin pdfs
+3. In the top right, make sure 'Developer Mode' is enabled.
 
-## Contact
+4. Now select the 'Load Unpacked' button and select the folder containing RecentPDF.
+
+5. Make sure to enable the extension and you're all set!
+
+### Code style
+
+RecentPDF uses ESLint for Javascript style.
+
+## Deployment
+
+Add additional notes about how to deploy this on a live system
+
+## Built With
+
+- [vscode](https://code.visualstudio.com/)
+
+## Contributing
+
+REecentPDF is a simple extension made with Javascript. If you know a little bit of Javascript you can most likely help develop this project.
 
 Please feel free to contact me with any comments, improvements, or if you would like to help me with this profect or any others.
+<!-- TODO -->
+<!-- Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us. -->
+
+## Authors
+
+- **Alex Weininger** - *Initial work* - [alexweininger](https://github.com/alexweininger)
+
+<!-- TODO contributors list -->
+<!-- See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project. -->
 
 ## License
 
-Recent PDF is licensed under the [MIT](LICENSE) license.
-Copyright &copy; 2018, Alex Weininger
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+
+## Acknowledgments
+
+- Chrome API docs
+- All the professors who upload so many PDF files
+- vscode
