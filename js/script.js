@@ -23,6 +23,8 @@ let maxLocalFilesPerPage = 11 // setting set to 11 by default
 // load the user settings
 loadSettings()
 
+maxLocalFilesPerPage = 30
+
 searchHistory()
 
 function searchHistory() {
@@ -93,7 +95,7 @@ function searchDownloads() {
         data.forEach(function (file, i) {
             if (file.filename.endsWith('.pdf')) {
                 if (!localFiles.includes(file.filename) &&
-                    localPdfCount < maxLocalFilesPerPage) {
+                    localPdfCount < 30) {
                     localFiles.push(file.filename)
 
 
