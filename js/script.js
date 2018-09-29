@@ -7,7 +7,7 @@
  *  last modified: 9/24/2018
  */
 
- getDownloads()
+getDownloads()
 
 let localPdfCount = 0
 let onlineCount = 0
