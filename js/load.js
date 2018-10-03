@@ -7,25 +7,41 @@
  */
 
 function getDownloads() {
-	let pdfList = []
-	chrome.downloads.search({
-			urlRegex: '.+\.([pP][dD][fF])', // regex for .pdf files
-			limit: 500,
-			orderBy: ['-startTime']
-		},
-		(data) => {
-			data.forEach(function (page) {
-				if (!pdfList.includes(page)) { // check if page already in list
-					
-					pdfList.push(page) // add it to the array list
+  let pdfList = []
+  chrome.downloads.search({
+      finalUrlRegex: '.+\.pdf$', // regex for .pdf files
+      limit: 500,
+      orderBy: ['-startTime']
+    },
+    (data) => {
+      data.forEach((page) => {
 
-					if (page.finalUrl != page.url) {
-						console.log(`[INFO] url and final url do not match`)
-						console.log(` > url: ${page.url}, finalUrl: ${page.finalUrl}`)
-					}
-				} else {
-					console.info(`Duplicate file not pushed to file list.`);
-				}
-			})
-		})
+        if (!pdfList.includes(page)) { // check if page already in list
+
+          pdfList.push(page) // add it to the array list
+
+          if (!(page.url).search('.pdf')) {
+            console.error('Pushed file to list which does not end in \'.pdf\'')
+            console.groupCollapsed('url')
+            console.error(`url: ${page.url}`)
+            console.groupEnd()
+          }
+
+        } else {
+          console.info(`Duplicate file not pushed to file list.`)
+          console.groupCollapsed('url')
+          console.info(page.url)
+          console.groupEnd()
+        }
+      })
+      console.info(`${pdfList.length} PDF files found.`)
+
+      pdfList.forEach((page) => {
+        if (page.finalUrl != page.url) {
+          console.groupCollapsed(`page.url does not match page.finaUrl.`)
+          console.info(`url: ${page.url}\nfinalUrl: ${page.finalUrl}`)
+          console.groupEnd()
+        }
+      })
+    })
 }

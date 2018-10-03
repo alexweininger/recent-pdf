@@ -37,7 +37,9 @@
   </div>
 
   <div class="footer">
-    <div class="" id="footer-left"></div>
+    <div class="" id="footer-left">
+      <p id="count-display"></p>
+    </div>
     <div class="" id="footer-right">
       <button id="settings-link" class="">
         <img src="../../assets/settings_icon.jpeg" id="settings-icon">
@@ -50,21 +52,26 @@
 
 <style>
   html {
-    height: fit-content;
+    height: 436px;
     margin: 0 0 0 0;
+    padding-bottom: 2px;
     padding: 0;
     max-width: 400px;
-    overflow:unset;
+    max-height: 436px;
+    overflow: hidden;
   }
 
   body {
-    font-family: sans-serif;
-    height: inherit;
     margin: 0 0 0 0;
-    min-width: 300px;
-    width: 400px;
+    font-family: sans-serif;
     color: black;
-    max-width: 400px;
+    width: 100%;
+    max-height: 100%;
+    /* overflow-y: scroll;
+    padding-right: 21px; 
+    box-sizing: content-box;
+    overflow-x: hidden; */
+    overflow: hidden;
   }
 
   #more_icon {
@@ -129,16 +136,19 @@
   }
 
   .tabcontent {
-    border: none;
-    display: none;
-    max-width: 400px;
-    min-height: fit-content;
-    padding: 0;
+    padding: 0 0 0 0;
+    width: 100%;
+    resize: none;
+    max-height: 384px;
+    overflow-y: scroll;
+    padding-right: 21px; /* Increase/decrease this value for cross-browser compatibility */
+    box-sizing: content-box; /* So the width will be 100% + 17px */
+    overflow-x: hidden;
+    display: inline-block;
+    font-size: 14px;
+    height: -moz-fit-content;
+    height: -webkit-fit-content;
     height: auto;
-  }
-
-  .tabcontent-container {
-    min-height: auto;
   }
 
   #link-list,
@@ -151,16 +161,6 @@
     min-width: 180px;
     padding: 0px 0px 0px 0px;
     width: 100%;
-  }
-
-  .tabcontent {
-    display: inline-block;
-    font-size: 14px;
-    height: -moz-fit-content;
-    height: -webkit-fit-content;
-    height: auto;
-    min-height: 15%;
-    width: 400px;
   }
 
   .list-item {
@@ -217,12 +217,13 @@
     height: 20px;
     display: grid;
     grid-template-columns: 94% 6%;
+    background: white;
   }
 
   .footer div {
     height: 16px;
-    margin: 3 0 0 0;
-    padding: 0;
+    margin: 0 0 0 0;
+    padding: 2 0 2 0;
   }
 
   #settings-link {
@@ -245,10 +246,6 @@
     margin: 0 0 0 3px;
   }
 
-  .dark {
-    color: #eee;
-    background: #333;
-  }
 </style>
 <script src="../../js/load.js"></script>
 <script src="../../js/script.js"></script>
