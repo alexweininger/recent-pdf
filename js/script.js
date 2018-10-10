@@ -12,14 +12,10 @@ getDownloads()
 let localPdfCount = 0
 let onlineCount = 0
 
-// online file list
-let onlineList = document.getElementById('link-list')
-
+let onlineList = document.getElementById('link-list') // online file list
 let fileElement = document.getElementById('file-list') // offline (local) file list
 
-// load the user settings
-loadSettings()
-
+loadSettings() // load the user settings
 searchHistory()
 
 function searchHistory () {
