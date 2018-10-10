@@ -7,7 +7,6 @@
  *  last modified: 9/24/2018
  */
 
-
 let localPdfCount = 0
 let onlineCount = 0
 
@@ -16,7 +15,6 @@ let fileElement = document.getElementById('file-list') // offline (local) file l
 
 loadSettings() // load the user settings
 searchHistory()
-
 
 function searchHistory () {
   chrome.history.search({
@@ -112,7 +110,7 @@ function searchDownloads () {
 
           let linkUrl = document.createElement('p')
           linkUrl.classList.add('link-url')
-          linkUrl.innerHTML = file.filename;
+          linkUrl.innerHTML = file.filename
 
           leftDiv.appendChild(icon)
           leftDiv.appendChild(title)
@@ -158,7 +156,7 @@ function footer (count) {
 
   let countDisplay = document.getElementById('count-display')
 
-  countDisplay.innerHTML = `Found ${count} online PDF files.`
+  countDisplay.innerHTML = `Showing ${count} online PDF${plural}.`
 }
 
 function localFooter (count) {
@@ -169,7 +167,7 @@ function localFooter (count) {
 
   let countDisplay = document.getElementById('count-display')
 
-  countDisplay.innerHTML = `Found ${count} local PDF files.`
+  countDisplay.innerHTML = `Showing ${count} local PDF${plural}.`
 }
 
 // tab buttons
@@ -221,7 +219,7 @@ function loadSettings () {
     }
 
     if (result.filesPerPage) {
-      maxLocalFilesPerPage = result.filesPerPage
+      // TODO
     }
   })
 }
