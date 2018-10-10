@@ -2,9 +2,6 @@
  *
  * Contains the main program logic for recent-pdf
  *  - loads pdf files from downloads api
- *
- *  author: Alex Weininger
- *  last modified: 9/24/2018
  */
 
 getDownloads()
