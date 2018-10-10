@@ -14,7 +14,7 @@
     "default_locale": "en",
     "browser_action": {
         "default_icon": "icons/icon256.png",
-        "default_title": "recent pdfs",
+        "default_title": "recent pdf",
         "default_popup": "src/browser_action/index.html"
     },
     "permissions": [
