@@ -2,9 +2,6 @@
  *
  * Contains the main program logic for recent-pdf
  *  - loads pdf files from downloads api
- *
- *  author: Alex Weininger
- *  last modified: 9/24/2018
  */
 
 let localPdfCount = 0
@@ -110,7 +107,8 @@ function searchDownloads () {
 
           let linkUrl = document.createElement('p')
           linkUrl.classList.add('link-url')
-          linkUrl.innerHTML = file.filename
+          linkUrl.innerHTML = file.filename.substring(0, file.filename.lastIndexOf('\\'))
+          // linkUrl.innerHTML = file.filename // .substring(0, file.filename.lastIndexOf('/'))
 
           leftDiv.appendChild(icon)
           leftDiv.appendChild(title)

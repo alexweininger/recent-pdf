@@ -135,20 +135,26 @@ div.left {
 	display: inline-block;
 	font: 20px/1.5 sans-serif;
 	line-height: normal;
-	margin: 0px;
+	margin: 0;
+	width: 340px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .link-url {
+	direction: rtl;
 	display: inline-block;
 	font-size: 14px;
 	line-height: 1.3;
 	margin: 0 0 0 0;
 	padding: 0px 0px 0px 0px;
 	text-decoration: none;
-	white-space: wrap;
-	width: max-content;
 	word-wrap: break-word;
-	max-width: 400px;
+	width: 360px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 li {
