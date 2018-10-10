@@ -4,7 +4,6 @@
  *  - loads pdf files from downloads api
  */
 
-
 let localPdfCount = 0
 let onlineCount = 0
 
@@ -13,7 +12,6 @@ let fileElement = document.getElementById('file-list') // offline (local) file l
 
 loadSettings() // load the user settings
 searchHistory()
-
 
 function searchHistory () {
   chrome.history.search({
@@ -109,7 +107,8 @@ function searchDownloads () {
 
           let linkUrl = document.createElement('p')
           linkUrl.classList.add('link-url')
-          linkUrl.innerHTML = file.filename;
+          linkUrl.innerHTML = file.filename.substring(0, file.filename.lastIndexOf('\\'))
+          // linkUrl.innerHTML = file.filename // .substring(0, file.filename.lastIndexOf('/'))
 
           leftDiv.appendChild(icon)
           leftDiv.appendChild(title)
