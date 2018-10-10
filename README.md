@@ -4,7 +4,7 @@
 
 # ![error][logo]
 
-[![MIT Licence](https://badges.frapsoft.com/os/mit/mit.png?v=103)](https://opensource.org/licenses/mit-license.php) 
+[![MIT Licence](https://badges.frapsoft.com/os/mit/mit.png?v=103)](https://opensource.org/licenses/mit-license.php)
 
 RecentPDF is a simple and helpful Chrome extension to make accessing PDF files quick and easy.
 
@@ -53,6 +53,7 @@ Please feel free to contact me with any comments, improvements, or if you would 
 - **Alex Weininger** - *Initial work* - [alexweininger](https://github.com/alexweininger)
 
 <!-- TODO contributors list -->
+<!-- BUG -->
 <!-- See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project. -->
 
 ## License
