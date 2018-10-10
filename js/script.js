@@ -6,7 +6,6 @@
  *  author: Alex Weininger
  *  last modified: 9/24/2018
  */
-load = 'load.js'
 
 getDownloads()
 
