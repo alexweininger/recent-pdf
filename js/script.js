@@ -6,6 +6,7 @@
  *  author: Alex Weininger
  *  last modified: 9/24/2018
  */
+load = 'load.js'
 
 getDownloads()
 
@@ -15,28 +16,20 @@ let onlineCount = 0
 // online file list
 let onlineList = document.getElementById('link-list')
 
-// offline (local) file list
-let fileElement = document.getElementById('file-list')
-
-let maxLocalFilesPerPage = 11 // setting set to 11 by default
+let fileElement = document.getElementById('file-list') // offline (local) file list
 
 // load the user settings
 loadSettings()
 
-maxLocalFilesPerPage = 30
-
 searchHistory()
 
-function searchHistory() {
+function searchHistory () {
   chrome.history.search({
     text: '.pdf',
     maxResults: 10000
   }, function (data) {
-
     data.forEach(function (page) {
-
       if (page.url.endsWith('.pdf')) { // check if page is a .pdf
-
         let listItem = document.createElement('li')
         listItem.classList.add('list-item')
 
@@ -78,7 +71,7 @@ function searchHistory() {
         }
       }
     })
-
+    footer(onlineCount)
     searchDownloads()
     console.log(`${onlineCount} online PDFs found.`)
   })
@@ -86,7 +79,7 @@ function searchHistory() {
 
 let localFiles = []
 
-function searchDownloads() {
+function searchDownloads () {
   chrome.downloads.search({
     limit: 1000,
     orderBy: ['-startTime']
@@ -97,8 +90,6 @@ function searchDownloads() {
         if (!localFiles.includes(file.filename) &&
           localPdfCount < 30) {
           localFiles.push(file.filename)
-
-
           localPdfCount++
 
           let leftDiv = document.createElement('div')
@@ -154,18 +145,18 @@ function searchDownloads() {
           fileItem.appendChild(rightDiv)
           fileElement.appendChild(fileItem)
         } else {
-          //console.log(`[INFO] skipped duplicate file: ${file.filename}.`)
+          // console.log(`[INFO] skipped duplicate file: ${file.filename}.`)
         }
       }
     })
 
-    //console.log(`[INFO] ${localPdfCount} local PDFs found.`)
+    // console.log(`[INFO] ${localPdfCount} local PDFs found.`)
 
     loadSettings()
   })
 }
 
-function footer(count) {
+function footer (count) {
   let plural = (count > 1 ? 's' : '')
 
   let footerDivs = document.getElementsByClassName('footer')
@@ -174,10 +165,9 @@ function footer(count) {
   let countDisplay = document.getElementById('count-display')
 
   countDisplay.innerHTML = `Found ${count} online PDF files.`
-
 }
 
-function localFooter(count) {
+function localFooter (count) {
   let plural = (count > 1 ? 's' : '')
 
   let footerDivs = document.getElementsByClassName('footer')
@@ -186,7 +176,6 @@ function localFooter(count) {
   let countDisplay = document.getElementById('count-display')
 
   countDisplay.innerHTML = `Found ${count} local PDF files.`
-
 }
 
 // tab buttons
@@ -213,10 +202,9 @@ settingsTabLink.addEventListener(
   })
 
 onlineTabLink.click()
-footer(onlineCount)
 
 // function that handles switching between tabs
-function openTab(evt, tabName) {
+function openTab (evt, tabName) {
   var i, tabcontent, tablinks
   tabcontent = document.getElementsByClassName('tabcontent')
   for (i = 0; i < tabcontent.length; i++) {
@@ -231,7 +219,7 @@ function openTab(evt, tabName) {
 }
 
 // function that loads the settings from the options.js script
-function loadSettings() {
+function loadSettings () {
   chrome.storage.sync.get(['savedTab', 'filesPerPage'], function (result) {
     console.log(result)
     if (result.savedTab) {
