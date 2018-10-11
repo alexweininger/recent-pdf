@@ -42,7 +42,7 @@ Add additional notes about how to deploy this on a live system
 
 ## Contributing
 
-REecentPDF is a simple extension made with Javascript. If you know a little bit of Javascript you can most likely help develop this project.
+RecentPDF is a simple extension made with Javascript. If you know a little bit of Javascript you can most likely help develop this project.
 
 Please feel free to contact me with any comments, improvements, or if you would like to help me with this profect or any others.
 <!-- TODO -->
