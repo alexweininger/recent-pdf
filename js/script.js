@@ -35,7 +35,6 @@ function searchHistory () {
           title.classList.add('link-title')
           title.innerText = decodeURI(page.url).substring(
             page.url.lastIndexOf('/') + 1, page.url.length - 4)
-
           let linkUrl = document.createElement('p')
           linkUrl.classList.add('link-url')
           linkUrl.innerHTML =
@@ -47,7 +46,6 @@ function searchHistory () {
 
           leftDiv.appendChild(icon)
           leftDiv.appendChild(title)
-          leftDiv.appendChild(document.createElement('br'))
           leftDiv.appendChild(linkUrl)
 
           leftDiv.addEventListener('click',
@@ -78,7 +76,7 @@ function searchDownloads () {
     data.forEach(function (file, i) {
       if (file.filename.endsWith('.pdf')) {
         if (!localFiles.includes(file.filename) &&
-          localPdfCount < 30) {
+            localPdfCount < 30) {
           localFiles.push(file.filename)
           localPdfCount++
 
@@ -102,17 +100,17 @@ function searchDownloads () {
 
           let title = document.createElement('p')
           title.classList.add('link-title')
+          title.classList.add('local-title')
           title.innerText = file.filename.substring(
             file.filename.lastIndexOf('\\') + 1, file.filename.length - 4)
 
           let linkUrl = document.createElement('p')
           linkUrl.classList.add('link-url')
-          linkUrl.innerHTML = file.filename.substring(0, file.filename.lastIndexOf('\\'))
+          linkUrl.innerHTML = file.filename.substring(0, 50)
           // linkUrl.innerHTML = file.filename // .substring(0, file.filename.lastIndexOf('/'))
 
           leftDiv.appendChild(icon)
           leftDiv.appendChild(title)
-          leftDiv.appendChild(document.createElement('br'))
           leftDiv.appendChild(linkUrl)
 
           leftDiv.addEventListener(
@@ -175,12 +173,12 @@ let settingsTabLink = document.getElementById('settings-link')
 
 // event handlers for tab buttons
 onlineTabLink.addEventListener('click',
-  function () {
+  function (event) {
     footer(onlineCount)
     openTab(event, 'online')
   })
 
-localTabLink.addEventListener('click', function () {
+localTabLink.addEventListener('click', function (event) {
   localFooter(localPdfCount)
   openTab(event, 'local')
 })
