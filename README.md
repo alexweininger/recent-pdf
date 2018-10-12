@@ -44,7 +44,22 @@ Add additional notes about how to deploy this on a live system
 
 RecentPDF is a simple extension made with Javascript. If you know a little bit of Javascript you can most likely help develop this project.
 
-Please feel free to contact me with any comments, improvements, or if you would like to help me with this profect or any others.
+To begin working on this project follow these steps.
+
+1. Fork the recent-pdf repository.
+2. Clone the forked repository to your local machine.
+3. Add the local extension to Chrome.
+	a. Go to Chrome -> Extensions
+	b. Enable Developer Mode
+	c. Select "Load unpacked extension" and select the directory of the recent-pdf clone you're working on.
+4. The RecentPDF extension is now loaded into Chrome, and will reflect the changes you make the the local clone.
+5. Once you've finished developing, push the repository.
+6. Make a pull request and explain what changes have been made.
+
+Please feel free to contact me with any comments, improvements, or if you would like to help me with this project or any others.
+
+
+
 <!-- TODO -->
 <!-- Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us. -->
 
