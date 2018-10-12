@@ -49,9 +49,9 @@ To begin working on this project follow these steps.
 1. Fork the recent-pdf repository.
 2. Clone the forked repository to your local machine.
 3. Add the local extension to Chrome.
-	a. Go to Chrome -> Extensions
-	b. Enable Developer Mode
-	c. Select "Load unpacked extension" and select the directory of the recent-pdf clone you're working on.
+   1. Go to Chrome -> Extensions
+   2. Enable Developer Mode
+   3. Select "Load unpacked extension" and select the directory of the recent-pdf clone you're working on.
 4. The RecentPDF extension is now loaded into Chrome, and will reflect the changes you make the the local clone.
 5. Once you've finished developing, push the repository.
 6. Make a pull request and explain what changes have been made.
