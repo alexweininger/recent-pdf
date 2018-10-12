@@ -59,6 +59,9 @@ function searchHistory () {
         }
       }
     })
+    if(onlineCount > 0) {
+      document.getElementById("noOnline").remove();
+    }
     footer(onlineCount)
     searchDownloads()
     console.log(`${onlineCount} online PDFs found.`)
@@ -138,6 +141,9 @@ function searchDownloads () {
       }
     })
 
+    if(localPdfCount > 0) {
+      document.getElementById("noLocal").remove();
+    }
     // console.log(`[INFO] ${localPdfCount} local PDFs found.`)
 
     loadSettings()

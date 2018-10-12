@@ -219,3 +219,14 @@ li {
 	height: inherit;
 	margin: 0 0 0 3px;
 }
+
+
+.nothingHere {
+	display:inline-block;
+	width: 100%;
+	text-align:center;
+	padding-top: 50px;
+	text-transform: uppercase;
+	letter-spacing: 2px;
+	font-family: "Helvetica";
+}
