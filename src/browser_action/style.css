@@ -87,8 +87,6 @@ div.left {
 	width: 100%;
 	resize: none;
 	max-height: 384px;
-	overflow-y: scroll;
-	padding-right: 21px;
 	/* Increase/decrease this value for cross-browser compatibility */
 	box-sizing: content-box;
 	/* So the width will be 100% + 17px */
@@ -100,6 +98,20 @@ div.left {
 	height: auto;
 	min-height: 384px;
 }
+
+.tabcontent::-webkit-scrollbar {
+    width: 6px;
+}
+ 
+.tabcontent::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,0.3);
+}
+ 
+.tabcontent::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  outline: 1px solid slategrey;
+}
+
 
 #link-list,
 #file-list {
