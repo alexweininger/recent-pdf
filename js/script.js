@@ -19,7 +19,7 @@ function searchHistory () {
     maxResults: 10000
   }, function (data) {
     data.forEach(function (page) {
-      if (page.url.endsWith('.pdf')) { // check if page is a .pdf
+      if (page.url.endsWith('.pdf') | page.url.endsWith('.PDF')) { // check if page is a .pdf
         let listItem = document.createElement('li')
         listItem.classList.add('list-item')
 
@@ -74,7 +74,7 @@ function searchDownloads () {
   }, function (
     data) {
     data.forEach(function (file, i) {
-      if (file.filename.endsWith('.pdf')) {
+      if (file.filename.endsWith('.pdf') | file.filename.endsWith('.PDF')) {
         if (!localFiles.includes(file.filename) &&
             localPdfCount < 30) {
           localFiles.push(file.filename)
