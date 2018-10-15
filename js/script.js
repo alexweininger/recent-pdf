@@ -13,12 +13,15 @@ let fileElement = document.getElementById('file-list') // offline (local) file l
 loadSettings() // load the user settings
 searchHistory()
 
+/**
+ * searchHistory() - searches history using the chrome.history api for online pdf files
+ */
 function searchHistory () {
   chrome.history.search({
     text: '.pdf',
     maxResults: 10000
   }, function (data) {
-    data.forEach(function (page) {
+    data.forEach(function (page) { // for each result
       if (page.url.endsWith('.pdf')) { // check if page is a .pdf
         let listItem = document.createElement('li')
         listItem.classList.add('list-item')
@@ -76,7 +79,7 @@ function searchDownloads () {
     data.forEach(function (file, i) {
       if (file.filename.endsWith('.pdf')) {
         if (!localFiles.includes(file.filename) &&
-            localPdfCount < 30) {
+          localPdfCount < 30) {
           localFiles.push(file.filename)
           localPdfCount++
 
