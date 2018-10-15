@@ -1,7 +1,5 @@
 /** Script.js
- *
  * Contains the main program logic for recent-pdf
- *  - loads pdf files from downloads api
  */
 
 let onlineList = document.getElementById('link-list') // online file list
@@ -154,12 +152,14 @@ function searchDownloads () {
   })
 }
 
+// load and create the online pdf footer
 function onlineFooter (count) {
   let plural = (count > 1 ? 's' : '')
   let countDisplay = document.getElementById('count-display')
   countDisplay.innerHTML = `Showing ${count} online PDF${plural}.`
 }
 
+// load and create the local file footer
 function localFooter (count) {
   let plural = (count > 1 ? 's' : '')
   let countDisplay = document.getElementById('count-display')
@@ -178,17 +178,20 @@ onlineTabLink.addEventListener('click',
     openTab(event, 'online')
   })
 
+// click listener for local pdf tab
 localTabLink.addEventListener('click', function (event) {
   localFooter(localPdfCount)
   openTab(event, 'local')
 })
 
+// settings click listener
 settingsTabLink.addEventListener(
   'click',
   function () {
     window.open('../options/options.html')
   })
 
+// open the online tab by default
 onlineTabLink.click()
 
 // function that handles switching between tabs
