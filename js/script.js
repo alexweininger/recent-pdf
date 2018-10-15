@@ -156,23 +156,13 @@ function searchDownloads () {
 
 function footer (count) {
   let plural = (count > 1 ? 's' : '')
-
-  let footerDivs = document.getElementsByClassName('footer')
-  let footerLeft = document.getElementById('footer-left')
-
   let countDisplay = document.getElementById('count-display')
-
   countDisplay.innerHTML = `Showing ${count} online PDF${plural}.`
 }
 
 function localFooter (count) {
   let plural = (count > 1 ? 's' : '')
-
-  let footerDivs = document.getElementsByClassName('footer')
-  let footerLeft = document.getElementById('footer-left')
-
   let countDisplay = document.getElementById('count-display')
-
   countDisplay.innerHTML = `Showing ${count} local PDF${plural}.`
 }
 
