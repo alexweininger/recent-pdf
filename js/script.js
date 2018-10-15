@@ -4,82 +4,90 @@
  *  - loads pdf files from downloads api
  */
 
-let localPdfCount = 0
-let onlineCount = 0
-
 let onlineList = document.getElementById('link-list') // online file list
 let fileElement = document.getElementById('file-list') // offline (local) file list
 
 loadSettings() // load the user settings
 searchHistory()
 
+let onlinePdfCount = 0 // number of online pdf files
 /**
  * searchHistory() - searches history using the chrome.history api for online pdf files
  */
 function searchHistory () {
   chrome.history.search({
-    text: '.pdf',
+    text: '.pdf', // search for .pdf
     maxResults: 10000
   }, function (data) {
     data.forEach(function (page) { // for each result
-      if (page.url.endsWith('.pdf')) { // check if page is a .pdf
+      if (page.url.endsWith('.pdf') | page.url.endsWith('.PDF')) { // check if page is a .pdf
         let listItem = document.createElement('li')
         listItem.classList.add('list-item')
 
         if (!page.url.startsWith('file:')) {
-          onlineCount++
+          onlinePdfCount++
 
           let leftDiv = document.createElement('div')
           let rightDiv = document.createElement('div')
           leftDiv.classList.add('list-div', 'left')
           rightDiv.classList.add('list-div', 'right')
 
+          // make title element
           let title = document.createElement('p')
           title.classList.add('link-title')
           title.innerText = decodeURI(page.url).substring(
             page.url.lastIndexOf('/') + 1, page.url.length - 4)
+
+          // make url element
           let linkUrl = document.createElement('p')
           linkUrl.classList.add('link-url')
           linkUrl.innerHTML =
             decodeURI(page.url).substring(0, 50).replace(' ', '')
 
+          // make icon element
           let icon = document.createElement('img')
           icon.classList.add('link-thumb')
           icon.src = `chrome://favicon/${page.url}`
 
+          // append elements to left div
           leftDiv.appendChild(icon)
           leftDiv.appendChild(title)
           leftDiv.appendChild(linkUrl)
 
+          // on click listener
           leftDiv.addEventListener('click',
             function () {
               window.open(page.url)
             })
 
+          // append to list item
           listItem.appendChild(leftDiv)
           listItem.appendChild(rightDiv)
+          // append list item to online list
           onlineList.appendChild(listItem)
         }
       }
     })
-    footer(onlineCount)
+    footer(onlinePdfCount)
     searchDownloads()
-    console.log(`${onlineCount} online PDFs found.`)
+    console.log(`${onlinePdfCount} online PDFs found.`)
   })
 }
 
 let localFiles = []
-
+let localPdfCount = 0 // number of local pdf files
+/**
+ * searchDownloads() - searches downloads with chrome.downloads api for local pdf files
+ */
 function searchDownloads () {
   chrome.downloads.search({
     limit: 1000,
     orderBy: ['-startTime']
   }, function (
     data) {
-    data.forEach(function (file, i) {
-      if (file.filename.endsWith('.pdf')) {
-        if (!localFiles.includes(file.filename) &&
-          localPdfCount < 30) {
+    data.forEach(function (file, i) { // for each result
+      if (file.filename.endsWith('.pdf') | file.filename.endsWith('.PDF')) { // if file  ends with .pdf or .PDF
+        if (!localFiles.includes(file.filename) && localPdfCount < 30) {
           localFiles.push(file.filename)
           localPdfCount++
 
@@ -88,40 +96,41 @@ function searchDownloads () {
           leftDiv.classList.add('list-div', 'left')
           rightDiv.classList.add('list-div', 'right')
 
+          // create local file list item
           let fileItem = document.createElement('li')
           fileItem.classList.add('list-item', 'file-item')
 
+          // create icon element
           let icon = document.createElement('img')
           icon.classList.add('link-thumb')
           chrome.downloads.getFileIcon(
-            file.id, {
-              size: 16
-            },
-            function (iconUrl) {
-              icon.src = iconUrl
-            })
+            file.id, { size: 16 }, (iconUrl) => { icon.src = iconUrl })
 
+          // create title element
           let title = document.createElement('p')
           title.classList.add('link-title')
           title.classList.add('local-title')
           title.innerText = file.filename.substring(
             file.filename.lastIndexOf('\\') + 1, file.filename.length - 4)
 
+          // create file url element
           let linkUrl = document.createElement('p')
           linkUrl.classList.add('link-url')
           linkUrl.innerHTML = file.filename.substring(0, 50)
-          // linkUrl.innerHTML = file.filename // .substring(0, file.filename.lastIndexOf('/'))
 
+          // append elements to div
           leftDiv.appendChild(icon)
           leftDiv.appendChild(title)
           leftDiv.appendChild(linkUrl)
 
+          // on click listener
           leftDiv.addEventListener(
             'click',
             function () {
               chrome.downloads.open(file.id)
             })
 
+          // open in file explorer button
           let more = document.createElement('img')
           more.id = 'more_icon'
           more.src = '../../assets/More.png'
@@ -131,19 +140,17 @@ function searchDownloads () {
             })
 
           rightDiv.appendChild(more)
-
           fileItem.appendChild(leftDiv)
           fileItem.appendChild(rightDiv)
           fileElement.appendChild(fileItem)
         } else {
-          // console.log(`[INFO] skipped duplicate file: ${file.filename}.`)
+          console.log(`[INFO] skipped duplicate file: ${file.filename}.`)
         }
       }
     })
 
-    // console.log(`[INFO] ${localPdfCount} local PDFs found.`)
-
-    loadSettings()
+    console.log(`[INFO] ${localPdfCount} local PDFs found.`)
+    loadSettings() // load settings
   })
 }
 
@@ -177,7 +184,7 @@ let settingsTabLink = document.getElementById('settings-link')
 // event handlers for tab buttons
 onlineTabLink.addEventListener('click',
   function (event) {
-    footer(onlineCount)
+    footer(onlinePdfCount)
     openTab(event, 'online')
   })
 
