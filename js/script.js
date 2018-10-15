@@ -68,7 +68,7 @@ function searchHistory () {
         }
       }
     })
-    footer(onlinePdfCount)
+    onlineFooter(onlinePdfCount)
     searchDownloads()
     console.log(`${onlinePdfCount} online PDFs found.`)
   })
@@ -154,7 +154,7 @@ function searchDownloads () {
   })
 }
 
-function footer (count) {
+function onlineFooter (count) {
   let plural = (count > 1 ? 's' : '')
   let countDisplay = document.getElementById('count-display')
   countDisplay.innerHTML = `Showing ${count} online PDF${plural}.`
@@ -174,7 +174,7 @@ let settingsTabLink = document.getElementById('settings-link')
 // event handlers for tab buttons
 onlineTabLink.addEventListener('click',
   function (event) {
-    footer(onlinePdfCount)
+    onlineFooter(onlinePdfCount)
     openTab(event, 'online')
   })
 
@@ -186,7 +186,7 @@ localTabLink.addEventListener('click', function (event) {
 settingsTabLink.addEventListener(
   'click',
   function () {
-    open('../options/options.html')
+    window.open('../options/options.html')
   })
 
 onlineTabLink.click()
@@ -212,10 +212,6 @@ function loadSettings () {
     console.log(result)
     if (result.savedTab) {
       document.getElementById('online-footer').style = 'color: red'
-    }
-
-    if (result.filesPerPage) {
-      // TODO
     }
   })
 }
