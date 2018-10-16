@@ -12,6 +12,7 @@ let onlinePdfCount = 0 // number of online pdf files
 /**
  * searchHistory() - searches history using the chrome.history api for online pdf files
  */
+
 function searchHistory () {
   'use strict'
   chrome.history.search({
@@ -105,7 +106,11 @@ function searchDownloads () {
           let icon = document.createElement('img')
           icon.classList.add('link-thumb')
           chrome.downloads.getFileIcon(
-            file.id, { size: 16 }, (iconUrl) => { icon.src = iconUrl })
+            file.id, {
+              size: 16
+            }, (iconUrl) => {
+              icon.src = iconUrl
+            })
 
           // create title element
           let title = document.createElement('p')
@@ -157,6 +162,7 @@ function searchDownloads () {
 
 // load and create the online pdf footer
 function onlineFooter (count) {
+  'use strict'
   let plural = (count > 1 ? 's' : '')
   let countDisplay = document.getElementById('count-display')
   countDisplay.innerHTML = `Showing ${count} online PDF${plural}.`
@@ -164,6 +170,7 @@ function onlineFooter (count) {
 
 // load and create the local file footer
 function localFooter (count) {
+  'use strict'
   let plural = (count > 1 ? 's' : '')
   let countDisplay = document.getElementById('count-display')
   countDisplay.innerHTML = `Showing ${count} local PDF${plural}.`
@@ -175,30 +182,31 @@ let localTabLink = document.getElementById('local-tab-link')
 let settingsTabLink = document.getElementById('settings-link')
 
 // event handlers for tab buttons
-onlineTabLink.addEventListener('click',
-  function (event) {
-    onlineFooter(onlinePdfCount)
-    openTab(event, 'online')
-  })
+onlineTabLink.addEventListener('click', (event) => {
+  'use strict'
+  onlineFooter(onlinePdfCount)
+  openTab(event, 'online')
+})
 
 // click listener for local pdf tab
-localTabLink.addEventListener('click', function (event) {
+localTabLink.addEventListener('click', (event) => {
+  'use strict'
   localFooter(localPdfCount)
   openTab(event, 'local')
 })
 
 // settings click listener
-settingsTabLink.addEventListener(
-  'click',
-  function () {
-    window.open('../options/options.html')
-  })
+settingsTabLink.addEventListener('click', () => {
+  'use strict'
+  window.open('../options/options.html')
+})
 
 // open the online tab by default
 onlineTabLink.click()
 
 // function that handles switching between tabs
 function openTab (evt, tabName) {
+  'use strict'
   // Find active elements and remove active class from elements
   const activeElements = document.querySelectorAll('.active')
   activeElements.forEach(function (elem) {
@@ -215,6 +223,7 @@ function openTab (evt, tabName) {
 
 // function that loads the settings from the options.js script
 function loadSettings () {
+  'use strict'
   chrome.storage.sync.get(['savedTab', 'filesPerPage'], function (result) {
     console.log(result)
     if (result.savedTab) {
