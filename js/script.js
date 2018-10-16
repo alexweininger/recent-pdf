@@ -196,17 +196,18 @@ onlineTabLink.click()
 
 // function that handles switching between tabs
 function openTab (evt, tabName) {
-  var i, tabcontent, tablinks
-  tabcontent = document.getElementsByClassName('tabcontent')
-  for (i = 0; i < tabcontent.length; i++) {
-    tabcontent[i].style.display = 'none'
+  // Find active elements and remove active class from elements
+  const activeElements = document.querySelectorAll('.active')
+  activeElements.forEach(function (elem) {
+    elem.classList.remove('active')
+  })
+
+  // Add active class to tab and pressed button
+  const tab = document.querySelector(`.tabcontent#${tabName}`)
+  if (tab) {
+    tab.classList.add('active')
   }
-  tablinks = document.getElementsByClassName('tablinks')
-  for (i = 0; i < tablinks.length; i++) {
-    tablinks[i].className = tablinks[i].className.replace(' active', '')
-  }
-  document.getElementById(tabName).style.display = 'inline-block'
-  evt.currentTarget.className += ' active'
+  evt.currentTarget.classList.add('active')
 }
 
 // function that loads the settings from the options.js script
