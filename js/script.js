@@ -2,6 +2,8 @@
  * Contains the main program logic for recent-pdf
  */
 
+'use strict'
+
 let onlineList = document.getElementById('link-list') // online file list
 let fileElement = document.getElementById('file-list') // offline (local) file list
 
@@ -22,7 +24,7 @@ function searchHistory () {
         let listItem = document.createElement('li')
         listItem.classList.add('list-item')
 
-        if (!page.url.startsWith('file:')) {
+        if (!page.url.startsWith('file:')) { // if not local pdf
           onlinePdfCount++
 
           let leftDiv = document.createElement('div')
@@ -84,8 +86,9 @@ function searchDownloads () {
   }, function (
     data) {
     data.forEach(function (file, i) { // for each result
-      if (file.filename.endsWith('.pdf') | file.filename.endsWith('.PDF')) { // if file  ends with .pdf or .PDF
-        if (!localFiles.includes(file.filename) && localPdfCount < 30) {
+      console.log('TCL: searchDownloads -> i', i)
+      if (file.filename.endsWith('.pdf') | file.filename.endsWith('.PDF')) { // check if file ends with .pdf or .PDF
+        if (!localFiles.includes(file.filename) && localPdfCount < 30) { // check for duplicates and max of 30 files
           localFiles.push(file.filename)
           localPdfCount++
 
