@@ -2,8 +2,6 @@
  * Contains the main program logic for recent-pdf
  */
 
-'use strict'
-
 let onlineList = document.getElementById('link-list') // online file list
 let fileElement = document.getElementById('file-list') // offline (local) file list
 
@@ -15,12 +13,13 @@ let onlinePdfCount = 0 // number of online pdf files
  * searchHistory() - searches history using the chrome.history api for online pdf files
  */
 function searchHistory () {
+  'use strict'
   chrome.history.search({
     text: '.pdf', // search for .pdf
     maxResults: 10000
   }, function (data) {
     data.forEach(function (page) { // for each result
-      if (page.url.endsWith('.pdf') | page.url.endsWith('.PDF')) { // check if page is a .pdf
+      if (page.url.endsWith('.pdf') || page.url.endsWith('.PDF')) { // check if page is a .pdf
         let listItem = document.createElement('li')
         listItem.classList.add('list-item')
 
@@ -80,6 +79,7 @@ let localPdfCount = 0 // number of local pdf files
  * searchDownloads() - searches downloads with chrome.downloads api for local pdf files
  */
 function searchDownloads () {
+  'use strict'
   chrome.downloads.search({
     limit: 1000,
     orderBy: ['-startTime']
@@ -87,7 +87,7 @@ function searchDownloads () {
     data) {
     data.forEach(function (file, i) { // for each result
       console.log('TCL: searchDownloads -> i', i)
-      if (file.filename.endsWith('.pdf') | file.filename.endsWith('.PDF')) { // check if file ends with .pdf or .PDF
+      if (file.filename.endsWith('.pdf') || file.filename.endsWith('.PDF')) { // check if file ends with .pdf or .PDF
         if (!localFiles.includes(file.filename) && localPdfCount < 30) { // check for duplicates and max of 30 files
           localFiles.push(file.filename)
           localPdfCount++
