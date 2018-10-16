@@ -12,17 +12,19 @@ let onlinePdfCount = 0 // number of online pdf files
 /**
  * searchHistory() - searches history using the chrome.history api for online pdf files
  */
+
 function searchHistory () {
+  'use strict'
   chrome.history.search({
     text: '.pdf', // search for .pdf
     maxResults: 10000
   }, function (data) {
     data.forEach(function (page) { // for each result
-      if (page.url.endsWith('.pdf') | page.url.endsWith('.PDF')) { // check if page is a .pdf
+      if (page.url.endsWith('.pdf') || page.url.endsWith('.PDF')) { // check if page is a .pdf
         let listItem = document.createElement('li')
         listItem.classList.add('list-item')
 
-        if (!page.url.startsWith('file:')) {
+        if (!page.url.startsWith('file:')) { // if not local pdf
           onlinePdfCount++
 
           let leftDiv = document.createElement('div')
@@ -78,14 +80,16 @@ let localPdfCount = 0 // number of local pdf files
  * searchDownloads() - searches downloads with chrome.downloads api for local pdf files
  */
 function searchDownloads () {
+  'use strict'
   chrome.downloads.search({
     limit: 1000,
     orderBy: ['-startTime']
   }, function (
     data) {
     data.forEach(function (file, i) { // for each result
-      if (file.filename.endsWith('.pdf') | file.filename.endsWith('.PDF')) { // if file  ends with .pdf or .PDF
-        if (!localFiles.includes(file.filename) && localPdfCount < 30) {
+      console.log('TCL: searchDownloads -> i', i)
+      if (file.filename.endsWith('.pdf') || file.filename.endsWith('.PDF')) { // check if file ends with .pdf or .PDF
+        if (!localFiles.includes(file.filename) && localPdfCount < 30) { // check for duplicates and max of 30 files
           localFiles.push(file.filename)
           localPdfCount++
 
@@ -102,7 +106,11 @@ function searchDownloads () {
           let icon = document.createElement('img')
           icon.classList.add('link-thumb')
           chrome.downloads.getFileIcon(
-            file.id, { size: 16 }, (iconUrl) => { icon.src = iconUrl })
+            file.id, {
+              size: 16
+            }, (iconUrl) => {
+              icon.src = iconUrl
+            })
 
           // create title element
           let title = document.createElement('p')
@@ -154,6 +162,7 @@ function searchDownloads () {
 
 // load and create the online pdf footer
 function onlineFooter (count) {
+  'use strict'
   let plural = (count > 1 ? 's' : '')
   let countDisplay = document.getElementById('count-display')
   countDisplay.innerHTML = `Showing ${count} online PDF${plural}.`
@@ -161,6 +170,7 @@ function onlineFooter (count) {
 
 // load and create the local file footer
 function localFooter (count) {
+  'use strict'
   let plural = (count > 1 ? 's' : '')
   let countDisplay = document.getElementById('count-display')
   countDisplay.innerHTML = `Showing ${count} local PDF${plural}.`
@@ -172,30 +182,31 @@ let localTabLink = document.getElementById('local-tab-link')
 let settingsTabLink = document.getElementById('settings-link')
 
 // event handlers for tab buttons
-onlineTabLink.addEventListener('click',
-  function (event) {
-    onlineFooter(onlinePdfCount)
-    openTab(event, 'online')
-  })
+onlineTabLink.addEventListener('click', (event) => {
+  'use strict'
+  onlineFooter(onlinePdfCount)
+  openTab(event, 'online')
+})
 
 // click listener for local pdf tab
-localTabLink.addEventListener('click', function (event) {
+localTabLink.addEventListener('click', (event) => {
+  'use strict'
   localFooter(localPdfCount)
   openTab(event, 'local')
 })
 
 // settings click listener
-settingsTabLink.addEventListener(
-  'click',
-  function () {
-    window.open('../options/options.html')
-  })
+settingsTabLink.addEventListener('click', () => {
+  'use strict'
+  window.open('../options/options.html')
+})
 
 // open the online tab by default
 onlineTabLink.click()
 
 // function that handles switching between tabs
 function openTab (evt, tabName) {
+  'use strict'
   // Find active elements and remove active class from elements
   const activeElements = document.querySelectorAll('.active')
   activeElements.forEach(function (elem) {
@@ -212,6 +223,7 @@ function openTab (evt, tabName) {
 
 // function that loads the settings from the options.js script
 function loadSettings () {
+  'use strict'
   chrome.storage.sync.get(['savedTab', 'filesPerPage'], function (result) {
     console.log(result)
     if (result.savedTab) {
