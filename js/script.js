@@ -201,10 +201,12 @@ settingsTabLink.addEventListener('click', () => {
   window.open('../options/options.html')
 })
 
-// open the online tab by default
+// tab handling
+
+// on start, open the online tab by default
 onlineTabLink.click()
 
-// function that handles switching between tabs
+// tab switching function, called when a tab link is clicked
 function openTab (evt, tabName) {
   'use strict'
   // Find active elements and remove active class from elements
