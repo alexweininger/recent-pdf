@@ -177,23 +177,8 @@ function localFooter (count) {
 }
 
 // tab buttons
-let onlineTabLink = document.getElementById('online-tab-link')
-let localTabLink = document.getElementById('local-tab-link')
+
 let settingsTabLink = document.getElementById('settings-link')
-
-// event handlers for tab buttons
-onlineTabLink.addEventListener('click', (event) => {
-  'use strict'
-  onlineFooter(onlinePdfCount)
-  openTab(event, 'online')
-})
-
-// click listener for local pdf tab
-localTabLink.addEventListener('click', (event) => {
-  'use strict'
-  localFooter(localPdfCount)
-  openTab(event, 'local')
-})
 
 // settings click listener
 settingsTabLink.addEventListener('click', () => {
@@ -201,10 +186,25 @@ settingsTabLink.addEventListener('click', () => {
   window.open('../options/options.html')
 })
 
-// open the online tab by default
-onlineTabLink.click()
 
-// function that handles switching between tabs
+
+// event handlers for tab buttons
+let onlineTabLink = document.getElementById('online-tab-link')
+onlineTabLink.addEventListener('click', (event) => {
+  'use strict'
+  onlineFooter(onlinePdfCount)
+  openTab(event, 'online')
+})
+
+// click listener for local pdf tab
+let localTabLink = document.getElementById('local-tab-link')
+localTabLink.addEventListener('click', (event) => {
+  'use strict'
+  localFooter(localPdfCount)
+  openTab(event, 'local')
+})
+
+// tab switching function, called when a tab link is clicked
 function openTab (evt, tabName) {
   'use strict'
   // Find active elements and remove active class from elements
@@ -220,6 +220,13 @@ function openTab (evt, tabName) {
   }
   evt.currentTarget.classList.add('active')
 }
+
+// on start, open the online tab by default
+onlineTabLink.click()
+
+/**
+ * settings loading and management
+ */
 
 // function that loads the settings from the options.js script
 function loadSettings () {
