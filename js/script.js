@@ -87,9 +87,8 @@ function searchDownloads () {
   }, function (
     data) {
     data.forEach(function (file, i) { // for each result
-      console.log('TCL: searchDownloads -> i', i)
       if (file.filename.endsWith('.pdf') || file.filename.endsWith('.PDF')) { // check if file ends with .pdf or .PDF
-        if (!localFiles.includes(file.filename) && localPdfCount < 30) { // check for duplicates and max of 30 files
+        if (!localFiles.includes(file.filename) && localPdfCount < 30 && file.exists) { // check for duplicates and max of 30 files
           localFiles.push(file.filename)
           localPdfCount++
 
@@ -185,8 +184,6 @@ settingsTabLink.addEventListener('click', () => {
   'use strict'
   window.open('../options/options.html')
 })
-
-
 
 // event handlers for tab buttons
 let onlineTabLink = document.getElementById('online-tab-link')
