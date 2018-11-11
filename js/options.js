@@ -28,5 +28,7 @@ function restore_options() {
 		document.getElementById('files-per-page').value = items.filesPerPage;
 	});
 }
-document.addEventListener('DOMContentLoaded', restore_options);
-document.getElementById('save').addEventListener('click', save_options);
+document.addEventListener('DOMContentLoaded', function () {
+	restore_options()
+	document.getElementById('save').addEventListener('click', save_options)
+});

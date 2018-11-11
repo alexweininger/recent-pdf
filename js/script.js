@@ -180,9 +180,9 @@ function localFooter (count) {
 let settingsTabLink = document.getElementById('settings-link')
 
 // settings click listener
-settingsTabLink.addEventListener('click', () => {
+settingsTabLink.addEventListener('click', (settingsTabLink) => {
   'use strict'
-  window.open('../options/options.html')
+	openModal('#settingsModal')
 })
 
 // event handlers for tab buttons
