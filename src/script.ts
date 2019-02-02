@@ -1,5 +1,5 @@
 "use strict";
-/// <reference path="../node_modules/@types/chrome/chrome.d.ts"/>
+/// <reference path='../node_modules/@types/chrome/index.d.ts'/>
 let onlineList = document.getElementById("link-list"); // online file list
 let fileElement = document.getElementById("file-list"); // offline (local) file list
 loadSettings(); // load the user settings

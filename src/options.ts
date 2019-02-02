@@ -1,3 +1,5 @@
+/// <reference path='../node_modules/@types/chrome/index.d.ts'/>
+'../node_modules/@types/chrome/index.d.ts'
 'use strict'
 // Saves options to chrome.storage
 function save_options() {
