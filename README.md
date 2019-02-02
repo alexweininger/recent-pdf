@@ -1,6 +1,6 @@
-[logo]: https://github.com/alexweininger/recent-pdfs/blob/master/content/promotional/pr1400v2.png?raw=true ""
+[logo]: https://raw.githubusercontent.com/alexweininger/recent-pdf/dev/content/promotional/pr1400v2.png ""
 
-[screenshot]: https://github.com/alexweininger/recent-pdfs/blob/master/content/screenshots/global-sc-v2.png?raw=true ""
+[screenshot]: https://raw.githubusercontent.com/alexweininger/recent-pdf/dev/content/screenshots/global-sc-v2.png ""
 
 # ![error][logo]
 
