@@ -1,9 +1,0 @@
-{
-    "extends": "standard",
-    "globals": {
-        "chrome": false
-    },
-    "env": {
-        "webextensions": true
-    }
-}

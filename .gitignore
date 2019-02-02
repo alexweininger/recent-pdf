@@ -1,7 +1,6 @@
-/info.txt
-/tempCodeRunnerFile.py
-/workspace.code-workspace
-/node_modules
-/test.txt
+npm-debug.log
+node_modules/
+dist/js
+tmp/
 /.vscode
-.DS_Store
+/info.txt
