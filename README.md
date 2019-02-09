@@ -6,6 +6,8 @@
 
 [![MIT License](https://badges.frapsoft.com/os/mit/mit.png?v=103)](https://opensource.org/licenses/mit-license.php)
 
+![chrome users](https://img.shields.io/chrome-web-store/users/ihjgdammecebcjinfmllgniaeneabkdk.svg?label=chrome%20users&style=flat)
+
 RecentPDF is a simple and helpful Chrome extension to make accessing PDF files quick and easy.
 
 **You can download and install RecentPDF from the Chrome webstore [here](https://chrome.google.com/webstore/detail/recent-pdf/ihjgdammecebcjinfmllgniaeneabkdk).**
