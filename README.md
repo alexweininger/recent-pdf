@@ -4,7 +4,7 @@
 
 # ![error][logo]
 
-![MIT License](https://img.shields.io/github/license/alexweininger/recent-pdf.svg?style=flat-square) ![chrome users](https://img.shields.io/chrome-web-store/users/ihjgdammecebcjinfmllgniaeneabkdk.svg?label=chrome%20users&style=flat) ![webstore rating](https://img.shields.io/chrome-web-store/stars/ihjgdammecebcjinfmllgniaeneabkdk.svg?label=webstore%20rating&style=flat) [![HitCount](http://hits.dwyl.io/alexweininger/recent-pdf.svg)](http://hits.dwyl.io/alexweininger/recent-pdf)
+![MIT License](https://img.shields.io/github/license/alexweininger/recent-pdf.svg?style=flat-square) ![chrome users](https://img.shields.io/chrome-web-store/users/ihjgdammecebcjinfmllgniaeneabkdk.svg?label=chrome%20users&style=flat-square) ![webstore rating](https://img.shields.io/chrome-web-store/stars/ihjgdammecebcjinfmllgniaeneabkdk.svg?label=webstore%20rating&style=flat-square) [![HitCount](http://hits.dwyl.io/alexweininger/recent-pdf.svg)](http://hits.dwyl.io/alexweininger/recent-pdf)
 
 RecentPDF is a simple and helpful Chrome extension to make accessing PDF files quick and easy.
 
