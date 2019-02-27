@@ -30,13 +30,10 @@ RecentPDF is a simple and helpful Chrome extension to make accessing PDF files q
 
 More detailed instructions can be found in the Contributing section below.
 
-### Code style
-
-RecentPDF uses ESLint for Javascript style.
-
 ## Built With
 
 - [vscode](https://code.visualstudio.com/)
+- [TypeScript](https://www.typescriptlang.org/)
 
 ## Contributing
 

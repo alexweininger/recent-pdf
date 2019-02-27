@@ -27,7 +27,6 @@
   },
 
   "permissions": [
-    "chrome://favicon/",
     "clipboardWrite",
     "contextMenus",
     "history",
@@ -37,7 +36,6 @@
     "storage"
   ],
 
-  "content_security_policy": "img-src data: chrome://favicon; script-src 'self'; object-src 'self'",
-  "offline_enabled": true,
-  "options_page": "src/options/options.html"
+  "content_security_policy": "img-src *; script-src 'self'; object-src 'self'"
+
 }

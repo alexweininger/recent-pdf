@@ -97,7 +97,7 @@ div.left {
 }
 
 .tabcontent.active {
-	display: block;
+	display: initial;
 }
 
 .tabcontent::-webkit-scrollbar {
