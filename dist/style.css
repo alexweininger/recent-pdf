@@ -215,7 +215,12 @@ li {
 	height: 16px;
 }
 
-#count-display {
+#online-count-display {
+	height: inherit;
+	margin: 0 0 0 3px;
+}
+
+#local-count-display {
 	height: inherit;
 	margin: 0 0 0 3px;
 }

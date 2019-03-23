@@ -13,6 +13,8 @@ if (onlineTabLink) {
     onlineTabLink.addEventListener("click", function(event: Event) {
         onlineFooter(onlinePdfCount);
         openTab(event, "online");
+        document.getElementById("online-count-display").style.display = '';
+        document.getElementById("local-count-display").style.display = 'gone';
     });
 } else {
     console.error("onlineTabLink is null");
@@ -23,6 +25,8 @@ if (localTabLink) {
     localTabLink.addEventListener("click", function(event: Event) {
         localFooter(localPdfCount);
         openTab(event, "local");
+        document.getElementById("online-count-display").style.display = 'gone';
+        document.getElementById("local-count-display").style.display = '';
     });
 } else {
     console.error("localTabLink is null");
@@ -30,7 +34,7 @@ if (localTabLink) {
 
 // settings click listener
 settingsTabLink.addEventListener("click", function() {
-    window.open("./options.html");
+    chrome.runtime.openOptionsPage();
 });
 
 searchHistory();
@@ -182,6 +186,7 @@ function searchDownloads() {
             });
 
             console.log(`[INFO] ${localPdfCount} local PDFs found.`);
+            localFooter(localPdfCount);
         }
     );
 }
@@ -189,14 +194,14 @@ function searchDownloads() {
 // load and create the online pdf footer
 function onlineFooter(count: number) {
     let plural: string = count > 1 ? "s" : "";
-    let countDisplay: HTMLParagraphElement = <HTMLParagraphElement>document.getElementById("count-display");
+    let countDisplay: HTMLParagraphElement = <HTMLParagraphElement>document.getElementById("online-count-display");
     countDisplay.innerHTML = `Showing ${count} online PDF${plural}.`;
 }
 
 // load and create the local file footer
 function localFooter(count: number) {
     let plural: string = count > 1 ? "s" : "";
-    let countDisplay: HTMLParagraphElement = <HTMLParagraphElement>document.getElementById("count-display");
+    let countDisplay: HTMLParagraphElement = <HTMLParagraphElement>document.getElementById("local-count-display");
     countDisplay.innerHTML = `Showing ${count} local PDF${plural}.`;
 }
 
@@ -216,33 +221,30 @@ function openTab(evt: any, tabName: string) {
     evt.currentTarget.classList.add("active");
 }
 
-async function getOption(name: string): Promise<any> {
-    return await chrome.storage.sync.get([name], async (result: any) => {
+async function getOption(name: string, callback: Function): Promise<any> {
+    return await chrome.storage.sync.get([name], (result: any) => {
         if (result) {
             console.log('getOption', result);
-            return result;
+            callback(result);
         }
     });
 }
 
-async function loadOptions() {
-    let defaultTab = await getOption("defaultTab");
-    console.log("setting", defaultTab);
-
-    if (defaultTab) {
-        console.log(defaultTab.defaultTab);
-
-        if (defaultTab === "online") {
-            onlineTabLink.click();
-        } else if (defaultTab === "local") {
-            localTabLink.click();
+function loadOptions() {
+    getOption('general.defaultTab', (result: any) => {
+        let defaultTab = result['general.defaultTab'];
+        if (defaultTab) {
+            if (defaultTab == "Online files") {
+                onlineTabLink.click();
+            } else if (defaultTab == "Local files") {
+                localTabLink.click();
+            } else {
+                localTabLink.click();
+            }
         } else {
             localTabLink.click();
         }
-    } else {
-        console.log("uh oh");
-        localTabLink.click();
-    }
+    });
 }
 
 loadOptions();
