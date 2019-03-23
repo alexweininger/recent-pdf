@@ -9,6 +9,7 @@
         "noEmitOnError": false,
         "types": [
             "chrome"
-        ]
+        ],
+        "alwaysStrict": true,
     }
 }
