@@ -13,8 +13,6 @@ if (onlineTabLink) {
     onlineTabLink.addEventListener("click", function(event: Event) {
         onlineFooter(onlinePdfCount);
         openTab(event, "online");
-        document.getElementById("online-count-display").style.display = '';
-        document.getElementById("local-count-display").style.display = 'gone';
     });
 } else {
     console.error("onlineTabLink is null");
@@ -25,8 +23,6 @@ if (localTabLink) {
     localTabLink.addEventListener("click", function(event: Event) {
         localFooter(localPdfCount);
         openTab(event, "local");
-        document.getElementById("online-count-display").style.display = 'gone';
-        document.getElementById("local-count-display").style.display = '';
     });
 } else {
     console.error("localTabLink is null");
@@ -101,7 +97,6 @@ function searchHistory() {
                     }
                 }
             });
-            onlineFooter(onlinePdfCount);
             searchDownloads();
             console.log(`${onlinePdfCount} online PDFs found.`);
         }
@@ -186,7 +181,6 @@ function searchDownloads() {
             });
 
             console.log(`[INFO] ${localPdfCount} local PDFs found.`);
-            localFooter(localPdfCount);
         }
     );
 }
@@ -194,14 +188,14 @@ function searchDownloads() {
 // load and create the online pdf footer
 function onlineFooter(count: number) {
     let plural: string = count > 1 ? "s" : "";
-    let countDisplay: HTMLParagraphElement = <HTMLParagraphElement>document.getElementById("online-count-display");
+    let countDisplay: HTMLParagraphElement = <HTMLParagraphElement>document.getElementById("count-display");
     countDisplay.innerHTML = `Showing ${count} online PDF${plural}.`;
 }
 
 // load and create the local file footer
 function localFooter(count: number) {
     let plural: string = count > 1 ? "s" : "";
-    let countDisplay: HTMLParagraphElement = <HTMLParagraphElement>document.getElementById("local-count-display");
+    let countDisplay: HTMLParagraphElement = <HTMLParagraphElement>document.getElementById("count-display");
     countDisplay.innerHTML = `Showing ${count} local PDF${plural}.`;
 }
 
@@ -236,10 +230,14 @@ function loadOptions() {
         if (defaultTab) {
             if (defaultTab == "Online files") {
                 onlineTabLink.click();
+                console.log('clicked online tab link');
+
             } else if (defaultTab == "Local files") {
                 localTabLink.click();
+                console.log('clicked local tab link');
             } else {
                 localTabLink.click();
+                console.log('loaded defaults');
             }
         } else {
             localTabLink.click();
