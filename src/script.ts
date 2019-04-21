@@ -5,14 +5,20 @@ let fileElement: HTMLUListElement = <HTMLUListElement>document.getElementById('f
 let onlineTabLink: HTMLButtonElement = <HTMLButtonElement>document.getElementById('online-tab-link');
 let localTabLink: HTMLButtonElement = <HTMLButtonElement>document.getElementById('local-tab-link');
 let settingsTabLink: HTMLButtonElement = <HTMLButtonElement>document.getElementById('settings-link');
+let currentTab: Tab;
 
+enum Tab {
+    Local = 'local',
+    Online = 'online'
+}
 // tab buttons
 
 if (onlineTabLink) {
     // event handlers for tab buttons
     onlineTabLink.addEventListener('click', function(event: Event) {
         onlineFooter(onlinePdfCount);
-        openTab(event, 'online');
+        openTab(event, Tab.Online);
+        currentTab = Tab.Online;
     });
 } else {
     console.error('onlineTabLink is null');
@@ -22,7 +28,8 @@ if (onlineTabLink) {
 if (localTabLink) {
     localTabLink.addEventListener('click', function(event: Event) {
         localFooter(localPdfCount);
-        openTab(event, 'local');
+        openTab(event, Tab.Local);
+        currentTab = Tab.Local;
     });
 } else {
     console.error('localTabLink is null');
@@ -34,6 +41,7 @@ settingsTabLink.addEventListener('click', function() {
 });
 
 searchHistory();
+searchDownloads();
 
 let onlinePdfCount: number = 0; // number of online pdf files
 /**
@@ -97,8 +105,10 @@ function searchHistory() {
                     }
                 }
             });
-            searchDownloads();
+            // searchDownloads();
             console.log(`${onlinePdfCount} online PDFs found.`);
+            console.log('hello');
+            updateFooter();
         }
     );
 }
@@ -181,8 +191,17 @@ function searchDownloads() {
             });
 
             console.log(`[INFO] ${localPdfCount} local PDFs found.`);
+            updateFooter();
         }
     );
+}
+
+function updateFooter() {
+    if (currentTab == Tab.Local) {
+        localFooter(localPdfCount);
+    } else {
+        onlineFooter(onlinePdfCount);
+    }
 }
 
 // load and create the online pdf footer
@@ -200,7 +219,7 @@ function localFooter(count: number) {
 }
 
 // function that handles switching between tabs
-function openTab(evt: any, tabName: string) {
+function openTab(evt: any, tab: Tab) {
     // Find active elements and remove active class from elements
     const activeElements: NodeListOf<Element> = <NodeListOf<Element>>document.querySelectorAll('.active');
     activeElements.forEach(function(elem: HTMLElement) {
@@ -208,11 +227,12 @@ function openTab(evt: any, tabName: string) {
     });
 
     // Add active class to tab and pressed button
-    const tab: HTMLElement = <HTMLElement>document.querySelector(`.tabcontent#${tabName}`);
-    if (tab) {
-        tab.classList.add('active');
+    const tabContent: HTMLElement = <HTMLElement>document.querySelector(`.tabcontent#${tab}`);
+    if (tabContent) {
+        tabContent.classList.add('active');
     }
     evt.currentTarget.classList.add('active');
+    currentTab = tab;
 }
 
 async function getOption(name: string, callback: Function): Promise<any> {
