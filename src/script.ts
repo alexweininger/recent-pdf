@@ -53,7 +53,7 @@ function searchHistory() {
             text: '.pdf', // search for .pdf
             maxResults: 10000
         },
-        function(data) {
+        function(data: chrome.history.HistoryItem[]) {
             data.forEach(function(page: chrome.history.HistoryItem) {
                 // for each result
                 if (page.url.endsWith('.pdf') || page.url.endsWith('.PDF')) {
@@ -105,7 +105,7 @@ function searchHistory() {
                     }
                 }
             });
-            // searchDownloads();
+
             console.log(`${onlinePdfCount} online PDFs found.`);
             console.log('hello');
             updateFooter();
@@ -119,15 +119,22 @@ let localPdfCount: number = 0; // number of local pdf files
  * searchDownloads() - searches downloads with chrome.downloads api for local pdf files
  */
 function searchDownloads() {
+
     chrome.downloads.search(
         {
-            limit: 1000,
-            orderBy: ['-startTime']
+            limit: 0,
+            orderBy: ['-startTime'],
+            filenameRegex: '^(.(.*\.pdf$))*$'
         },
         function(data: chrome.downloads.DownloadItem[]) {
+            if (data.length == 0) {
+                searchDownloads();
+                return;
+            }
+            console.log('found ' + data.length + ' local pdfs');
             data.forEach(function(file: chrome.downloads.DownloadItem, i: number) {
                 // for each result
-                // console.log('TCL: searchDownloads -> i', i);
+                console.log('TCL: searchDownloads -> i', i);
                 if (file.filename.endsWith('.pdf') || file.filename.endsWith('.PDF')) {
                     // check if file ends with .pdf or .PDF
                     if (localFiles.indexOf(file.filename) === -1 && localPdfCount < 30) {
