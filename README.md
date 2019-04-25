@@ -1,6 +1,6 @@
 [logo]: https://raw.githubusercontent.com/alexweininger/recent-pdf/dev/content/promotional/pr1400v2.png ""
 
-[screenshot]: https://raw.githubusercontent.com/alexweininger/recent-pdf/dev/content/screenshots/global-sc-v2.png ""
+[screenshot]: https://raw.githubusercontent.com/alexweininger/recent-pdf/master/content/promotional/image.png ""
 
 # ![error][logo]
 
@@ -9,6 +9,8 @@
 RecentPDF is a simple and helpful Chrome extension to make accessing PDF files quick and easy.
 
 **You can download and install RecentPDF from the Chrome webstore [here](https://chrome.google.com/webstore/detail/recent-pdf/ihjgdammecebcjinfmllgniaeneabkdk).**
+
+# ![error][screenshot]
 
 ## Features
 
