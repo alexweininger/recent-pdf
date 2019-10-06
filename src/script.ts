@@ -162,7 +162,7 @@ function searchDownloads() {
                         let title: HTMLParagraphElement = document.createElement('p');
                         title.classList.add('link-title');
                         title.classList.add('local-title');
-                        title.innerText = file.filename.substring(file.filename.lastIndexOf('\\') + 1, file.filename.length - 4);
+                        title.innerText = file.filename.substring(file.filename.lastIndexOf('/') + 1, file.filename.length - 4);
 
                         // create file url element
                         let linkUrl: HTMLParagraphElement = document.createElement('p');
