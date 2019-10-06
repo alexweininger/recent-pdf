@@ -73,7 +73,9 @@ function searchHistory() {
                         // make title element
                         let title: HTMLParagraphElement = document.createElement('p');
                         title.classList.add('link-title');
-                        title.innerText = decodeURI(page.url).substring(page.url.lastIndexOf('/') + 1, page.url.length - 4);
+                        title.classList.add('local-title');
+                        let URI = decodeURI(page.url);
+                        title.innerText = URI.substring(URI.lastIndexOf('/') + 1, page.url.length - 4);
 
                         // make url element
                         let linkUrl: HTMLParagraphElement = document.createElement('p');
