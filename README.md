@@ -32,14 +32,6 @@ RecentPDF is a simple and helpful Chrome extension to make accessing PDF files q
 
 More detailed instructions can be found in the Contributing section below.
 
-### Code style
-
-RecentPDF uses ESLint for Javascript style.
-
-## Built With
-
-- [vscode](https://code.visualstudio.com/)
-
 ## Contributing
 
 RecentPDF is a simple extension made with Javascript. If you know a little bit of Javascript you can most likely help develop this project.
@@ -57,6 +49,16 @@ To begin working on this project follow these steps.
 6. Once you've finished developing, push the repository.
 7. Make a pull request and explain what changes have been made.
 
+### Debugging
+
+If you're not doing anything really UI specific, then you can load the popup content in a normal browser window.
+
+1. find the ID: for the recent pdf extension in `chrome://chrome/extensions/`
+
+2. You can then load your popup in a regular window by `chrome-extension://id_of_your_application/index.html`
+
+You can also open up the Chrome Dev Tools window for the popup by right clicking and selecting inspect popup. Be careful when using this method since your breakpoints might not be hit since the popup runs scripts before the user clicks to open it. If this happens, reload the Chrome Dev Tools by pressing `Ctrl + R`.
+
 Please feel free to contact me with any comments, improvements, or if you would like to help me with this project or any others.
 
 
@@ -68,6 +70,11 @@ Please feel free to contact me with any comments, improvements, or if you would 
 <!-- BUG -->
 <!-- See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project. -->
 
+## Built Proudly with
+
+- [vscode](https://code.visualstudio.com/)
+- [TypeScript](https://www.typescriptlang.org/index.html)
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
@@ -77,3 +84,4 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 - Chrome API docs
 - All the professors who upload so many PDF files
 - vscode
+- All Hacktoberfest contributors!
