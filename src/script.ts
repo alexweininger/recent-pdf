@@ -132,7 +132,9 @@ function searchDownloads() {
                 searchDownloads();
                 return;
             }
-            console.log(data.length + ' local PDFs found.');
+            console.log('found ' + data.length + ' local pdfs');
+            let winos = navigator.appVersion.indexOf('Win');
+            let slashType = winos !== -1 ? '\\' : '/';
             data.forEach(function(file: chrome.downloads.DownloadItem, i: number) {
                 // for each result
                 console.log('TCL: searchDownloads -> i', i);
@@ -163,7 +165,7 @@ function searchDownloads() {
                         let title: HTMLParagraphElement = document.createElement('p');
                         title.classList.add('link-title');
                         title.classList.add('local-title');
-                        title.innerText = file.filename.substring(file.filename.lastIndexOf('\\') + 1, file.filename.length - 4);
+                        title.innerText = file.filename.substring(file.filename.lastIndexOf(slashType) + 1, file.filename.length - 4);
 
                         // create file url element
                         let linkUrl: HTMLParagraphElement = document.createElement('p');
