@@ -1,5 +1,5 @@
 /// <reference path='../node_modules/@types/chrome/index.d.ts'/>
-
+/// <reference path='./web-ext/index.d.ts'/>
 let onlineList: HTMLUListElement = <HTMLUListElement>document.getElementById('link-list'); // online file list
 let fileElement: HTMLUListElement = <HTMLUListElement>document.getElementById('file-list'); // offline (local) file list
 let onlineTabLink: HTMLButtonElement = <HTMLButtonElement>document.getElementById('online-tab-link');
@@ -11,7 +11,10 @@ enum Tab {
     Local = 'local',
     Online = 'online'
 }
-// tab buttons
+
+window.browser = (function () {
+    return window.browser || window.chrome;
+})();
 
 if (onlineTabLink) {
     // event handlers for tab buttons
@@ -37,7 +40,7 @@ if (localTabLink) {
 
 // settings click listener
 settingsTabLink.addEventListener('click', function() {
-    chrome.runtime.openOptionsPage();
+    window.browser.runtime.openOptionsPage();
 });
 
 searchHistory();
@@ -48,7 +51,7 @@ let onlinePdfCount: number = 0; // number of online pdf files
  * searchHistory() - searches history using the chrome.history api for online pdf files
  */
 function searchHistory() {
-    chrome.history.search(
+    window.browser.history.search(
         {
             text: '.pdf', // search for .pdf
             maxResults: 10000
@@ -121,7 +124,7 @@ let localPdfCount: number = 0; // number of local pdf files
  */
 function searchDownloads() {
 
-    chrome.downloads.search(
+    window.browser.downloads.search(
         {
             limit: 0,
             orderBy: ['-startTime'],
@@ -155,7 +158,7 @@ function searchDownloads() {
                         // create icon element
                         let icon: HTMLImageElement = document.createElement('img');
                         icon.classList.add('link-thumb');
-                        chrome.downloads.getFileIcon(file.id, { size: 16 }, iconUrl => {
+                        window.browser.downloads.getFileIcon(file.id, { size: 16 }, iconUrl => {
                             icon.src = iconUrl;
                         });
 
@@ -177,7 +180,7 @@ function searchDownloads() {
 
                         // on click listener
                         leftDiv.addEventListener('click', function() {
-                            chrome.downloads.open(file.id);
+                            window.browser.downloads.open(file.id);
                         });
 
                         // open in file explorer button
@@ -185,7 +188,7 @@ function searchDownloads() {
                         more.id = 'more_icon';
                         more.src = '../../assets/More.png';
                         more.addEventListener('click', function() {
-                            chrome.downloads.show(file.id);
+                            window.browser.downloads.show(file.id);
                         });
 
                         rightDiv.appendChild(more);
@@ -244,7 +247,7 @@ function openTab(evt: any, tab: Tab) {
 }
 
 async function getOption(name: string, callback: Function): Promise<any> {
-    return await chrome.storage.sync.get([name], (result: any) => {
+    return await window.browser.storage.sync.get([name], (result: any) => {
         if (result) {
             console.log('getOption', result);
             callback(result);
