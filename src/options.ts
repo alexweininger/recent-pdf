@@ -1,11 +1,17 @@
 /// <reference path='../node_modules/@types/chrome/index.d.ts'/>
 "../node_modules/@types/chrome/index.d.ts";
+/// <reference path='./web-ext/index.d.ts'/>
+
+window.browser = (function () {
+    return window.browser || window.chrome;
+})();
+
 // Saves options to chrome.storage
 function save_options(): any {
 	var defaultTab: HTMLCollectionOf<HTMLOptionElement> = (<HTMLSelectElement> document.getElementById("default-tab")).selectedOptions;
 	console.log(defaultTab[0].value);
 
-    chrome.storage.sync.set(
+    window.browser.storage.sync.set(
         {
             defaultTab: defaultTab[0].value
         },
@@ -21,7 +27,7 @@ function save_options(): any {
 // stored in chrome.storage.
 function restore_options() {
     // Use default value color = 'red' and likesColor = true.
-    chrome.storage.sync.get(
+    window.browser.storage.sync.get(
         {
             defaultTab: "local"
         },
