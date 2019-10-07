@@ -107,7 +107,6 @@ function searchHistory() {
             });
 
             console.log(`${onlinePdfCount} online PDFs found.`);
-            console.log('hello');
             updateFooter();
         }
     );
@@ -131,7 +130,7 @@ function searchDownloads() {
                 searchDownloads();
                 return;
             }
-            console.log('found ' + data.length + ' local pdfs');
+            console.log(data.length + ' local PDFs found.');
             data.forEach(function(file: chrome.downloads.DownloadItem, i: number) {
                 // for each result
                 console.log('TCL: searchDownloads -> i', i);
@@ -213,14 +212,14 @@ function updateFooter() {
 
 // load and create the online pdf footer
 function onlineFooter(count: number) {
-    let plural: string = count > 1 ? 's' : '';
+    let plural: string = count != 1 ? 's' : '';
     let countDisplay: HTMLParagraphElement = <HTMLParagraphElement>document.getElementById('count-display');
     countDisplay.innerHTML = `Showing ${count} online PDF${plural}.`;
 }
 
 // load and create the local file footer
 function localFooter(count: number) {
-    let plural: string = count > 1 ? 's' : '';
+    let plural: string = count != 1 ? 's' : '';
     let countDisplay: HTMLParagraphElement = <HTMLParagraphElement>document.getElementById('count-display');
     countDisplay.innerHTML = `Showing ${count} local PDF${plural}.`;
 }
