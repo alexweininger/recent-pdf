@@ -8,21 +8,21 @@
 
 RecentPDF is a simple and helpful Chrome extension to make accessing PDF files quick and easy.
 
-**You can download and install RecentPDF from the Chrome webstore [here](https://chrome.google.com/webstore/detail/recent-pdf/ihjgdammecebcjinfmllgniaeneabkdk).**
+**You can download and install RecentPDF from the Chrome Webstore [here](https://chrome.google.com/webstore/detail/recent-pdf/ihjgdammecebcjinfmllgniaeneabkdk).**
 
 # ![error][screenshot]
 
 ## Features
 
-- Pop up displaying recently view or downloaded **local** and **online** PDF files.
+- Pop up message displaying recently view or downloaded **local** and **online** PDF files.
 - Ability to open local PDF file in file explorer.
 - Open PDF file in PDF viewer of choice.
 
 ## Getting Started
 
-1. Fork or clone the this repository.
+1. Fork or clone this repository.
 
-2. open Chrome, and then go to your extensions page. [chrome://extensions/](chrome://extensions/)
+2. Open Chrome, and then go to your extensions page. [chrome://extensions/](chrome://extensions/)
 
 3. In the top right, make sure 'Developer Mode' is enabled.
 
@@ -53,7 +53,7 @@ To begin working on this project follow these steps.
 
 If you're not doing anything really UI specific, then you can load the popup content in a normal browser window.
 
-1. find the ID: for the recent pdf extension in `chrome://chrome/extensions/`
+1. Find the ID: for the recent pdf extension in `chrome://chrome/extensions/`
 
 2. You can then load your popup in a regular window by `chrome-extension://id_of_your_application/index.html`
 
@@ -72,7 +72,7 @@ Please feel free to contact me with any comments, improvements, or if you would 
 
 ## Built Proudly with
 
-- [vscode](https://code.visualstudio.com/)
+- [VSCode](https://code.visualstudio.com/)
 - [TypeScript](https://www.typescriptlang.org/index.html)
 
 ## License
@@ -82,6 +82,6 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 ## Acknowledgments
 
 - Chrome API docs
-- All the professors who upload so many PDF files
-- vscode
+- All the professors who upload so many PDF files :grin:
+- VSCode
 - All Hacktoberfest contributors!
