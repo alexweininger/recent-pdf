@@ -119,6 +119,8 @@ function searchHistory() {
 
 let localFiles: any[] = [];
 let localPdfCount: number = 0; // number of local pdf files
+const maxFilesDefaultValue: number = 30; // default number of files to show in case of missing/invalid setting
+
 /**
  * searchDownloads() - searches downloads with chrome.downloads api for local pdf files
  */
@@ -130,11 +132,12 @@ function searchDownloads() {
             orderBy: ['-startTime'],
             filenameRegex: '^(.(.*\.pdf$))*$'
         },
-        function(data: chrome.downloads.DownloadItem[]) {
+        async function(data: chrome.downloads.DownloadItem[]) {
             if (data.length == 0) {
                 searchDownloads();
                 return;
             }
+            const maxFilesToShow = await getMaxFilesValue()
             console.log('found ' + data.length + ' local pdfs');
             let winos = navigator.appVersion.indexOf('Win');
             let slashType = winos !== -1 ? '\\' : '/';
@@ -143,8 +146,8 @@ function searchDownloads() {
                 console.log('TCL: searchDownloads -> i', i);
                 if (file.filename.endsWith('.pdf') || file.filename.endsWith('.PDF')) {
                     // check if file ends with .pdf or .PDF
-                    if (localFiles.indexOf(file.filename) === -1 && localPdfCount < 30) {
-                        // check for duplicated and max of 30 files
+                    if (localFiles.indexOf(file.filename) === -1 && localPdfCount < maxFilesToShow) {
+                        // check for duplicated and maxFilesToShow value
                         localFiles.push(file.filename);
                         localPdfCount++;
 
@@ -248,34 +251,45 @@ function openTab(evt: any, tab: Tab) {
     currentTab = tab;
 }
 
-async function getOption(name: string, callback: Function): Promise<any> {
-    return await window.browser.storage.sync.get([name], (result: any) => {
+async function getOption(name: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+        window.browser.storage.sync.get(name, (result: any) => {
         if (result) {
             console.log('getOption', result);
-            callback(result);
+            resolve(result);
         }
-    });
+        reject(`Error in loading option ${name}`)
+    })
+});
 }
 
-function loadOptions() {
-    getOption('general.defaultTab', (result: any) => {
-        let defaultTab = result['general.defaultTab'];
-        if (defaultTab) {
-            if (defaultTab == 'Online files') {
-                onlineTabLink.click();
-                console.log('clicked online tab link');
+async function getMaxFilesValue() {
+    const result = await getOption('general.maxFilesToShow')
+    let maxFilesValue = result['general.maxFilesToShow'];
+    if (maxFilesValue && Number.isInteger(parseInt(maxFilesValue))) {
+        return parseInt(maxFilesValue)
+    }
+    return maxFilesDefaultValue
+}
 
-            } else if (defaultTab == 'Local files') {
-                localTabLink.click();
-                console.log('clicked local tab link');
-            } else {
-                localTabLink.click();
-                console.log('loaded defaults');
-            }
+async function loadOptions() {
+    let result = await getOption('general.defaultTab')
+    let defaultTab = result['general.defaultTab'];
+    if (defaultTab) {
+        if (defaultTab == 'Online files') {
+            onlineTabLink.click();
+            console.log('clicked online tab link');
+
+        } else if (defaultTab == 'Local files') {
+            localTabLink.click();
+            console.log('clicked local tab link');
         } else {
             localTabLink.click();
+            console.log('loaded defaults');
         }
-    });
+    } else {
+        localTabLink.click();
+    }
 }
 
 loadOptions();
