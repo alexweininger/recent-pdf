@@ -10,6 +10,8 @@ chrome.options.opts.about = `
   </p>
 `;
 
+const maxFilesToShowLimit = 1000
+
 chrome.options.addTab('General', [
   {
     name: 'defaultTab',
@@ -18,5 +20,20 @@ chrome.options.addTab('General', [
     options: [
       'Online files', 'Local files'
     ]
+  },
+  {
+    name: 'maxFilesToShow',
+    type: 'text',
+    desc: 'Maximum number of files to display',
+    default: 30,
+    validate: function (value) {
+      try {
+        const valueInt = parseInt(value)
+        const isValid = Number.isInteger(valueInt) && valueInt > 0 && valueInt <= maxFilesToShowLimit
+        return isValid
+      } catch (error) {
+        console.log(`Error parsing input value: ${error}`)
+      }
+    }
   }
 ]);
