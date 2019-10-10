@@ -1,29 +1,37 @@
 {
-  "name": "recent-pdf",
-  "version": "1.0.0",
-  "description": "A Chrome extension.",
-  "main": "index.js",
-  "scripts": {
-    "watch": "webpack --config webpack/webpack.dev.js --watch",
-    "build": "webpack --config webpack/webpack.prod.js",
-    "update-contrib": "weallcontribute -o . && git add CONTRIBUTING.md && git commit -m 'docs(contributing): updated CONTRIBUTING.md'"
-  },
-  "author": "Alex Weininger",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/alexweininger/recent-pdfs.git"
-  },
-  "devDependencies": {
-    "@types/chrome": "0.0.78",
-    "ts-loader": "~5.0.0",
-    "typescript": "~3.0.3",
-    "weallcontribute": "^1.0.8",
-    "webpack": "~4.17.2",
-    "webpack-cli": "~3.1.0",
-    "webpack-merge": "~4.1.4"
-  },
-  "dependencies": {
-    "chrome-options": "^1.0.0"
-  }
+   "name": "recent-pdf",
+   "version": "1.0.0",
+   "description": "A Chrome extension.",
+   "main": "index.js",
+   "scripts": {
+      "watch": "webpack --config webpack/webpack.dev.js --watch",
+      "build": "webpack --config webpack/webpack.prod.js",
+      "update-contrib": "weallcontribute -o . && git add CONTRIBUTING.md && git commit -m 'docs(contributing): updated CONTRIBUTING.md'"
+   },
+   "husky": {
+      "hooks": {
+         "pre-commit": "pretty-quick --staged"
+      }
+   },
+   "author": "Alex Weininger",
+   "license": "MIT",
+   "repository": {
+      "type": "git",
+      "url": "git+https://github.com/alexweininger/recent-pdfs.git"
+   },
+   "devDependencies": {
+      "@types/chrome": "0.0.78",
+      "husky": "^3.0.8",
+      "prettier": "^1.18.2",
+      "pretty-quick": "^1.11.1",
+      "ts-loader": "~5.0.0",
+      "typescript": "~3.0.3",
+      "weallcontribute": "^1.0.8",
+      "webpack": "~4.17.2",
+      "webpack-cli": "~3.1.0",
+      "webpack-merge": "~4.1.4"
+   },
+   "dependencies": {
+      "chrome-options": "^1.0.0"
+   }
 }
