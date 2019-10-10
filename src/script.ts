@@ -258,18 +258,18 @@ async function getOption(name: string): Promise<any> {
             console.log('getOption', result);
             resolve(result);
         }
-        reject(`Error in loading option ${name}`)
+        reject(`Error in loading option ${name}`);
     })
 });
 }
 
 async function getMaxFilesValue() {
-    const result = await getOption('general.maxFilesToShow')
+    const result = await getOption('general.maxFilesToShow');
     let maxFilesValue = result['general.maxFilesToShow'];
     if (maxFilesValue && Number.isInteger(parseInt(maxFilesValue))) {
-        return parseInt(maxFilesValue)
+        return parseInt(maxFilesValue);
     }
-    return maxFilesDefaultValue
+    return maxFilesDefaultValue;
 }
 
 async function loadOptions() {
