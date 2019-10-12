@@ -5,6 +5,7 @@ let fileElement: HTMLUListElement = <HTMLUListElement>document.getElementById('f
 let onlineTabLink: HTMLButtonElement = <HTMLButtonElement>document.getElementById('online-tab-link');
 let localTabLink: HTMLButtonElement = <HTMLButtonElement>document.getElementById('local-tab-link');
 let settingsTabLink: HTMLButtonElement = <HTMLButtonElement>document.getElementById('settings-link');
+var head = document.getElementsByTagName('HEAD')[0];
 let currentTab: Tab;
 
 enum Tab {
@@ -260,6 +261,7 @@ async function getOption(name: string, callback: Function): Promise<any> {
 function loadOptions() {
     getOption('general.defaultTab', (result: any) => {
         let defaultTab = result['general.defaultTab'];
+        console.log("defaultTab = " + defaultTab);
         if (defaultTab) {
             if (defaultTab == 'Online files') {
                 onlineTabLink.click();
@@ -275,6 +277,30 @@ function loadOptions() {
         } else {
             localTabLink.click();
         }
+    });
+
+    getOption('general.colorTheme', (result: any) => {
+        let colorTheme = result['general.colorTheme'];
+        console.log("colorTheme = " + colorTheme);
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';  
+        link.type = 'text/css'; 
+        if(colorTheme)
+        {
+            if(colorTheme == 'Light')
+            {
+                link.href = 'style.css'; 
+            }else if(colorTheme == 'Dark')
+            {
+                link.href = 'style_dark_mode.css';
+
+            }else{
+                link.href = 'style.css'; 
+            }
+        }else{
+            link.href = 'style.css'; 
+        }
+        head.appendChild(link);
     });
 }
 

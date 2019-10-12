@@ -18,5 +18,11 @@ chrome.options.addTab('General', [
     options: [
       'Online files', 'Local files'
     ]
+  },
+  {
+    name: 'colorTheme',
+    type: 'select',
+    desc: 'Which color theme you would like to use',
+    options: ['Light', 'Dark']
   }
 ]);

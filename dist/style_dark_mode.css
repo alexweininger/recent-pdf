@@ -1,0 +1,234 @@
+html {
+	height: 436px;
+	margin: 0;
+	padding: 0 0 2px 0;
+	max-width: 400px;
+	max-height: 436px;
+	overflow: hidden;
+}
+
+body {
+	margin: 0;
+	font-family: sans-serif;
+	color: white;
+	width: 100%;
+	max-height: 100%;
+	overflow: hidden;
+	background-color: #333333;
+}
+
+#count-display {
+	padding-top: 0;
+	height: inherit;
+	margin: 0 0 0 3px;
+}
+
+#more_icon {
+	width: 32px;
+	height: 32px;
+	margin-top: 8px;
+}
+
+#more_icon:hover {
+	filter: brightness(75%);
+}
+
+/* Tab header */
+
+.tab-header {
+	background-color: #191919; /* non-active */
+	border-bottom: 1px solid #333333;
+	display: grid;
+	grid-template-columns: 50% 50%;
+	height: 32px;
+	margin: 0;
+	overflow: hidden;
+	width: 400px;
+}
+
+.tab-header button {
+	background-color: inherit;
+	color: white;
+	border: none;
+	cursor: pointer;
+	font-size: 17px;
+	height: 100%;
+	outline: none;
+	padding: 4px 8px;
+	transition: 0.3s;
+}
+
+.tab-header button:hover {
+	background-color: #ddd;
+}
+
+.tab-header button.active {
+	background-color: #333333;
+}
+
+/* List item sections */
+
+.list-div {
+	float: left;
+	margin: 0;
+	overflow: hidden;
+	padding: 0;
+}
+
+div.right {
+	width: 32px;
+	float: right;
+}
+
+div.left {
+	padding: 0 0 0 5px;
+	width: 360px;
+}
+
+.tabcontent {
+	padding: 0;
+	width: 100%;
+	resize: none;
+	max-height: 384px;
+	/* Increase/decrease this value for cross-browser compatibility */
+	box-sizing: content-box;
+	/* So the width will be 100% + 17px */
+	overflow-x: hidden;
+	display: inline-block;
+	font-size: 14px;
+	height: auto;
+	min-height: 384px;
+}
+
+.tabcontent {
+	display: none;
+}
+
+.tabcontent.active {
+	display: block;
+}
+
+.tabcontent::-webkit-scrollbar {
+	width: 6px;
+}
+
+.tabcontent::-webkit-scrollbar-track {
+	webkit-box-shadow: inset 0 0 4px rgba(0,0,0,0.3);
+}
+
+.tabcontent::-webkit-scrollbar-thumb {
+  background-color: #828282;
+  outline: 1px solid #363336;
+}
+
+
+#link-list,
+#file-list {
+	display: inline-block;
+	font-size: 14px;
+	height: auto;
+	list-style-type: none;
+	margin: 0;
+	min-width: 180px;
+	padding: 0;
+	width: 100%;
+}
+
+.list-item {
+	cursor: pointer;
+	display: inline-block;
+	height: auto;
+	margin: 0;
+	padding: 3px 0 3px 0;
+	width: 400px;
+	border-bottom: 1px solid #363636;
+}
+
+.list-item:hover {
+	background: #363636;
+}
+
+.link-thumb {
+	margin: 4px 6px 0 4px;
+	width: 20px;
+	float: left;
+}
+
+.link-title {
+	color: white;
+	display: inline;
+	font: 20px/1.5 sans-serif;
+	line-height: inherit;
+	margin: 0;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.local-title {
+	display: block;
+}
+
+.link-url {
+	direction: rtl;
+	display: inline-block;
+	font-size: 14px;
+	line-height: 1.3;
+	margin: 0;
+	padding: 0;
+	text-decoration: none;
+	word-wrap: break-word;
+	width: 360px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+li {
+	display: inline-block;
+	font: 15px/1.5 sans-serif;
+	margin: 0 10px 0 10px;
+	padding: 0 10px 0 10px;
+	width: 368px;
+	word-wrap: break-word;
+}
+
+.footer {
+	font-size: 14px;
+	width: 100%;
+	height: 20px;
+	display: grid;
+	grid-template-columns: 94% 6%;
+	background: #333333;
+}
+
+.footer div {
+	height: 16px;
+	margin: 0;
+	padding: 2px 0;
+}
+
+#settings-link {
+	height: 16px;
+	width: 16px;
+	background-color: inherit;
+	border: none;
+	cursor: pointer;
+	outline: none;
+	padding: 0;
+}
+
+#settings-icon {
+	width: 16px;
+	height: 16px;
+}
+
+#online-count-display {
+	height: inherit;
+	margin: 0 0 0 3px;
+}
+
+#local-count-display {
+	height: inherit;
+	margin: 0 0 0 3px;
+}
