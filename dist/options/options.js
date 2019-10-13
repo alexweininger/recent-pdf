@@ -20,9 +20,24 @@ chrome.options.addTab('General', [
     ]
   },
   {
+    name: 'maxFilesToShow',
+    type: 'text',
+    desc: 'Maximum number of files to display',
+    default: 30,
+    validate: function (value) {
+      try {
+        const valueInt = parseInt(value)
+        const isValid = Number.isInteger(valueInt) && valueInt > 0 && valueInt <= maxFilesToShowLimit
+        return isValid
+      } catch (error) {
+        console.log(`Error parsing input value: ${error}`)
+      }
+    }
+  },
+  {
     name: 'colorTheme',
     type: 'select',
     desc: 'Which color theme you would like to use',
     options: ['Light', 'Dark']
-  }
+  },
 ]);
