@@ -10,6 +10,8 @@ chrome.options.opts.about = `
   </p>
 `;
 
+const maxFilesToShowLimit = 1000
+
 chrome.options.addTab('General', [
   {
     name: 'defaultTab',
@@ -40,4 +42,5 @@ chrome.options.addTab('General', [
     desc: 'Which color theme you would like to use',
     options: ['Light', 'Dark']
   },
+  }
 ]);
