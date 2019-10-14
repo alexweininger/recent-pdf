@@ -64,23 +64,29 @@ function searchHistory() {
         async function(data: chrome.history.HistoryItem[]) {
             const groupingOption = await getGroupingOption();
             if (groupingOption === GroupingOption.Domain) {
+                // Map for storing arrays of grouped history items
                 const domainMap: Map<string, Array<chrome.history.HistoryItem>> = new Map();
                 data.forEach(page => {
+                    // Early return if not an online PDF
                     if (!isOnlinePDF(page.url)) {
                         return;
                     }
                     onlinePdfCount++;
 
+                    // Get hostname from page URL
                     const [, , domain] = page.url.split('/');
                     let listItem: HTMLLIElement = document.createElement('li');
                     listItem.classList.add('domain-list-item');
 
+                    // Add new page if domain exists in domainMap
                     if (domainMap.has(domain)) {
                         domainMap.get(domain).push(page);
                     } else {
+                        // Create new array and store in domainMap
                         const pageArray = [page];
                         domainMap.set(domain, pageArray);
                         let listElement: HTMLUListElement;
+                        // Render new folder to DOM tree
                         const folder = createFolder(domain, () => {
                             // Click listener on folder header
                             if (listElement) {
@@ -96,6 +102,7 @@ function searchHistory() {
                     }
                 });
             } else {
+                // Populate onlineList with all available PDFs
                 onlinePdfCount = populateFileList(data, onlineList);
             }
             
@@ -263,10 +270,11 @@ async function getMaxFilesValue() {
 async function getGroupingOption(): Promise<GroupingOption> {
     try {
         const result = await getOption('general.fileGrouping');
+        // 'No Grouping' is the default option
         const groupingOption = result['general.fileGrouping'] || GroupingOption.None;
         return groupingOption;
     } catch(err) {
-        // Fallback to no grouping if could not get selected option
+        // Fallback to 'No Grouping' if could not get selected option
         return GroupingOption.None;
     }
 }

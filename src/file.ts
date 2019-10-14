@@ -1,5 +1,9 @@
 import { isOnlinePDF } from "./utils";
 
+/**
+ * Create new file list and populate it with data
+ * @param pages Pages with data
+ */
 export function createFileList(pages: Array<chrome.history.HistoryItem>): HTMLUListElement {
   const list = document.createElement('ul');
   list.classList.add('grouped-file-list');
@@ -7,18 +11,23 @@ export function createFileList(pages: Array<chrome.history.HistoryItem>): HTMLUL
   return list;
 }
 
+/**
+ * Populate list with online PDFs
+ * @param pages Pages with data
+ * @param parentList List to populate
+ * @returns Number of appended files
+ */
 export function populateFileList(pages: Array<chrome.history.HistoryItem>, parentList: HTMLUListElement): number {
   let onlinePdfCount = 0;
   pages.forEach(page => {
+    // Early return if not an online PDF
     if (!isOnlinePDF(page.url)) {
       return;
     }
     onlinePdfCount++;
-    // for each result
-    // check if page is a .pdf
+    // New list item
     let listItem: HTMLLIElement = document.createElement('li');
     listItem.classList.add('list-item');
-    // onlinePdfCount++;
 
     let leftDiv: HTMLDivElement = document.createElement('div');
     let rightDiv: HTMLDivElement = document.createElement('div');
