@@ -35,6 +35,14 @@ chrome.options.addTab('General', [
     }
   },
   {
+    name: 'fileGrouping',
+    type: 'select',
+    desc: 'Select how PDF files are grouped',
+    options: [
+      'No grouping', 'Group by domain'
+    ]
+  },
+  {
     name: 'colorTheme',
     type: 'select',
     desc: 'Which color theme you would like to use',

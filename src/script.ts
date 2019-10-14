@@ -1,5 +1,10 @@
 /// <reference path='../node_modules/@types/chrome/index.d.ts'/>
 /// <reference path='./web-ext/index.d.ts'/>
+import { createFileList, populateFileList } from './file';
+import { createFolder } from './grouping';
+import { GroupingOption } from './types';
+import { isOnlinePDF } from './utils';
+
 let onlineList: HTMLUListElement = <HTMLUListElement>document.getElementById('link-list'); // online file list
 let fileElement: HTMLUListElement = <HTMLUListElement>document.getElementById('file-list'); // offline (local) file list
 let onlineTabLink: HTMLButtonElement = <HTMLButtonElement>document.getElementById('online-tab-link');
@@ -57,61 +62,51 @@ function searchHistory() {
             text: '.pdf', // search for .pdf
             maxResults: 10000
         },
-        function(data: chrome.history.HistoryItem[]) {
-            data.forEach(function(page: chrome.history.HistoryItem) {
-                // for each result
-                if (page.url.endsWith('.pdf') || page.url.endsWith('.PDF')) {
-                    // check if page is a .pdf
+        async function(data: chrome.history.HistoryItem[]) {
+            const groupingOption = await getGroupingOption();
+            if (groupingOption === GroupingOption.Domain) {
+                // Map for storing arrays of grouped history items
+                const domainMap: Map<string, Array<chrome.history.HistoryItem>> = new Map();
+                data.forEach(page => {
+                    // Early return if not an online PDF
+                    if (!isOnlinePDF(page.url)) {
+                        return;
+                    }
+                    onlinePdfCount++;
+
+                    // Get hostname from page URL
+                    const [, , domain] = page.url.split('/');
                     let listItem: HTMLLIElement = document.createElement('li');
-                    listItem.classList.add('list-item');
+                    listItem.classList.add('domain-list-item');
 
-                    if (!page.url.startsWith('file:')) {
-                        // if not local pdf
-                        onlinePdfCount++;
-
-                        let leftDiv: HTMLDivElement = document.createElement('div');
-                        let rightDiv: HTMLDivElement = document.createElement('div');
-                        leftDiv.classList.add('list-div', 'left');
-                        rightDiv.classList.add('list-div', 'right');
-
-                        // make title element
-                        let title: HTMLParagraphElement = document.createElement('p');
-                        title.classList.add('link-title');
-                        title.classList.add('local-title');
-                        let URI = decodeURI(page.url);
-                        title.innerText = URI.substring(URI.lastIndexOf('/') + 1, page.url.length - 4);
-
-                        // make url element
-                        let linkUrl: HTMLParagraphElement = document.createElement('p');
-                        linkUrl.classList.add('link-url');
-                        linkUrl.innerHTML = decodeURI(page.url)
-                            .substring(0, 50)
-                            .replace(' ', '');
-
-                        // make icon element
-                        let icon: HTMLImageElement = document.createElement('img');
-                        icon.classList.add('link-thumb');
-                        icon.src = `chrome://favicon/${page.url}`;
-
-                        // append elements to left div
-                        leftDiv.appendChild(icon);
-                        leftDiv.appendChild(title);
-                        leftDiv.appendChild(linkUrl);
-
-                        // on click listener
-                        leftDiv.addEventListener('click', function() {
-                            window.open(page.url);
+                    // Add new page if domain exists in domainMap
+                    if (domainMap.has(domain)) {
+                        domainMap.get(domain).push(page);
+                    } else {
+                        // Create new array and store in domainMap
+                        const pageArray = [page];
+                        domainMap.set(domain, pageArray);
+                        let listElement: HTMLUListElement;
+                        // Render new folder to DOM tree
+                        const folder = createFolder(domain, () => {
+                            // Click listener on folder header
+                            if (listElement) {
+                                folder.removeChild(listElement);
+                                listElement = null;
+                            } else {
+                                listElement = createFileList(pageArray);
+                                folder.appendChild(listElement);
+                            }
                         });
-
-                        // append to list item
-                        listItem.appendChild(leftDiv);
-                        listItem.appendChild(rightDiv);
-                        // append list item to online list
+                        listItem.appendChild(folder);
                         onlineList.appendChild(listItem);
                     }
-                }
-            });
-
+                });
+            } else {
+                // Populate onlineList with all available PDFs
+                onlinePdfCount = populateFileList(data, onlineList);
+            }
+            
             console.log(`${onlinePdfCount} online PDFs found.`);
             updateFooter();
         }
@@ -271,6 +266,18 @@ async function getMaxFilesValue() {
         return parseInt(maxFilesValue);
     }
     return maxFilesDefaultValue;
+}
+
+async function getGroupingOption(): Promise<GroupingOption> {
+    try {
+        const result = await getOption('general.fileGrouping');
+        // 'No Grouping' is the default option
+        const groupingOption = result['general.fileGrouping'] || GroupingOption.None;
+        return groupingOption;
+    } catch(err) {
+        // Fallback to 'No Grouping' if could not get selected option
+        return GroupingOption.None;
+    }
 }
 
 async function loadOptions() {
