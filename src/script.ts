@@ -10,6 +10,7 @@ let fileElement: HTMLUListElement = <HTMLUListElement>document.getElementById('f
 let onlineTabLink: HTMLButtonElement = <HTMLButtonElement>document.getElementById('online-tab-link');
 let localTabLink: HTMLButtonElement = <HTMLButtonElement>document.getElementById('local-tab-link');
 let settingsTabLink: HTMLButtonElement = <HTMLButtonElement>document.getElementById('settings-link');
+var head = document.getElementsByTagName('HEAD')[0];
 let currentTab: Tab;
 
 enum Tab {
@@ -281,6 +282,7 @@ async function getGroupingOption(): Promise<GroupingOption> {
 
 async function loadOptions() {
     let result = await getOption('general.defaultTab')
+    let result2 = await getOption('general.colorTheme')
     let defaultTab = result['general.defaultTab'];
     if (defaultTab) {
         if (defaultTab == 'Online files') {
@@ -297,6 +299,25 @@ async function loadOptions() {
     } else {
         localTabLink.click();
     }
+    let colorTheme = result2['general.colorTheme'];
+    var link = document.createElement('link');
+    link.rel = 'stylesheet';  
+    link.type = 'text/css';
+    if(colorTheme)
+    {
+        if(colorTheme == 'Light')
+        {
+            link.href = 'style.css'; 
+        }else if(colorTheme == 'Dark')
+        {
+            link.href = 'style_dark_mode.css';
+        }else{
+            link.href = 'style.css'; 
+        }
+        }else{
+            link.href = 'style.css'; 
+        }
+        head.appendChild(link);
 }
 
 loadOptions();
