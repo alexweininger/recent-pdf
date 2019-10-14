@@ -2,6 +2,7 @@ import { isOnlinePDF } from "./utils";
 
 export function createFileList(pages: Array<chrome.history.HistoryItem>): HTMLUListElement {
   const list = document.createElement('ul');
+  list.classList.add('grouped-file-list');
   populateFileList(pages, list);
   return list;
 }

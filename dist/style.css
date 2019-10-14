@@ -232,10 +232,26 @@ li {
 }
 
 /* Domain grouping section */
+.domain-list-item {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	border-bottom: 1px solid #ddd;
+}
+
+.domain-list-item:last-child {
+	border-bottom: none;
+}
+
 .folder-info {
 	display: flex;
 	align-items: center;
-	padding: 8px 4px;
+	padding: 8px;
+	cursor: pointer;
+}
+
+.folder-info:hover {
+	background: #eee;
 }
 
 .folder-icon {
@@ -246,4 +262,8 @@ li {
 
 .folder-title {
 	margin: 0;
+}
+
+.grouped-file-list {
+	padding-left: 24px;
 }

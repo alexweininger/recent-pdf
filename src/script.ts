@@ -73,7 +73,7 @@ function searchHistory() {
 
                     const [, , domain] = page.url.split('/');
                     let listItem: HTMLLIElement = document.createElement('li');
-                    listItem.classList.add('list-item');
+                    listItem.classList.add('domain-list-item');
 
                     if (domainMap.has(domain)) {
                         domainMap.get(domain).push(page);
