@@ -35,5 +35,13 @@ chrome.options.addTab('General', [
         console.log(`Error parsing input value: ${error}`)
       }
     }
+  },
+  {
+    name: 'fileGrouping',
+    type: 'select',
+    desc: 'Select how PDF files are grouped',
+    options: [
+      'No grouping', 'Group by domain'
+    ]
   }
 ]);

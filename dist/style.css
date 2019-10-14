@@ -230,3 +230,20 @@ li {
 	height: inherit;
 	margin: 0 0 0 3px;
 }
+
+/* Domain grouping section */
+.folder-info {
+	display: flex;
+	align-items: center;
+	padding: 8px 4px;
+}
+
+.folder-icon {
+	height: 32px;
+	width: 32px;
+	margin-right: 8px;
+}
+
+.folder-title {
+	margin: 0;
+}
