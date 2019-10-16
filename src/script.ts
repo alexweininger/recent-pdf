@@ -259,7 +259,8 @@ async function getOption(name: string): Promise<any> {
             console.log('getOption', result);
             resolve(result);
         }
-        reject(`Error in loading option ${name}`);
+        // resolve with empty options result
+        resolve({});
     })
 });
 }
