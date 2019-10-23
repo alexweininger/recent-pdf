@@ -25,7 +25,7 @@ body {
 #more_icon {
 	width: 32px;
 	height: 32px;
-	margin-top: 8px;
+	margin-top: 0px;
 }
 
 #more_icon:hover {
@@ -38,7 +38,7 @@ body {
 	background-color: #f1f1f1;
 	border-bottom: 1px solid #ddd;
 	display: grid;
-	grid-template-columns: 50% 50%;
+	grid-template-columns: 45% 45% 10%;
 	height: 32px;
 	margin: 0;
 	overflow: hidden;
@@ -121,6 +121,7 @@ div.left {
 
 
 #link-list,
+#pinned-list,
 #file-list {
 	display: inline-block;
 	font-size: 14px;
@@ -220,6 +221,32 @@ li {
 	width: 16px;
 	height: 16px;
 }
+
+#pinned-icon {
+	width: 20px;
+	height: 20px;
+	display: flex;
+	align-items: center;
+}
+
+#pin_icon_online {
+	width: 20px;
+	height: 20px;
+	margin-top: 15px;
+}
+
+#pin_icon_local {
+	width: 20px;
+	height: 20px;
+	margin: 0 0 0 3px;
+}
+
+#remove_icon {
+	width: 20px;
+	height: 20px;
+	margin-top: 15px;
+}
+
 
 #online-count-display {
 	height: inherit;

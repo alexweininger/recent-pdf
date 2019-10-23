@@ -8,7 +8,9 @@
         "outDir": "dist/js",
         "noEmitOnError": false,
         "types": [
-            "chrome"
+            "chrome",
+            "node",
+            "lodash"
         ],
         "alwaysStrict": true,
     }
