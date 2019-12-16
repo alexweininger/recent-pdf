@@ -59,7 +59,7 @@ body {
 }
 
 .tab-header button:hover {
-	background-color: #ddd;
+	background-color: #494949;
 }
 
 .tab-header button.active {
@@ -145,7 +145,7 @@ div.left {
 }
 
 .list-item:hover {
-	background: #363636;
+	background: #494949;
 }
 
 .link-thumb {
