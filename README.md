@@ -1,6 +1,6 @@
 [logo]: https://raw.githubusercontent.com/alexweininger/recent-pdf/dev/content/promotional/pr1400v2.png ""
 
-[screenshot]: https://raw.githubusercontent.com/alexweininger/recent-pdf/master/content/promotional/image.png ""
+[screenshot]: https://github.com/alexweininger/recent-pdf/blob/master/content/screenshots/overview-dark.png?raw=true ""
 
 # ![error][logo]
 
