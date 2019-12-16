@@ -3,10 +3,12 @@
 "../../node_modules/@types/chrome/index.d.ts";
 
 chrome.options.opts.about = `
-  <p>This is my about page :)</p>
   <p>
-    See how this demo's options are structured
-    in the <a href="options.js">options.js</a> file
+    Proudly created by <a href="https://github.com/alexweininger">Alex Weininger</a> and <a href="https://github.com/alexweininger/recent-pdf/graphs/contributors">many others</a> on <a href="https://github.com/alexweininger/recent-pdf">GitHub</a>.
+  </p>
+
+  <p>
+    For any questions, feature requests, or feedback please open an issue <a href="https://github.com/alexweininger/recent-pdf/issues">here</a>.
   </p>
 `;
 
