@@ -16,10 +16,46 @@ chrome.options.addTab('General', [
   {
     name: 'defaultTab',
     type: 'select',
-    desc: 'Default tab',
+    desc: 'Tab that is selected when RecentPDF is first opened.',
     options: [
       'Online files', 'Local files'
     ]
+  },
+  {
+    name: 'syncOnlineFiles',
+    type: 'checkbox',
+    desc: 'Sync my recently visited online PDF links wherever you log in to Google Chrome.',
+    default: true
+  },
+  {
+    name: 'maxFilesToStore',
+    type: 'text',
+    desc: 'Maximum number of recently visited online PDF links to store either locally, or synced.',
+    default: 30,
+    validate: function (value) {
+      try {
+        const valueInt = parseInt(value);
+        const isValid = Number.isInteger(valueInt) && valueInt > 0 && valueInt <= 1000;
+        return isValid;
+      } catch (error) {
+        console.log(`Error parsing input value: ${error}`);
+      }
+    }
+  },
+  {
+    name: 'daysToRemember',
+    type: 'text',
+    desc: 'Maximum number of days since you visited the online PDF link to keep in storage.',
+    default: 60,
+    validate: function (value) {
+      try {
+        const valueInt = parseInt(value);
+        const isValid = Number.isInteger(valueInt) && valueInt > 0 && valueInt <= 1000;
+        return isValid;
+      } catch (error) {
+        console.log(`Error parsing input value: ${error}`);
+      }
+    }
   },
   {
     name: 'maxFilesToShow',
@@ -28,18 +64,18 @@ chrome.options.addTab('General', [
     default: 30,
     validate: function (value) {
       try {
-        const valueInt = parseInt(value)
-        const isValid = Number.isInteger(valueInt) && valueInt > 0 && valueInt <= maxFilesToShowLimit
-        return isValid
+        const valueInt = parseInt(value);
+        const isValid = Number.isInteger(valueInt) && valueInt > 0 && valueInt <= maxFilesToShowLimit;
+        return isValid;
       } catch (error) {
-        console.log(`Error parsing input value: ${error}`)
+        console.log(`Error parsing input value: ${error}`);
       }
     }
   },
   {
     name: 'colorTheme',
     type: 'select',
-    desc: 'Which color theme you would like to use',
+    desc: 'Color theme for the RecentPDF UI.',
     options: ['Light', 'Dark']
   },
 ]);
