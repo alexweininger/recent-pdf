@@ -48,6 +48,7 @@ settingsTabLink.addEventListener("click", function() {
 // searchHistory();
 searchDownloads();
 
+// in the future, we should give the users the option to sync/not sync their online pdf list
 function onOnlineFilesChanged(data: any): void {
 	onlinePdfCount = 0;
 
