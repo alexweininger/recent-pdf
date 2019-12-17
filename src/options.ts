@@ -2,6 +2,17 @@
 "../node_modules/@types/chrome/index.d.ts";
 /// <reference path='./web-ext/index.d.ts'/>
 
+import { ApplicationInsights, IMetricTelemetry, IEventTelemetry } from '@microsoft/applicationinsights-web';
+
+const appInsights = new ApplicationInsights({
+	config: {
+		instrumentationKey: '5d1d3647-64de-49ec-9cd1-c11e1d658d78'
+	}
+});
+
+appInsights.loadAppInsights();
+appInsights.trackPageView(); // Manually call trackPageView to establish the current user/session/pagevie
+
 window.browser = (function () {
     return window.browser || window.chrome;
 })();
@@ -37,5 +48,7 @@ function restore_options() {
 document.addEventListener("DOMContentLoaded", restore_options);
 document.getElementById("save").addEventListener("click", (event) => {
 	event.preventDefault();
-	save_options();
+    save_options();
+
+
 });
