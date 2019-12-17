@@ -16,10 +16,16 @@ chrome.options.addTab('General', [
   {
     name: 'defaultTab',
     type: 'select',
-    desc: 'Default tab',
+    desc: 'Tab that is selected when RecentPDF is first opened.',
     options: [
       'Online files', 'Local files'
     ]
+  },
+  {
+    name: 'syncOnlineFiles',
+    type: 'checkbox',
+    desc: 'Sync my recently visited online PDF links wherever you log in to Google Chrome.',
+    default: true
   },
   {
     name: 'maxFilesToShow',
@@ -39,7 +45,7 @@ chrome.options.addTab('General', [
   {
     name: 'colorTheme',
     type: 'select',
-    desc: 'Which color theme you would like to use',
+    desc: 'Color theme for the RecentPDF UI.',
     options: ['Light', 'Dark']
   },
 ]);

@@ -8,6 +8,7 @@ let localTabLink: HTMLButtonElement = <HTMLButtonElement>document.getElementById
 let settingsTabLink: HTMLButtonElement = <HTMLButtonElement>document.getElementById("settings-link");
 var head = document.getElementsByTagName("HEAD")[0];
 let currentTab: Tab;
+let syncOnlineFiles: boolean;
 
 enum Tab {
 	Local = "local",
@@ -44,6 +45,8 @@ if (localTabLink) {
 settingsTabLink.addEventListener("click", function() {
 	window.browser.runtime.openOptionsPage();
 });
+
+loadOptions();
 
 // searchHistory();
 searchDownloads();
@@ -123,7 +126,10 @@ fetchAndUpdateOnlineFiles();
 
 function fetchAndUpdateOnlineFiles() {
 
-	chrome.storage.local.get(['onlineFiles'], (value) => {
+
+
+
+	let func = (value: any) => {
 		console.log('value', value['onlineFiles']);
 		onlineFiles = value['onlineFiles'];
 
@@ -145,19 +151,25 @@ function fetchAndUpdateOnlineFiles() {
 					}
 				});
 
-				console.log('online files', onlineFiles);
 				onOnlineFilesChanged(onlineFiles);
 
-				chrome.storage.local.set({onlineFiles: onlineFiles}, () => {
-					console.log('set', onlineFiles);
-				});
+				if (syncOnlineFiles) {
+					chrome.storage.sync.set({onlineFiles: onlineFiles}, () => {});
+				} else {
+					chrome.storage.local.set({onlineFiles: onlineFiles}, () => {});
+				}
 			}
 		);
-	})
+	}
+
+	if (syncOnlineFiles) {
+		chrome.storage.sync.get(['onlineFiles'], func);
+	} else {
+		chrome.storage.local.get(['onlineFiles'], func);
+	}
 }
 
 let onlinePdfCount: number = 0; // number of online pdf files
-
 let localFiles: any[] = [];
 let localPdfCount: number = 0; // number of local pdf files
 const maxFilesDefaultValue: number = 30; // default number of files to show in case of missing/invalid setting
@@ -178,7 +190,6 @@ function searchDownloads() {
 				return;
 			}
 			const maxFilesToShow = await getMaxFilesValue();
-			console.log("found " + data.length + " local pdfs");
 
 			// for x-plat
 			let winos = navigator.appVersion.indexOf("Win");
@@ -186,7 +197,6 @@ function searchDownloads() {
 
 			data.forEach(function(file: chrome.downloads.DownloadItem, i: number) {
 				// for each result
-				console.log("TCL: searchDownloads -> i", i);
 				if (file.filename.endsWith(".pdf") || file.filename.endsWith(".PDF")) {
 					// check if file ends with .pdf or .PDF
 					if (localFiles.indexOf(file.filename) === -1 && localPdfCount < maxFilesToShow) {
@@ -244,12 +254,11 @@ function searchDownloads() {
 						fileItem.appendChild(rightDiv);
 						fileElement.appendChild(fileItem);
 					} else {
-						// console.log(`[INFO] skipped duplicate file: ${file.filename}.`);
+						// console.log(`[INFO] skipped duplicate file: ${file.filename}.`); may want telemetry on this
 					}
 				}
 			});
 
-			console.log(`[INFO] ${localPdfCount} local PDFs found.`);
 			updateFooter();
 		}
 	);
@@ -315,40 +324,47 @@ async function getMaxFilesValue() {
 	return maxFilesDefaultValue;
 }
 
+
+
 async function loadOptions() {
-	let result = await getOption("general.defaultTab");
-	let result2 = await getOption("general.colorTheme");
-	let defaultTab = result["general.defaultTab"];
+	let defaultTabOption = await getOption('general.defaultTab');
+	let colorThemeOption = await getOption('general.colorTheme');
+	let syncOnlineFilesOption = await getOption('general.syncOnlineFiles');
+
+	let defaultTab: string = defaultTabOption['general.defaultTab'];
+
 	if (defaultTab) {
-		if (defaultTab == "Online files") {
+		if (defaultTab == 'Online files') {
 			onlineTabLink.click();
-			console.log("clicked online tab link");
-		} else if (defaultTab == "Local files") {
+			console.log('clicked online tab link');
+		} else if (defaultTab == 'Local files') {
 			localTabLink.click();
-			console.log("clicked local tab link");
+			console.log('clicked local tab link');
 		} else {
 			localTabLink.click();
-			console.log("loaded defaults");
+			console.log('loaded defaults');
 		}
 	} else {
 		localTabLink.click();
 	}
-	let colorTheme = result2["general.colorTheme"];
-	var link = document.createElement("link");
-	link.rel = "stylesheet";
-	link.type = "text/css";
+
+	let colorTheme: string = colorThemeOption['general.colorTheme'];
+
+	var link = document.createElement('link');
+	link.rel = 'stylesheet';
+	link.type = 'text/css';
 	if (colorTheme) {
-		if (colorTheme == "Light") {
-			link.href = "style.css";
-		} else if (colorTheme == "Dark") {
-			link.href = "style_dark_mode.css";
+		if (colorTheme == 'Light') {
+			link.href = 'style.css';
+		} else if (colorTheme == 'Dark') {
+			link.href = 'style_dark_mode.css';
 		} else {
-			link.href = "style.css";
+			link.href = 'style.css';
 		}
 	} else {
-		link.href = "style.css";
+		link.href = 'style.css';
 	}
 	head.appendChild(link);
-}
 
-loadOptions();
+	syncOnlineFiles = syncOnlineFilesOption['general.syncOnlineFiles'];
+}
