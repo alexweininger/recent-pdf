@@ -28,17 +28,47 @@ chrome.options.addTab('General', [
     default: true
   },
   {
+    name: 'maxFilesToStore',
+    type: 'text',
+    desc: 'Maximum number of recently visited online PDF links to store either locally, or synced.',
+    default: 30,
+    validate: function (value) {
+      try {
+        const valueInt = parseInt(value);
+        const isValid = Number.isInteger(valueInt) && valueInt > 0 && valueInt <= 1000;
+        return isValid;
+      } catch (error) {
+        console.log(`Error parsing input value: ${error}`);
+      }
+    }
+  },
+  {
+    name: 'daysToRemember',
+    type: 'text',
+    desc: 'Maximum number of days since you visited the online PDF link to keep in storage.',
+    default: 60,
+    validate: function (value) {
+      try {
+        const valueInt = parseInt(value);
+        const isValid = Number.isInteger(valueInt) && valueInt > 0 && valueInt <= 1000;
+        return isValid;
+      } catch (error) {
+        console.log(`Error parsing input value: ${error}`);
+      }
+    }
+  },
+  {
     name: 'maxFilesToShow',
     type: 'text',
     desc: 'Maximum number of files to display',
     default: 30,
     validate: function (value) {
       try {
-        const valueInt = parseInt(value)
-        const isValid = Number.isInteger(valueInt) && valueInt > 0 && valueInt <= maxFilesToShowLimit
-        return isValid
+        const valueInt = parseInt(value);
+        const isValid = Number.isInteger(valueInt) && valueInt > 0 && valueInt <= maxFilesToShowLimit;
+        return isValid;
       } catch (error) {
-        console.log(`Error parsing input value: ${error}`)
+        console.log(`Error parsing input value: ${error}`);
       }
     }
   },

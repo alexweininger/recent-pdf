@@ -9,6 +9,8 @@ let settingsTabLink: HTMLButtonElement = <HTMLButtonElement>document.getElementB
 var head = document.getElementsByTagName("HEAD")[0];
 let currentTab: Tab;
 let syncOnlineFiles: boolean;
+let maxFilesToStore: number;
+let daysToRemeber: number;
 
 enum Tab {
 	Local = "local",
@@ -62,13 +64,16 @@ function onOnlineFilesChanged(data: any): void {
 		console.log('keys', key);
 		if (data.hasOwnProperty(key)) {
 			const page = data[key];
+			onlinePdfCount++;
 
-			console.log(page);
+			if (onlinePdfCount > maxFilesToStore) {
+				break;
+			}
 
 			let listItem: HTMLLIElement = document.createElement("li");
 			listItem.classList.add("list-item");
 
-			onlinePdfCount++;
+
 
 			let leftDiv: HTMLDivElement = document.createElement("div");
 			let rightDiv: HTMLDivElement = document.createElement("div");
@@ -124,13 +129,29 @@ let onlineFiles: OnlineFiles = {};
 
 fetchAndUpdateOnlineFiles();
 
+let numDaysBetween = function(d1: Date, d2: Date): number {
+	let diff = Math.abs(d1.getTime() - d2.getTime());
+	return diff / (1000 * 60 * 60 * 24);
+  };
+
+function pruneOnlineFiles (data: OnlineFiles) {
+	for (const key in data) {
+		console.log('keys', key);
+		if (data.hasOwnProperty(key)) {
+			const page: chrome.history.HistoryItem = data[key];
+
+			let lastVisited: Date = new Date(page.lastVisitTime);
+
+			if (numDaysBetween(lastVisited, new Date()) > (daysToRemeber | 60)) {
+				delete data[key];
+			}
+		}
+	}
+}
+
 function fetchAndUpdateOnlineFiles() {
 
-
-
-
-	let func = (value: any) => {
-		console.log('value', value['onlineFiles']);
+	let updateFiles = (value: any) => {
 		onlineFiles = value['onlineFiles'];
 
 		window.browser.history.search(
@@ -153,19 +174,23 @@ function fetchAndUpdateOnlineFiles() {
 
 				onOnlineFilesChanged(onlineFiles);
 
+
+
 				if (syncOnlineFiles) {
 					chrome.storage.sync.set({onlineFiles: onlineFiles}, () => {});
 				} else {
 					chrome.storage.local.set({onlineFiles: onlineFiles}, () => {});
 				}
+
+				pruneOnlineFiles(onlineFiles);
 			}
 		);
 	}
 
 	if (syncOnlineFiles) {
-		chrome.storage.sync.get(['onlineFiles'], func);
+		chrome.storage.sync.get(['onlineFiles'], updateFiles);
 	} else {
-		chrome.storage.local.get(['onlineFiles'], func);
+		chrome.storage.local.get(['onlineFiles'], updateFiles);
 	}
 }
 
@@ -324,14 +349,17 @@ async function getMaxFilesValue() {
 	return maxFilesDefaultValue;
 }
 
-
+async function fetchOption(name: string) {
+	let option: any = await getOption(name);
+	return option[name];
+}
 
 async function loadOptions() {
-	let defaultTabOption = await getOption('general.defaultTab');
-	let colorThemeOption = await getOption('general.colorTheme');
-	let syncOnlineFilesOption = await getOption('general.syncOnlineFiles');
+	syncOnlineFiles = await fetchOption('general.syncOnlineFiles');
+	maxFilesToStore = await fetchOption('general.maxFilesToStore');
+	daysToRemeber = await fetchOption('general.daysToRemember');
 
-	let defaultTab: string = defaultTabOption['general.defaultTab'];
+	let defaultTab: string = await fetchOption('general.defaultTab');
 
 	if (defaultTab) {
 		if (defaultTab == 'Online files') {
@@ -348,7 +376,7 @@ async function loadOptions() {
 		localTabLink.click();
 	}
 
-	let colorTheme: string = colorThemeOption['general.colorTheme'];
+	let colorTheme =  await fetchOption('general.colorTheme');
 
 	var link = document.createElement('link');
 	link.rel = 'stylesheet';
@@ -365,6 +393,4 @@ async function loadOptions() {
 		link.href = 'style.css';
 	}
 	head.appendChild(link);
-
-	syncOnlineFiles = syncOnlineFilesOption['general.syncOnlineFiles'];
 }
