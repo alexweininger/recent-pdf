@@ -14,6 +14,8 @@ const appInsights = new ApplicationInsights({
 appInsights.loadAppInsights();
 appInsights.context.application.ver = extensionVerson;
 
+console.log(extensionVerson);
+
 let onlineList: HTMLUListElement = <HTMLUListElement>document.getElementById('link-list'); // online file list
 let fileElement: HTMLUListElement = <HTMLUListElement>document.getElementById('file-list'); // offline (local) file list
 let onlineTabLink: HTMLButtonElement = <HTMLButtonElement>document.getElementById('online-tab-link');
@@ -95,9 +97,7 @@ function onOnlineFilesChanged(data: any): void {
 			// make url element
 			let linkUrl: HTMLParagraphElement = document.createElement('p');
 			linkUrl.classList.add('link-url');
-			linkUrl.innerHTML = decodeURI(page.url)
-				.substring(0, 50)
-				.replace(' ', '');
+			linkUrl.innerHTML = decodeURI(page.url).replace(' ', '');
 
 			// make icon element
 			let icon: HTMLImageElement = document.createElement('img');
@@ -111,7 +111,6 @@ function onOnlineFilesChanged(data: any): void {
 
 			// on click listener
 			leftDiv.addEventListener('click', function() {
-
 				let openOnlineFileEvent: IEventTelemetry = {
 					name: 'openOnlineFile',
 					properties: {
@@ -125,6 +124,9 @@ function onOnlineFilesChanged(data: any): void {
 
 				window.open(page.url);
 			});
+
+			listItem.setAttribute('data-search-term', page.url.toLocaleLowerCase());
+
 
 			// append to list item
 			listItem.appendChild(leftDiv);
@@ -265,44 +267,64 @@ function searchDownloads() {
 						// create icon element
 						let icon: HTMLImageElement = document.createElement('img');
 						icon.classList.add('link-thumb');
-						window.browser.downloads.getFileIcon(file.id, { size: 16 }, iconUrl => {
+						window.browser.downloads.getFileIcon(file.id, { size: 32 }, iconUrl => {
 							icon.src = iconUrl;
+							icon.src = '../../test-icons/icons8-file-50.png';
 						});
 
 						// create title element
 						let title: HTMLParagraphElement = document.createElement('p');
 						title.classList.add('link-title');
 						title.classList.add('local-title');
-						title.innerText = file.filename.substring(file.filename.lastIndexOf(slashType) + 1, file.filename.length - 4);
+						let titleText: string = file.filename.substring(file.filename.lastIndexOf(slashType) + 1, file.filename.length - 4);
+						title.innerText = titleText;
 
-						// create file url element
-						let linkUrl: HTMLParagraphElement = document.createElement('p');
-						linkUrl.classList.add('link-url');
-						linkUrl.innerHTML = file.filename.substring(0, 50);
-
-						// append elements to div
-						leftDiv.appendChild(icon);
-						leftDiv.appendChild(title);
-						leftDiv.appendChild(linkUrl);
-
-						// on click listener
-						leftDiv.addEventListener('click', function() {
-
+						title.onclick = function() {
 							let openLocalFileEvent: IEventTelemetry = {
 								name: 'openLocalFile'
 							};
 
 							appInsights.trackEvent(openLocalFileEvent);
 							appInsights.flush();
-
 							window.browser.downloads.open(file.id);
-						});
+						};
 
-						// open in file explorer button
-						let more: HTMLImageElement = document.createElement('img');
-						more.id = 'more_icon';
-						more.src = '../../assets/More.png';
-						more.addEventListener('click', function() {
+						let filename = file.filename.substring(file.filename.lastIndexOf(slashType) + 1);
+
+						// create file url element
+						let linkUrl: HTMLParagraphElement = document.createElement('p');
+						linkUrl.classList.add('link-url');
+						if (file.filename.length - filename.length > 60) {
+							linkUrl.title = file.filename;
+						}
+						let linkUrlText = file.filename.replace(filename, '');
+						if (linkUrlText.endsWith('\\')) {
+							linkUrlText = linkUrlText.substring(0, linkUrlText.length - 1);
+						}
+						linkUrl.innerHTML = linkUrlText;
+
+						// append elements to div
+						leftDiv.appendChild(icon);
+						leftDiv.appendChild(title);
+						leftDiv.appendChild(linkUrl);
+
+						let openFileButton = document.createElement('a');
+						openFileButton.classList.add('action-link');
+						openFileButton.href = '#';
+						openFileButton.innerText = 'Open file';
+						openFileButton.onclick = (ev: MouseEvent) => {
+							window.browser.downloads.open(file.id);
+						};
+
+						let expander = document.createElement('div');
+
+						expander.appendChild(openFileButton);
+
+						let revealInExplorer = document.createElement('a');
+						revealInExplorer.classList.add('action-link');
+						revealInExplorer.innerText = 'Reveal in explorer';
+						revealInExplorer.id = 'revealInExplorer_icon';
+						revealInExplorer.addEventListener('click', function() {
 							window.browser.downloads.show(file.id);
 
 							let showLocalFileEvent: IEventTelemetry = {
@@ -312,7 +334,12 @@ function searchDownloads() {
 							appInsights.trackEvent(showLocalFileEvent);
 						});
 
-						rightDiv.appendChild(more);
+						expander.appendChild(revealInExplorer);
+
+						leftDiv.appendChild(expander);
+
+						fileItem.setAttribute('data-search-term', filename.toLocaleLowerCase());
+
 						fileItem.appendChild(leftDiv);
 						fileItem.appendChild(rightDiv);
 						fileElement.appendChild(fileItem);
@@ -353,14 +380,14 @@ function updateFooter() {
 function onlineFooter(count: number) {
 	let plural: string = count != 1 ? 's' : '';
 	let countDisplay: HTMLParagraphElement = <HTMLParagraphElement>document.getElementById('count-display');
-	countDisplay.innerHTML = `Showing ${count} online PDF${plural}.`;
+	countDisplay.innerHTML = `Showing ${count} link${plural}`;
 }
 
 // load and create the local file footer
 function localFooter(count: number) {
 	let plural: string = count != 1 ? 's' : '';
 	let countDisplay: HTMLParagraphElement = <HTMLParagraphElement>document.getElementById('count-display');
-	countDisplay.innerHTML = `Showing ${count} local PDF${plural}.`;
+	countDisplay.innerHTML = `Showing ${count} file${plural}`;
 }
 
 // function that handles switching between tabs
@@ -378,6 +405,10 @@ function openTab(evt: any, tab: Tab) {
 	}
 	evt.currentTarget.classList.add('active');
 	currentTab = tab;
+
+	let searchBox: HTMLInputElement = document.querySelector('.search');
+	searchBox.value = '';
+	searchBox.dispatchEvent(new Event('keyup'));
 }
 
 async function getOption(name: string): Promise<any> {
@@ -486,6 +517,38 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		fetchAndUpdateOnlineFiles();
 		searchDownloads();
+
+		let searchBox: HTMLInputElement = document.querySelector('.search');
+
+		searchBox.addEventListener('keyup', ev => {
+			let searchText: string = searchBox.value;
+			if (searchText == '') {
+				let clearSearch: HTMLButtonElement = document.querySelector('#clear-search');
+				clearSearch.style.display = 'none';
+			} else {
+				let clearSearch: HTMLButtonElement = document.querySelector('#clear-search');
+				clearSearch.style.display = '';
+			}
+			let listItems: NodeListOf<HTMLLIElement>;
+			if (currentTab == Tab.Local) {
+				listItems = document.querySelectorAll('#file-list > li');
+			} else {
+				listItems = document.querySelectorAll('#link-list > li');
+			}
+			listItems.forEach((listItem: HTMLLIElement) => {
+				if (listItem.getAttribute('data-search-term').indexOf(searchText) > -1) {
+					listItem.style.display = '';
+				} else {
+					listItem.style.display = 'none';
+				}
+			});
+		});
+
+		let clearSearch: HTMLButtonElement = document.querySelector('#clear-search');
+		clearSearch.addEventListener('click', (event: MouseEvent) => {
+			searchBox.value = '';
+			searchBox.dispatchEvent(new Event('keyup'));
+		})
 	});
 });
 
