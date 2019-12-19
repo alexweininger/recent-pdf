@@ -1,18 +1,9 @@
 /// <reference path='../node_modules/@types/chrome/index.d.ts'/>
 /// <reference path='./web-ext/index.d.ts'/>
 
-let onlineList: HTMLUListElement = <HTMLUListElement>document.getElementById('link-list'); // online file list
-let fileElement: HTMLUListElement = <HTMLUListElement>document.getElementById('file-list'); // offline (local) file list
-let onlineTabLink: HTMLButtonElement = <HTMLButtonElement>document.getElementById('online-tab-link');
-let localTabLink: HTMLButtonElement = <HTMLButtonElement>document.getElementById('local-tab-link');
-let settingsTabLink: HTMLButtonElement = <HTMLButtonElement>document.getElementById('settings-link');
-var head = document.getElementsByTagName('HEAD')[0];
-let currentTab: Tab;
-let syncOnlineFiles: boolean;
-let maxFilesToStore: number;
-let daysToRemeber: number;
-
 import { ApplicationInsights, IMetricTelemetry, IEventTelemetry } from '@microsoft/applicationinsights-web';
+
+const extensionVerson: string = chrome.runtime.getManifest().version;
 
 const appInsights = new ApplicationInsights({
 	config: {
@@ -21,7 +12,22 @@ const appInsights = new ApplicationInsights({
 });
 
 appInsights.loadAppInsights();
-appInsights.trackPageView(); // Manually call trackPageView to establish the current user/session/pagevie
+appInsights.context.application.ver = extensionVerson;
+
+let onlineList: HTMLUListElement = <HTMLUListElement>document.getElementById('link-list'); // online file list
+let fileElement: HTMLUListElement = <HTMLUListElement>document.getElementById('file-list'); // offline (local) file list
+let onlineTabLink: HTMLButtonElement = <HTMLButtonElement>document.getElementById('online-tab-link');
+let localTabLink: HTMLButtonElement = <HTMLButtonElement>document.getElementById('local-tab-link');
+let settingsTabLink: HTMLButtonElement = <HTMLButtonElement>document.getElementById('settings-link');
+let head = document.getElementsByTagName('HEAD')[0];
+let currentTab: Tab;
+let syncOnlineFiles: boolean = true;
+let maxFilesToStore: number = 1000;
+let daysToRemeber: number = 60;
+
+appInsights.trackPageView({
+	name: 'popupView'
+}); // Manually call trackPageView to establish the current user/session/pageview
 
 enum Tab {
 	Local = 'local',
@@ -54,19 +60,11 @@ if (localTabLink) {
 	console.error('localTabLink is null');
 }
 
-// settings click listener
-settingsTabLink.addEventListener('click', function() {
-	window.browser.runtime.openOptionsPage();
-});
-
-loadOptions();
-
-// searchHistory();
-searchDownloads();
-
 // in the future, we should give the users the option to sync/not sync their online pdf list
 function onOnlineFilesChanged(data: any): void {
 	onlinePdfCount = 0;
+
+	console.log('onOnlineFilesChanged', data);
 
 	onlineList.innerHTML = ''; // clear list
 
@@ -113,7 +111,6 @@ function onOnlineFilesChanged(data: any): void {
 
 			// on click listener
 			leftDiv.addEventListener('click', function() {
-				window.open(page.url);
 
 				let openOnlineFileEvent: IEventTelemetry = {
 					name: 'openOnlineFile',
@@ -124,11 +121,15 @@ function onOnlineFilesChanged(data: any): void {
 					}
 				};
 				appInsights.trackEvent(openOnlineFileEvent);
+				appInsights.flush();
+
+				window.open(page.url);
 			});
 
 			// append to list item
 			listItem.appendChild(leftDiv);
 			listItem.appendChild(rightDiv);
+
 			// append list item to online list
 			onlineList.appendChild(listItem);
 		}
@@ -140,7 +141,6 @@ function onOnlineFilesChanged(data: any): void {
 	};
 
 	appInsights.trackMetric(onlineFileCountMetric, { maxFilesToShow: getMaxFilesValue() });
-
 	updateFooter();
 }
 
@@ -149,8 +149,6 @@ interface OnlineFiles {
 }
 
 let onlineFiles: OnlineFiles = {};
-
-fetchAndUpdateOnlineFiles();
 
 let numDaysBetween = function(d1: Date, d2: Date): number {
 	let diff = Math.abs(d1.getTime() - d2.getTime());
@@ -165,6 +163,7 @@ function pruneOnlineFiles(data: OnlineFiles) {
 			let lastVisited: Date = new Date(page.lastVisitTime);
 
 			if (numDaysBetween(lastVisited, new Date()) > (daysToRemeber | 60)) {
+				console.log('pruning', key);
 				delete data[key];
 			}
 		}
@@ -174,6 +173,10 @@ function pruneOnlineFiles(data: OnlineFiles) {
 function fetchAndUpdateOnlineFiles() {
 	let updateFiles = (value: any) => {
 		onlineFiles = value['onlineFiles'];
+
+		if (!onlineFiles) {
+			onlineFiles = {};
+		}
 
 		window.browser.history.search(
 			{
@@ -207,9 +210,9 @@ function fetchAndUpdateOnlineFiles() {
 	};
 
 	if (syncOnlineFiles) {
-		chrome.storage.sync.get(['onlineFiles'], updateFiles);
+		chrome.storage.sync.get(['onlineFiles'], value => updateFiles(value));
 	} else {
-		chrome.storage.local.get(['onlineFiles'], updateFiles);
+		chrome.storage.local.get(['onlineFiles'], value => updateFiles(value));
 	}
 }
 
@@ -284,16 +287,15 @@ function searchDownloads() {
 
 						// on click listener
 						leftDiv.addEventListener('click', function() {
-							window.browser.downloads.open(file.id);
 
 							let openLocalFileEvent: IEventTelemetry = {
-								name: 'openLocalFile',
-								properties: {
-									visitCount: file.startTime
-								}
+								name: 'openLocalFile'
 							};
 
 							appInsights.trackEvent(openLocalFileEvent);
+							appInsights.flush();
+
+							window.browser.downloads.open(file.id);
 						});
 
 						// open in file explorer button
@@ -382,7 +384,6 @@ async function getOption(name: string): Promise<any> {
 	return new Promise((resolve, reject) => {
 		window.browser.storage.sync.get(name, (result: any) => {
 			if (result) {
-				console.log('getOption', result);
 				resolve(result);
 			}
 			reject(`Error in loading option ${name}`);
@@ -399,20 +400,19 @@ async function getMaxFilesValue() {
 	return maxFilesDefaultValue;
 }
 
-async function fetchOption(name: string) {
+async function fetchOption(name: string, defaultValue: any) {
 	let option: any = await getOption(name);
-	return option[name];
+	return option[name] || defaultValue;
 }
 
 async function loadOptions() {
-	syncOnlineFiles = await fetchOption('general.syncOnlineFiles');
-	maxFilesToStore = await fetchOption('general.maxFilesToStore');
-	daysToRemeber = await fetchOption('general.daysToRemember');
+	syncOnlineFiles = await fetchOption('general.syncOnlineFiles', true);
+	maxFilesToStore = await fetchOption('general.maxFilesToStore', 100);
+	daysToRemeber = await fetchOption('general.daysToRemember', 60);
 
-	const result = await getOption('general.maxFilesToShow');
-	let maxFilesValue = result['general.maxFilesToShow'];
+	let maxFilesValue = await fetchOption('general.defaultTab', 30);
 
-	let defaultTab: string = await fetchOption('general.defaultTab');
+	let defaultTab: string = await fetchOption('general.defaultTab', 'Online files');
 
 	console.log('defaultTab', defaultTab);
 
@@ -435,7 +435,7 @@ async function loadOptions() {
 		appInsights.trackException({ id: 'defaultTabSettingUndefined', exception: defaultTabSettingUndefinedError });
 	}
 
-	let colorTheme = await fetchOption('general.colorTheme');
+	let colorTheme: string = await fetchOption('general.colorTheme', 'Light');
 
 	var link = document.createElement('link');
 	link.rel = 'stylesheet';
@@ -453,15 +453,6 @@ async function loadOptions() {
 	}
 	head.appendChild(link);
 
-	console.log({
-		syncOnlineFiles: syncOnlineFiles,
-		colorTheme: colorTheme,
-		defaultTab: defaultTab as string,
-		maxFilesToStore: maxFilesToStore,
-		daysToRemeber: daysToRemeber as number,
-		maxFilesToShow: maxFilesValue
-	});
-
 	let loadSettingsEvent: IEventTelemetry = {
 		name: 'loadSettingsEvent',
 		properties: {
@@ -474,7 +465,30 @@ async function loadOptions() {
 		}
 	};
 
-	console.log(loadSettingsEvent);
-
 	appInsights.trackEvent(loadSettingsEvent);
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+	onlineList = <HTMLUListElement>document.getElementById('link-list'); // online file list
+	fileElement = <HTMLUListElement>document.getElementById('file-list'); // offline (local) file list
+	onlineTabLink = <HTMLButtonElement>document.getElementById('online-tab-link');
+	localTabLink = <HTMLButtonElement>document.getElementById('local-tab-link');
+	settingsTabLink = <HTMLButtonElement>document.getElementById('settings-link');
+	head = document.getElementsByTagName('HEAD')[0];
+
+	loadOptions().then(() => {
+		// settings click listener
+		settingsTabLink.addEventListener('click', function() {
+			window.browser.runtime.openOptionsPage();
+
+			appInsights.trackEvent({ name: 'clickSettingsIcon' });
+		});
+
+		fetchAndUpdateOnlineFiles();
+		searchDownloads();
+	});
+});
+
+window.addEventListener('beforeunload', (ev: BeforeUnloadEvent) => {
+	appInsights.flush();
+});
