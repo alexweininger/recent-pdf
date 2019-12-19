@@ -31,7 +31,7 @@ chrome.options.addTab('General', [
     name: 'maxFilesToStore',
     type: 'text',
     desc: 'Maximum number of recently visited online PDF links to store either locally, or synced.',
-    default: 30,
+    default: 100,
     validate: function (value) {
       try {
         const valueInt = parseInt(value);

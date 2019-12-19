@@ -49,6 +49,4 @@ document.addEventListener("DOMContentLoaded", restore_options);
 document.getElementById("save").addEventListener("click", (event) => {
 	event.preventDefault();
     save_options();
-
-
 });

@@ -1,6 +1,6 @@
 {
   "name": "Recent PDF",
-  "version": "2.1.0",
+  "version": "2.2.3",
   "manifest_version": 2,
   "description": "Easy access to recently viewed or downloaded PDF files.",
   "author": "Alex Weininger",
@@ -20,11 +20,6 @@
     "default_title": "recent pdf",
     "default_popup": "./index.html"
   },
-
-  "background": {
-    "scripts": ["./js/script.js"]
-  },
-
   "permissions": [
     "chrome://favicon/",
     "clipboardWrite",
