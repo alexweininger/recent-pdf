@@ -127,7 +127,6 @@ function onOnlineFilesChanged(data: any): void {
 
 			listItem.setAttribute('data-search-term', page.url.toLocaleLowerCase());
 
-
 			// append to list item
 			listItem.appendChild(leftDiv);
 			listItem.appendChild(rightDiv);
@@ -468,21 +467,23 @@ async function loadOptions() {
 
 	let colorTheme: string = await fetchOption('general.colorTheme', 'Light');
 
-	var link = document.createElement('link');
-	link.rel = 'stylesheet';
-	link.type = 'text/css';
 	if (colorTheme) {
 		if (colorTheme == 'Light') {
-			link.href = 'style.css';
-		} else if (colorTheme == 'Dark') {
-			link.href = 'style_dark_mode.css';
-		} else {
-			link.href = 'style.css';
+			let root = document.documentElement;
+
+			root.style.setProperty('--main-bg-color', 'white');
+			root.style.setProperty('--item-bg-color', '#ededed');
+			root.style.setProperty('--link-color', '#1A73E8');
+			root.style.setProperty('--main-font-color', '#191919');
+			root.style.setProperty('--sub-font-color', '#494949');
+			root.style.setProperty('--imp-font-color', 'black');
+			root.style.setProperty('--inactive-tab-color', 'white');
+			root.style.setProperty('--tab-hover-color', 'rgb(154, 160, 166)');
+			root.style.setProperty('--scrollbar-color', '#eee');
+			root.style.setProperty('--shadow-color', '##bdbdbd');
+			root.style.setProperty('--border-color', '#eee');
 		}
-	} else {
-		link.href = 'style.css';
 	}
-	head.appendChild(link);
 
 	let loadSettingsEvent: IEventTelemetry = {
 		name: 'loadSettingsEvent',
@@ -548,7 +549,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		clearSearch.addEventListener('click', (event: MouseEvent) => {
 			searchBox.value = '';
 			searchBox.dispatchEvent(new Event('keyup'));
-		})
+		});
 	});
 });
 
