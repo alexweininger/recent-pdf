@@ -12,6 +12,8 @@ chrome.options.opts.about = `
   </p>
 `;
 
+let maxFilesToShowLimit = 1000;
+
 chrome.options.addTab('General', [
   {
     name: 'defaultTab',

@@ -6,17 +6,16 @@
 	</head>
 
 	<body>
-		<div class="tab-header">
-			<button id="online-tab-link" class="tablinks">Online</button>
-			<button id="local-tab-link" class="tablinks">Local</button>
-		</div>
+		<ul class="tab-bar">
+			<li id="online-tab-link" data-num="1" class="tab wave dark">Online</li>
+			<li id="local-tab-link" data-num="2" class="tab wave dark">Downloads</li id="local-tab-link">
+			<div class="indicator"></div>
+		  </ul>
+
 		<div class="footer">
 			<div class="" id="footer-left">
-				<img src="./test-icons//icons8-search-50.png" style="margin-left: 3px; margin-right: 3px;" id="settings-icon" />
+				<img src="./test-icons//icons8-search-50.png" style="position: relative; margin-top: 2px; margin-left: 12px; margin-right: 3px; z-index: 10;" id="settings-icon" />
 				<input class="search" placeholder="Search" />
-
-				<!-- <p id="online-count-display"></p>
-      <p id="local-count-display"></p> -->
 			</div>
 			<div>
 				<button id="clear-search" class="" style="display: none;">
@@ -25,8 +24,6 @@
 			</div>
 			<div class="" id="footer-middle">
 				<p id="count-display"></p>
-				<!-- <p id="online-count-display"></p>
-      <p id="local-count-display"></p> -->
 				<p id="count-display"></p>
 			</div>
 			<div class="" id="footer-right">
