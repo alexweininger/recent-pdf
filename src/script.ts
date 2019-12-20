@@ -2,6 +2,17 @@
 /// <reference path='./web-ext/index.d.ts'/>
 
 import { ApplicationInsights, IMetricTelemetry, IEventTelemetry } from '@microsoft/applicationinsights-web';
+import { OptionsProvider, IOptions, ColorThemes, Tabs } from './OptionsProvider';
+import { numDaysBetween } from './Utils';
+
+enum Tab {
+	Local = 'local',
+	Online = 'online'
+}
+
+interface OnlineFiles {
+	[url: string]: chrome.history.HistoryItem;
+}
 
 const extensionVerson: string = chrome.runtime.getManifest().version;
 
@@ -14,6 +25,12 @@ const appInsights = new ApplicationInsights({
 appInsights.loadAppInsights();
 appInsights.context.application.ver = extensionVerson;
 
+appInsights.trackPageView({
+	name: 'popupView'
+});
+
+let options: IOptions;
+
 let onlineList: HTMLUListElement = <HTMLUListElement>document.getElementById('link-list'); // online file list
 let fileElement: HTMLUListElement = <HTMLUListElement>document.getElementById('file-list'); // offline (local) file list
 let onlineTabLink: HTMLLinkElement = <HTMLLinkElement>document.getElementById('online-tab-link');
@@ -23,40 +40,190 @@ let currentTab: Tab;
 let syncOnlineFiles: boolean = true;
 let maxFilesToStore: number = 1000;
 let daysToRemeber: number = 60;
+let onlinePdfCount: number = 0; // number of online pdf files
+let localFiles: any[] = [];
+let localPdfCount: number = 0; // number of local pdf files
+let onlineFiles: OnlineFiles = {};
 
-appInsights.trackPageView({
-	name: 'popupView'
-});
-
-enum Tab {
-	Local = 'local',
-	Online = 'online'
-}
-
-window.browser = (function() {
+// for x-browser support
+window.browser = (() => {
 	return window.browser || window.chrome;
 })();
 
-if (onlineTabLink) {
-	// event handlers for tab buttons
-	onlineTabLink.addEventListener('click', function(event: Event) {
-		onlineFooter(onlinePdfCount);
-		openTab(event, Tab.Online);
-		currentTab = Tab.Online;
+
+document.addEventListener('DOMContentLoaded', () => {
+	onlineList = <HTMLUListElement>document.getElementById('link-list'); // online file list
+	fileElement = <HTMLUListElement>document.getElementById('file-list'); // offline (local) file list
+	onlineTabLink = <HTMLLinkElement>document.getElementById('online-tab-link');
+	localTabLink = <HTMLLinkElement>document.getElementById('local-tab-link');
+	settingsTabLink = <HTMLButtonElement>document.getElementById('settings-link');
+
+	let btn = document.querySelectorAll('.wave');
+	let indicator: HTMLDivElement = document.querySelector('.indicator');
+	let indi: number = 0;
+
+	indicator.style.marginLeft = indi + 'px';
+
+	for (var i = 0; i < btn.length; i++) {
+		const btnI: HTMLButtonElement = <HTMLButtonElement>btn[i];
+		btnI.addEventListener('click', function(e) {
+			var newRound = document.createElement('div'),
+				x,
+				y;
+
+			newRound.className = 'cercle';
+			btnI.appendChild(newRound);
+
+			x = e.pageX - btnI.offsetLeft;
+			y = e.pageY - btnI.offsetTop;
+
+			newRound.style.left = x + 'px';
+			newRound.style.top = y + 'px';
+			newRound.className += ' anim';
+
+			indicator.style.marginLeft = indi + (parseInt(btnI.dataset.num) - 1) * 200 + 'px';
+
+			if (parseInt(btnI.dataset.num) == 1) {
+				openTab(null, Tab.Online);
+			} else {
+				openTab(null, Tab.Local);
+			}
+
+			setTimeout(function() {
+				newRound.remove();
+			}, 1200);
+		});
+	}
+
+	loadOptions().then(() => {
+		settingsTabLink.addEventListener('click', function() {
+			window.browser.runtime.openOptionsPage();
+
+			appInsights.trackEvent({ name: 'clickSettingsIcon' });
+		});
+
+		fetchAndUpdateOnlineFiles();
+		searchDownloads();
+
+		let searchBox: HTMLInputElement = document.querySelector('.search');
+
+		searchBox.addEventListener('keyup', (event: KeyboardEvent) => {
+			let searchText: string = searchBox.value.toLocaleLowerCase();
+
+			if (searchText == '') {
+				let clearSearch: HTMLButtonElement = document.querySelector('#clear-search');
+				clearSearch.style.display = 'none';
+			} else {
+				let clearSearch: HTMLButtonElement = document.querySelector('#clear-search');
+				clearSearch.style.display = '';
+			}
+
+			let listItems: NodeListOf<HTMLLIElement>;
+
+			if (currentTab == Tab.Local) {
+				listItems = document.querySelectorAll('#file-list > li');
+			} else {
+				listItems = document.querySelectorAll('#link-list > li');
+			}
+
+			// filter items
+			listItems.forEach((listItem: HTMLLIElement) => {
+				if (listItem.getAttribute('data-search-term').indexOf(searchText) > -1) {
+					listItem.style.display = '';
+				} else {
+					listItem.style.display = 'none';
+				}
+			});
+		});
+
+		let clearSearch: HTMLButtonElement = document.querySelector('#clear-search');
+		clearSearch.addEventListener('click', (event: MouseEvent) => {
+			searchBox.value = '';
+			searchBox.dispatchEvent(new Event('keyup'));
+		});
 	});
-} else {
-	console.error('onlineTabLink is null');
+});
+
+window.addEventListener('beforeunload', (ev: BeforeUnloadEvent) => {
+	appInsights.flush();
+});
+
+// function that handles switching between tabs
+function openTab(evt: any, tab: Tab): void {
+	// Find active elements and remove active class from elements
+	const activeElements: NodeListOf<Element> = <NodeListOf<Element>>document.querySelectorAll('.active');
+	activeElements.forEach(function(elem: HTMLElement) {
+		elem.classList.remove('active');
+	});
+
+	// Add active class to tab and pressed button
+	const tabContent: HTMLElement = <HTMLElement>document.querySelector(`.tabcontent#${tab}`);
+	if (tabContent) {
+		tabContent.classList.add('active');
+	}
+
+	currentTab = tab;
+
+	let searchBox: HTMLInputElement = document.querySelector('.search');
+	searchBox.value = '';
+	searchBox.dispatchEvent(new Event('keyup'));
 }
 
-// click listener for local pdf tab
-if (localTabLink) {
-	localTabLink.addEventListener('click', function(event: Event) {
+function updateFooter(): void {
+	if (currentTab == Tab.Local) {
 		localFooter(localPdfCount);
-		openTab(event, Tab.Local);
-		currentTab = Tab.Local;
-	});
-} else {
-	console.error('localTabLink is null');
+	} else {
+		onlineFooter(onlinePdfCount);
+	}
+}
+
+// load and create the online pdf footer
+function onlineFooter(count: number): void {
+	let plural: string = count != 1 ? 's' : '';
+	let countDisplay: HTMLParagraphElement = <HTMLParagraphElement>document.getElementById('count-display');
+	countDisplay.innerHTML = `Showing ${count} link${plural}`;
+}
+
+// load and create the local file footer
+function localFooter(count: number): void {
+	let plural: string = count != 1 ? 's' : '';
+	let countDisplay: HTMLParagraphElement = <HTMLParagraphElement>document.getElementById('count-display');
+	countDisplay.innerHTML = `Showing ${count} file${plural}`;
+}
+
+async function loadOptions() {
+	options = await OptionsProvider.fetchOptions();
+
+	if (options.general.defaultTab == Tabs.Online) {
+		onlineTabLink.click();
+	} else {
+		localTabLink.click();
+	}
+
+	if (options.general.colorTheme == ColorThemes.Light) {
+		const root: HTMLElement = document.documentElement;
+
+		root.style.setProperty('--main-bg-color', '#ededed');
+		root.style.setProperty('--item-bg-color', 'white');
+		root.style.setProperty('--link-color', 'rgb(26, 115, 232)');
+		root.style.setProperty('--main-font-color', 'rgb(26, 115, 232)');
+		root.style.setProperty('--sub-font-color', '#494949');
+		root.style.setProperty('--imp-font-color', 'black');
+		root.style.setProperty('--inactive-tab-color', '#ededed');
+		root.style.setProperty('--tab-hover-color', 'rgb(154, 160, 166)');
+		root.style.setProperty('--scrollbar-color', '#eee');
+		root.style.setProperty('--shadow-color', '#d9d9d9');
+		root.style.setProperty('--border-color', '#eee');
+		root.style.setProperty('--header-color', 'white');
+		root.style.setProperty('--tab-font-color', '#494949');
+	}
+
+	const loadSettingsEvent: IEventTelemetry = {
+		name: 'loadSettingsEvent',
+		properties: options
+	};
+
+	appInsights.trackEvent(loadSettingsEvent);
 }
 
 // in the future, we should give the users the option to sync/not sync their online pdf list
@@ -133,20 +300,9 @@ function onOnlineFilesChanged(data: any): void {
 		average: onlinePdfCount
 	};
 
-	appInsights.trackMetric(onlineFileCountMetric, { maxFilesToShow: getMaxFilesValue() });
+	appInsights.trackMetric(onlineFileCountMetric, { maxFilesToShow: options.general.maxFilesToShow });
 	updateFooter();
 }
-
-interface OnlineFiles {
-	[url: string]: chrome.history.HistoryItem;
-}
-
-let onlineFiles: OnlineFiles = {};
-
-let numDaysBetween = function(d1: Date, d2: Date): number {
-	let diff = Math.abs(d1.getTime() - d2.getTime());
-	return diff / (1000 * 60 * 60 * 24);
-};
 
 function pruneOnlineFiles(data: OnlineFiles) {
 	for (const key in data) {
@@ -209,11 +365,6 @@ function fetchAndUpdateOnlineFiles() {
 	}
 }
 
-let onlinePdfCount: number = 0; // number of online pdf files
-let localFiles: any[] = [];
-let localPdfCount: number = 0; // number of local pdf files
-const maxFilesDefaultValue: number = 30; // default number of files to show in case of missing/invalid setting
-
 /**
  * searchDownloads() - searches downloads with chrome.downloads api for local pdf files
  */
@@ -229,7 +380,6 @@ function searchDownloads() {
 				searchDownloads();
 				return;
 			}
-			const maxFilesToShow = await getMaxFilesValue();
 
 			// for x-plat
 			let winos = navigator.appVersion.indexOf('Win');
@@ -241,7 +391,7 @@ function searchDownloads() {
 				// for each result
 				if (file.filename.endsWith('.pdf') || file.filename.endsWith('.PDF')) {
 					// check if file ends with .pdf or .PDF
-					if (localFiles.indexOf(file.filename) === -1 && localPdfCount < maxFilesToShow) {
+					if (localFiles.indexOf(file.filename) === -1 && localPdfCount < options.general.maxFilesToShow) {
 						// check for duplicated and maxFilesToShow value
 						localFiles.push(file.filename);
 						localPdfCount++;
@@ -352,243 +502,9 @@ function searchDownloads() {
 				average: localPdfCount
 			};
 
-			appInsights.trackMetric(localFileCountMetric, { maxFilesToShow: maxFilesToShow });
+			appInsights.trackMetric(localFileCountMetric, { maxFilesToShow: options.general.maxFilesToShow });
 
 			updateFooter();
 		}
 	);
 }
-
-function updateFooter() {
-	if (currentTab == Tab.Local) {
-		localFooter(localPdfCount);
-	} else {
-		onlineFooter(onlinePdfCount);
-	}
-}
-
-// load and create the online pdf footer
-function onlineFooter(count: number) {
-	let plural: string = count != 1 ? 's' : '';
-	let countDisplay: HTMLParagraphElement = <HTMLParagraphElement>document.getElementById('count-display');
-	countDisplay.innerHTML = `Showing ${count} link${plural}`;
-}
-
-// load and create the local file footer
-function localFooter(count: number) {
-	let plural: string = count != 1 ? 's' : '';
-	let countDisplay: HTMLParagraphElement = <HTMLParagraphElement>document.getElementById('count-display');
-	countDisplay.innerHTML = `Showing ${count} file${plural}`;
-}
-
-// function that handles switching between tabs
-function openTab(evt: any, tab: Tab) {
-
-	// Find active elements and remove active class from elements
-	const activeElements: NodeListOf<Element> = <NodeListOf<Element>>document.querySelectorAll('.active');
-	activeElements.forEach(function(elem: HTMLElement) {
-		elem.classList.remove('active');
-	});
-
-	// Add active class to tab and pressed button
-	const tabContent: HTMLElement = <HTMLElement>document.querySelector(`.tabcontent#${tab}`);
-	if (tabContent) {
-		tabContent.classList.add('active');
-	}
-
-	currentTab = tab;
-
-	let searchBox: HTMLInputElement = document.querySelector('.search');
-	searchBox.value = '';
-	searchBox.dispatchEvent(new Event('keyup'));
-}
-
-async function getOption(name: string): Promise<any> {
-	return new Promise((resolve, reject) => {
-		window.browser.storage.sync.get(name, (result: any) => {
-			if (result) {
-				resolve(result);
-			}
-			reject(`Error in loading option ${name}`);
-		});
-	});
-}
-
-async function getMaxFilesValue() {
-	const result = await getOption('general.maxFilesToShow');
-	let maxFilesValue = result['general.maxFilesToShow'];
-	if (maxFilesValue && Number.isInteger(parseInt(maxFilesValue))) {
-		return parseInt(maxFilesValue);
-	}
-	return maxFilesDefaultValue;
-}
-
-async function fetchOption(name: string, defaultValue: any) {
-	let option: any = await getOption(name);
-	return option[name] || defaultValue;
-}
-
-async function loadOptions() {
-	syncOnlineFiles = await fetchOption('general.syncOnlineFiles', true);
-	maxFilesToStore = await fetchOption('general.maxFilesToStore', 100);
-	daysToRemeber = await fetchOption('general.daysToRemember', 60);
-
-	let maxFilesValue = await fetchOption('general.defaultTab', 30);
-
-	let defaultTab: string = await fetchOption('general.defaultTab', 'Online files');
-	if (defaultTab) {
-		if (defaultTab == 'Online files') {
-			onlineTabLink.dispatchEvent(new Event('mousedown'));
-			onlineTabLink.click();
-		} else if (defaultTab == 'Local files') {
-			localTabLink.click();
-			localTabLink.dispatchEvent(new Event('mousedown'));
-		} else {
-			localTabLink.click();
-			localTabLink.dispatchEvent(new Event('mousedown'));
-		}
-	} else {
-		localTabLink.click();
-		localTabLink.dispatchEvent(new Event('mousedown'));
-
-		let defaultTabSettingUndefinedError: Error = {
-			name: 'defaultTabSettingUndefined',
-			message: 'defaultTab settings is undefined'
-		};
-
-		appInsights.trackException({ id: 'defaultTabSettingUndefined', exception: defaultTabSettingUndefinedError });
-	}
-
-	let colorTheme: string = await fetchOption('general.colorTheme', 'Light');
-
-	if (colorTheme) {
-		if (colorTheme == 'Light') {
-			let root = document.documentElement;
-
-			root.style.setProperty('--main-bg-color', '#ededed');
-			root.style.setProperty('--item-bg-color', 'white');
-			root.style.setProperty('--link-color', 'rgb(26, 115, 232)');
-			root.style.setProperty('--main-font-color', 'rgb(26, 115, 232)');
-			root.style.setProperty('--sub-font-color', '#494949');
-			root.style.setProperty('--imp-font-color', 'black');
-			root.style.setProperty('--inactive-tab-color', '#ededed');
-			root.style.setProperty('--tab-hover-color', 'rgb(154, 160, 166)');
-			root.style.setProperty('--scrollbar-color', '#eee');
-			root.style.setProperty('--shadow-color', '#d9d9d9');
-			root.style.setProperty('--border-color', '#eee');
-			root.style.setProperty('--header-color', 'white');
-			root.style.setProperty('--tab-font-color', '#494949');
-		}
-	}
-
-	let loadSettingsEvent: IEventTelemetry = {
-		name: 'loadSettingsEvent',
-		properties: {
-			syncOnlineFiles: syncOnlineFiles,
-			colorTheme: colorTheme,
-			defaultTab: defaultTab as string,
-			maxFilesToStore: maxFilesToStore,
-			daysToRemeber: daysToRemeber as number,
-			maxFilesToShow: maxFilesValue
-		}
-	};
-
-	appInsights.trackEvent(loadSettingsEvent);
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-	onlineList = <HTMLUListElement>document.getElementById('link-list'); // online file list
-	fileElement = <HTMLUListElement>document.getElementById('file-list'); // offline (local) file list
-	onlineTabLink = <HTMLLinkElement>document.getElementById('online-tab-link');
-	localTabLink = <HTMLLinkElement>document.getElementById('local-tab-link');
-	settingsTabLink = <HTMLButtonElement>document.getElementById('settings-link');
-	let head = document.getElementsByTagName('HEAD')[0];
-
-	var waveBtn = (function () {
-		'use strict';
-		var btn = document.querySelectorAll('.wave'),
-			tab = document.querySelector('.tab-bar'),
-			indicator: HTMLDivElement = document.querySelector('.indicator'),
-			indi = 0;
-		indicator.style.marginLeft = indi + 'px';
-
-		for(var i = 0; i < btn.length; i++) {
-			const btnI: HTMLButtonElement = <HTMLButtonElement> btn[i];
-			btnI.addEventListener('click', function (e) {
-			var newRound = document.createElement('div'),x,y;
-
-
-			newRound.className = 'cercle';
-			btnI.appendChild(newRound);
-
-			x = e.pageX - btnI.offsetLeft;
-			y = e.pageY - btnI.offsetTop;
-
-			newRound.style.left = x + "px";
-			newRound.style.top = y + "px";
-			newRound.className += " anim";
-
-			indicator.style.marginLeft = indi + ((parseInt(btnI.dataset.num)) - 1) * 200 + 'px';
-
-
-			if (parseInt(btnI.dataset.num) == 1) {
-				openTab(null, Tab.Online);
-			} else {
-				openTab(null, Tab.Local);
-			}
-
-			setTimeout(function() {
-			  newRound.remove();
-			}, 1200);
-		  });
-		}
-	  }());
-
-	loadOptions().then(() => {
-
-		settingsTabLink.addEventListener('click', function() {
-			window.browser.runtime.openOptionsPage();
-
-			appInsights.trackEvent({ name: 'clickSettingsIcon' });
-		});
-
-		fetchAndUpdateOnlineFiles();
-		searchDownloads();
-
-		let searchBox: HTMLInputElement = document.querySelector('.search');
-
-		searchBox.addEventListener('keyup', ev => {
-			let searchText: string = searchBox.value.toLocaleLowerCase();
-			if (searchText == '') {
-				let clearSearch: HTMLButtonElement = document.querySelector('#clear-search');
-				clearSearch.style.display = 'none';
-			} else {
-				let clearSearch: HTMLButtonElement = document.querySelector('#clear-search');
-				clearSearch.style.display = '';
-			}
-			let listItems: NodeListOf<HTMLLIElement>;
-			if (currentTab == Tab.Local) {
-				listItems = document.querySelectorAll('#file-list > li');
-			} else {
-				listItems = document.querySelectorAll('#link-list > li');
-			}
-			listItems.forEach((listItem: HTMLLIElement) => {
-				if (listItem.getAttribute('data-search-term').indexOf(searchText) > -1) {
-					listItem.style.display = '';
-				} else {
-					listItem.style.display = 'none';
-				}
-			});
-		});
-
-		let clearSearch: HTMLButtonElement = document.querySelector('#clear-search');
-		clearSearch.addEventListener('click', (event: MouseEvent) => {
-			searchBox.value = '';
-			searchBox.dispatchEvent(new Event('keyup'));
-		});
-	});
-});
-
-window.addEventListener('beforeunload', (ev: BeforeUnloadEvent) => {
-	appInsights.flush();
-});
