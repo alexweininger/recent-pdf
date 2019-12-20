@@ -14,14 +14,11 @@ const appInsights = new ApplicationInsights({
 appInsights.loadAppInsights();
 appInsights.context.application.ver = extensionVerson;
 
-console.log(extensionVerson);
-
 let onlineList: HTMLUListElement = <HTMLUListElement>document.getElementById('link-list'); // online file list
 let fileElement: HTMLUListElement = <HTMLUListElement>document.getElementById('file-list'); // offline (local) file list
 let onlineTabLink: HTMLLinkElement = <HTMLLinkElement>document.getElementById('online-tab-link');
 let localTabLink: HTMLLinkElement = <HTMLLinkElement>document.getElementById('local-tab-link');
 let settingsTabLink: HTMLButtonElement = <HTMLButtonElement>document.getElementById('settings-link');
-let head = document.getElementsByTagName('HEAD')[0];
 let currentTab: Tab;
 let syncOnlineFiles: boolean = true;
 let maxFilesToStore: number = 1000;
@@ -65,8 +62,6 @@ if (localTabLink) {
 // in the future, we should give the users the option to sync/not sync their online pdf list
 function onOnlineFilesChanged(data: any): void {
 	onlinePdfCount = 0;
-
-	console.log('onOnlineFilesChanged', data);
 
 	onlineList.innerHTML = ''; // clear list
 
@@ -388,7 +383,6 @@ function localFooter(count: number) {
 
 // function that handles switching between tabs
 function openTab(evt: any, tab: Tab) {
-	console.log(tab);
 
 	// Find active elements and remove active class from elements
 	const activeElements: NodeListOf<Element> = <NodeListOf<Element>>document.querySelectorAll('.active');
@@ -442,9 +436,6 @@ async function loadOptions() {
 	let maxFilesValue = await fetchOption('general.defaultTab', 30);
 
 	let defaultTab: string = await fetchOption('general.defaultTab', 'Online files');
-
-	console.log('defaultTab', defaultTab);
-
 	if (defaultTab) {
 		if (defaultTab == 'Online files') {
 			onlineTabLink.dispatchEvent(new Event('mousedown'));
@@ -511,7 +502,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	onlineTabLink = <HTMLLinkElement>document.getElementById('online-tab-link');
 	localTabLink = <HTMLLinkElement>document.getElementById('local-tab-link');
 	settingsTabLink = <HTMLButtonElement>document.getElementById('settings-link');
-	head = document.getElementsByTagName('HEAD')[0];
+	let head = document.getElementsByTagName('HEAD')[0];
 
 	var waveBtn = (function () {
 		'use strict';
