@@ -7,6 +7,7 @@
 	--imp-font-color: white;
 	--inactive-tab-color: #191919;
 	--tab-hover-color: #494949;
+	--file-hover-color: #494949;
 	--scrollbar-color: rgba(0, 0, 0, 0.3);
 	--shadow-color: #1b1b1b;
 	--border-color: #4b4b4b;
@@ -313,6 +314,15 @@ li {
 	height: 16px;
 	margin: 0;
 	padding: 2px 0;
+}
+
+.list-div.left:hover{
+	background-color: var(--file-hover-color);
+	border-radius: 3px;
+}
+
+.list-item:hover{
+	background-color: var(--file-hover-color);
 }
 
 input.search {

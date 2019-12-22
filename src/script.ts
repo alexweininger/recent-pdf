@@ -546,7 +546,7 @@ async function loadOptions() {
 			root.style.setProperty('--imp-font-color', 'black');
 			root.style.setProperty('--inactive-tab-color', '#ededed');
 			root.style.setProperty('--tab-hover-color', 'rgb(154, 160, 166)');
-			root.style.setProperty('--file-hover-color', 'rgb(154, 160, 166)');
+			root.style.setProperty('--file-hover-color', 'rgb(212, 214, 216)');
 			root.style.setProperty('--scrollbar-color', '#eee');
 			root.style.setProperty('--shadow-color', '#d9d9d9');
 			root.style.setProperty('--border-color', '#eee');
