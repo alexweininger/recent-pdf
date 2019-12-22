@@ -23,6 +23,7 @@ let currentTab: Tab;
 let syncOnlineFiles: boolean = true;
 let maxFilesToStore: number = 1000;
 let daysToRemeber: number = 60;
+let groupPDFs: string = "No";
 
 appInsights.trackPageView({
 	name: 'popupView'
@@ -59,6 +60,8 @@ if (localTabLink) {
 	console.error('localTabLink is null');
 }
 
+let onlineFileGroups: string[] = []; // list of online groups
+
 // in the future, we should give the users the option to sync/not sync their online pdf list
 function onOnlineFilesChanged(data: any): void {
 	onlinePdfCount = 0;
@@ -73,58 +76,121 @@ function onOnlineFilesChanged(data: any): void {
 			if (onlinePdfCount > maxFilesToStore) {
 				break;
 			}
-
+			
 			let listItem: HTMLLIElement = document.createElement('li');
-			listItem.classList.add('list-item');
+					listItem.classList.add('list-item');
 
-			let leftDiv: HTMLDivElement = document.createElement('div');
-			leftDiv.classList.add('list-div', 'left');
+					let leftDiv: HTMLDivElement = document.createElement('div');
+					leftDiv.classList.add('list-div', 'left');
 
-			// make title element
-			let title: HTMLParagraphElement = document.createElement('p');
-			title.classList.add('link-title');
-			title.classList.add('local-title');
-			let URI = decodeURI(page.url);
-			title.innerText = URI.substring(URI.lastIndexOf('/') + 1, page.url.length - 4);
+					// make title element
+					let title: HTMLParagraphElement = document.createElement('p');
+					title.classList.add('link-title');
+					title.classList.add('local-title');
+					let URI = decodeURI(page.url);
+					title.innerText = URI.substring(URI.lastIndexOf('/') + 1, page.url.length - 4);
 
-			// make url element
-			let linkUrl: HTMLParagraphElement = document.createElement('p');
-			linkUrl.classList.add('link-url');
-			linkUrl.innerHTML = decodeURI(page.url).replace(' ', '');
+					// make url element
+					let linkUrl: HTMLParagraphElement = document.createElement('p');
+					linkUrl.classList.add('link-url');
+					linkUrl.innerHTML = decodeURI(page.url).replace(' ', '');
 
-			// make icon element
-			let icon: HTMLImageElement = document.createElement('img');
-			icon.classList.add('link-thumb');
-			icon.src = `../../test-icons/icons8-globe-48.png`;
+					// make icon element
+					let icon: HTMLImageElement = document.createElement('img');
+					icon.classList.add('link-thumb');
+					icon.src = `../../test-icons/icons8-globe-48.png`;
 
-			// append elements to left div
-			leftDiv.appendChild(icon);
-			leftDiv.appendChild(title);
-			leftDiv.appendChild(linkUrl);
+					// append elements to left div
+					leftDiv.appendChild(icon);
+					leftDiv.appendChild(title);
+					leftDiv.appendChild(linkUrl);
 
-			// on click listener
-			leftDiv.addEventListener('click', function() {
-				let openOnlineFileEvent: IEventTelemetry = {
-					name: 'openOnlineFile',
-					properties: {
-						visitCount: page.visitCount,
-						typedCount: page.typedCount,
-						lastVisitTime: page.lastVisitTime
+					// on click listener
+					leftDiv.addEventListener('click', function() {
+						let openOnlineFileEvent: IEventTelemetry = {
+							name: 'openOnlineFile',
+							properties: {
+								visitCount: page.visitCount,
+								typedCount: page.typedCount,
+								lastVisitTime: page.lastVisitTime
+							}
+						};
+						appInsights.trackEvent(openOnlineFileEvent);
+						appInsights.flush();
+
+						window.open(page.url);
+					});
+
+					listItem.setAttribute('data-search-term', page.url.toLocaleLowerCase());
+
+			
+			if (groupPDFs)
+			{
+				if(groupPDFs == 'Yes')
+				{
+					let groupName: string = page.url.toLocaleLowerCase();
+					groupName = groupName.substring(groupName.indexOf('.')+1);
+					groupName = groupName.substring(0, groupName.indexOf('.'));
+					groupName = groupName.charAt(0).toUpperCase() + groupName.slice(1)
+
+					if(onlineFileGroups.indexOf(groupName) > -1) // There is already a group from this site
+					{
+						let listGroup: HTMLUListElement = <HTMLUListElement>document.getElementById(groupName);
+						listGroup.appendChild(leftDiv);
+
+					}else{ // The group has not been made yet and should be created
+						onlineFileGroups.push(groupName);
+						let groupParagraph: HTMLParagraphElement = document.createElement('p');
+						groupParagraph.innerText = groupName;
+						groupParagraph.classList.add(groupName+"-pdf-list");
+						groupParagraph.style.fontWeight = "bold";
+						groupParagraph.style.fontSize = "medium";
+						groupParagraph.style.marginTop = "8px";
+						groupParagraph.style.marginBottom = "4px";
+
+						let listGroup: HTMLUListElement = document.createElement('ul');
+						listGroup.setAttribute("id", groupName);
+						
+						listGroup.appendChild(groupParagraph);
+						listGroup.appendChild(leftDiv);
+						onlineList.appendChild(listGroup);
+						
+						// Sort the groups into alphabetical order
+						let list:HTMLElement, i:number, switching:boolean, b, shouldSwitch:boolean;
+						list = document.getElementById("link-list");
+						switching = true;
+						while (switching) {
+							switching = false;
+							b = list.getElementsByTagName("ul");
+							for (i = 0; i < (b.length - 1); i++) {
+							shouldSwitch = false;
+							if (b[i].innerHTML.toLowerCase() > b[i + 1].innerHTML.toLowerCase()) {
+								shouldSwitch = true;
+								break;
+							}
+							}
+							if (shouldSwitch) {
+							b[i].parentNode.insertBefore(b[i + 1], b[i]);
+							switching = true;
+							}
+						}
 					}
-				};
-				appInsights.trackEvent(openOnlineFileEvent);
-				appInsights.flush();
+				}else
+				{
+					// append to list item
+					listItem.appendChild(leftDiv);
 
-				window.open(page.url);
-			});
+					// append list item to online list
+					onlineList.appendChild(listItem);
+				}
+			}else
+			{
+				// append to list item
+				listItem.appendChild(leftDiv);
 
-			listItem.setAttribute('data-search-term', page.url.toLocaleLowerCase());
-
-			// append to list item
-			listItem.appendChild(leftDiv);
-
-			// append list item to online list
-			onlineList.appendChild(listItem);
+				// append list item to online list
+				onlineList.appendChild(listItem);
+			}
 		}
 	}
 
@@ -428,10 +494,17 @@ async function fetchOption(name: string, defaultValue: any) {
 	return option[name] || defaultValue;
 }
 
+async function getGroupPDFsValue(){
+	const result = await getOption('general.groupPDFs');
+	let GroupPDFsValue = result['general.maxFilesToShow'];
+	return GroupPDFsValue;
+}
+
 async function loadOptions() {
 	syncOnlineFiles = await fetchOption('general.syncOnlineFiles', true);
 	maxFilesToStore = await fetchOption('general.maxFilesToStore', 100);
 	daysToRemeber = await fetchOption('general.daysToRemember', 60);
+	groupPDFs = await fetchOption('general.groupPDFs', "No");
 
 	let maxFilesValue = await fetchOption('general.defaultTab', 30);
 
@@ -473,6 +546,7 @@ async function loadOptions() {
 			root.style.setProperty('--imp-font-color', 'black');
 			root.style.setProperty('--inactive-tab-color', '#ededed');
 			root.style.setProperty('--tab-hover-color', 'rgb(154, 160, 166)');
+			root.style.setProperty('--file-hover-color', 'rgb(154, 160, 166)');
 			root.style.setProperty('--scrollbar-color', '#eee');
 			root.style.setProperty('--shadow-color', '#d9d9d9');
 			root.style.setProperty('--border-color', '#eee');
@@ -489,10 +563,10 @@ async function loadOptions() {
 			defaultTab: defaultTab as string,
 			maxFilesToStore: maxFilesToStore,
 			daysToRemeber: daysToRemeber as number,
-			maxFilesToShow: maxFilesValue
+			maxFilesToShow: maxFilesValue,
+			groupPDFs: groupPDFs as string
 		}
 	};
-
 	appInsights.trackEvent(loadSettingsEvent);
 }
 

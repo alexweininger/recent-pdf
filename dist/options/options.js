@@ -79,5 +79,10 @@ chrome.options.addTab('General', [
     type: 'select',
     desc: 'Color theme for the RecentPDF UI.',
     options: ['Light', 'Dark']
+  },{
+    name: 'groupPDFs',
+    type: 'select',
+    desc: 'Group PDFs by URL',
+    options: ['No', 'Yes']
   },
 ]);
