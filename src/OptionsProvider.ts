@@ -74,6 +74,4 @@ export class OptionsProvider {
 			}
 		});
 	}
-
-	public getOption(option: string) {}
 }
