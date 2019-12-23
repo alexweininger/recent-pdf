@@ -36,7 +36,12 @@ export class OptionsProvider {
 		let optionsValues: any = defaults;
 
 		for (let option in optionsValues) {
-			optionsValues[option] = await OptionsProvider.fetchOption(option) || optionsValues[option];
+			const value = await OptionsProvider.fetchOption(option, optionsValues[option]);
+			if (value) {
+			 optionsValues[option] = value;
+			} else {
+				console.error(`Error loading option: ${option}, got ${value}.`);
+			}
 		}
 
 		const options: IOptions = {
@@ -53,16 +58,15 @@ export class OptionsProvider {
 		return options;
 	}
 
-	private static async fetchOption(name: string): Promise<any> {
-		return new Promise((resolve, reject) => {
+	private static async fetchOption<T>(name: string, defaultValue: T): Promise<T> {
+		return new Promise<T>((resolve, reject) => {
 			try {
 				window.browser.storage.sync.get(name, (result: any) => {
-					let value = result[name];
+					let value: T = result[name];
 					if (value) {
 						resolve(value);
 					} else {
-						console.error(`Error loading option ${name}.`);
-						reject();
+						resolve(defaultValue);
 					}
 				});
 			} catch (e) {
