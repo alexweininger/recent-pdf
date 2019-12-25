@@ -39,6 +39,10 @@ let localFiles: any[] = [];
 let localPdfCount: number = 0; // number of local pdf files
 let onlineFiles: OnlineFiles = {};
 
+let localFileList: LocalFileList;
+let onlineFileList: OnlineFileList;
+let sortSelector: HTMLSelectElement = <HTMLSelectElement>document.getElementById('sort-selector');
+
 // for x-browser support
 window.browser = (() => {
 	return window.browser || window.chrome;
@@ -52,6 +56,15 @@ document.addEventListener('DOMContentLoaded', () => {
 	onlineTabLink = <HTMLLinkElement>document.getElementById('online-tab-link');
 	localTabLink = <HTMLLinkElement>document.getElementById('local-tab-link');
 	settingsTabLink = <HTMLButtonElement>document.getElementById('settings-link');
+	sortSelector = document.querySelector('#sort-select');
+
+	sortSelector.onchange = () => {
+		if (currentTab == Tab.Local) {
+			localFileList.sort(sortSelector.value);
+		} else {
+			onlineFileList.sort(sortSelector.value);
+		}
+	};
 
 	let btn = document.querySelectorAll('.wave');
 	let indicator: HTMLDivElement = document.querySelector('.indicator');
@@ -91,18 +104,15 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	loadOptions().then(() => {
-
 		settingsTabLink.addEventListener('click', function() {
 			window.browser.runtime.openOptionsPage();
 			Telemetry.appInsights.trackEvent({ name: 'clickSettingsIcon' });
 		});
 
-		let localFileList: LocalFileList = new LocalFileList('Local File List', 'local files', [], localDiv, window.browser);
-
+		localFileList = new LocalFileList('Local File List', 'local files', [], localDiv, window.browser);
 		localFileList.updateFileList();
 
-		let onlineFileList: OnlineFileList = new OnlineFileList('Online File List', 'online pdf links', [], onlineDiv, window.browser);
-
+		onlineFileList = new OnlineFileList('Online File List', 'online pdf links', [], onlineDiv, window.browser);
 		onlineFileList.updateFileList();
 
 		let searchBox: HTMLInputElement = document.querySelector('.search');
@@ -152,6 +162,26 @@ function openTab(evt: any, tab: Tab): void {
 	}
 
 	currentTab = tab;
+
+	if (sortSelector && localFileList) {
+		if (currentTab == Tab.Local) {
+			sortSelector.innerHTML = '';
+			localFileList.sortTypes.forEach(sortType => {
+				let option: HTMLOptionElement = document.createElement('option');
+				option.text = sortType.name;
+				option.value = sortType.name;
+				sortSelector.appendChild(option);
+			});
+		} else {
+			sortSelector.innerHTML = '';
+			onlineFileList.sortTypes.forEach(sortType => {
+				let option: HTMLOptionElement = document.createElement('option');
+				option.text = sortType.name;
+				option.value = sortType.name;
+				sortSelector.appendChild(option);
+			});
+		}
+	}
 
 	let searchBox: HTMLInputElement = document.querySelector('.search');
 	searchBox.value = '';

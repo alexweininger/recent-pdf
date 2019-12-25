@@ -18,7 +18,6 @@ export class OnlineFileList extends FileList {
 
 	updateFileList = async function(this: OnlineFileList): Promise<void> {
 		let updateFiles = (value: any) => {
-			this.onlineFiles = value['onlineFiles'];
 
 			if (!this.onlineFiles) {
 				this.onlineFiles = {};
@@ -42,22 +41,14 @@ export class OnlineFileList extends FileList {
 						}
 					});
 
-					if (options.general.syncOnlineFiles) {
-						chrome.storage.sync.set({ onlineFiles: this.files, }, () => {});
-					} else {
-						chrome.storage.local.set({ onlineFiles: this.files }, () => {});
-					}
+
 
 					this.renderFileList();
 				}
 			);
 		};
 
-		if (options.general.syncOnlineFiles) {
-			chrome.storage.sync.get(['onlineFiles'], value => updateFiles(value));
-		} else {
-			chrome.storage.local.get(['onlineFiles'], value => updateFiles(value));
-		}
+		updateFiles(undefined);
 	};
 
 	constructor(name: string, description: string, files: File[], parent: HTMLDivElement, browser: typeof chrome) {
