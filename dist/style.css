@@ -65,9 +65,7 @@ body {
 	position: absolute;
 	margin-top: 35px;
 	margin-left: 0;
-
 	-webkit-transition: margin 0.5s ease;
-
 	transition: margin 0.5s ease;
 }
 
@@ -193,7 +191,6 @@ body {
 	min-height: 384px;
 	max-width: 400px;
 	overflow-y: scroll;
-
 }
 
 .tabcontent {
@@ -230,26 +227,22 @@ body {
 	margin-bottom: 60px;
 }
 
-.file-list
-	{
-		display: inline-block;
-		font-size: 13px;
-		list-style-type: none;
-		margin: 0;
-		min-width: 180px;
-		padding: 0;
-		width: 400px;
-		max-width: 400px;
-		margin-bottom: 6px;
-		height: 100%;
+.file-list {
+	display: inline-block;
+	font-size: 13px;
+	list-style-type: none;
+	margin: 0;
+	min-width: 180px;
+	padding: 0;
+	width: 400px;
+	max-width: 400px;
+	margin-bottom: 6px;
+	height: 100%;
 }
 
 #local-div {
 	height: 100%;
-
 }
-
-
 
 .list-item {
 	cursor: pointer;
@@ -266,7 +259,6 @@ body {
 
 .file-list-header {
 	color: var(--link-color);
-
 }
 
 .link-thumb {

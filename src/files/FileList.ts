@@ -1,115 +1,127 @@
 import { File, FileAction } from './File';
 
 export interface SortType<T> {
-	name: string,
-	compareFunc: (a: T, b: T) => number;
+  name: string;
+  compareFunc: (a: T, b: T) => number;
 }
 
 export abstract class FileList {
-	name: string;
-	description: string;
-	files: File[];
-	parent: HTMLDivElement;
-	browser: typeof chrome;
-	actions: FileAction[];
-	currentSearchTerm: string = '';
-	currentSortType: string;
+  name: string;
+  description: string;
+  files: File[];
+  parent: HTMLDivElement;
+  browser: typeof chrome;
+  actions: FileAction[];
+  currentSearchTerm: string = '';
+  currentSortType: string;
 
-	sortTypes: SortType<File>[] = [
-		{
-			name: 'Alphabetical',
-			compareFunc: (a: File, b: File) => {
-				if (a.title > b.title) {
-					return 1;
-				} else {
-					return -1;
-				}
-			}
-		},
-		{
-			name: 'Reverse alpha',
-			compareFunc: (a: File, b: File) => {
-				if (a.title > b.title) {
-					return -1;
-				} else {
-					return 1;
-				}
-			}
-		}
-	]
+  sortTypes: SortType<File>[] = [
+    {
+      name: 'Alphabetical',
+      compareFunc: (a: File, b: File) => {
+        if (a.title > b.title) {
+          return 1;
+        } else {
+          return -1;
+        }
+      },
+    },
+    {
+      name: 'Reverse alpha',
+      compareFunc: (a: File, b: File) => {
+        if (a.title > b.title) {
+          return -1;
+        } else {
+          return 1;
+        }
+      },
+    },
+  ];
 
-	abstract updateFileList: (this: FileList) => void;
+  abstract updateFileList: (this: FileList) => void;
 
-	search = (text: string) => this.renderFileList(text.toLowerCase());
+  search = (text: string) => this.renderFileList(text.toLowerCase());
 
-	sort = (text: string) => {
-		console.log('sort', text);
+  sort = (text: string) => {
+    console.log('sort', text);
 
-		this.sortTypes.forEach((sortType: SortType<File>) => {
-			if (sortType.name == text) {
-				this.files.sort(sortType.compareFunc);
-				this.renderFileList();
-			}
-		});
-	}
+    this.sortTypes.forEach((sortType: SortType<File>) => {
+      if (sortType.name == text) {
+        this.files.sort(sortType.compareFunc);
+        this.renderFileList();
+      }
+    });
+  };
 
-	renderFileList = function(this: FileList, searchTerm: string='', sortTypeText: string=this.sortTypes[0].name) {
+  renderFileList = function(
+    this: FileList,
+    searchTerm: string = '',
+    sortTypeText: string = this.sortTypes[0].name,
+  ) {
+    this.parent.innerHTML = '';
 
-		this.parent.innerHTML = '';
+    let pinnedFileListElement: HTMLUListElement = document.querySelector(
+      '#pinned-list' + this.name,
+    );
 
-		let pinnedFileListElement:HTMLUListElement = document.querySelector('#pinned-list' + this.name);
+    if (!pinnedFileListElement) {
+      pinnedFileListElement = document.createElement('ul');
+      pinnedFileListElement.id = '#pinned-list' + this.name;
+      pinnedFileListElement.classList.add('file-list');
+      this.parent.appendChild(pinnedFileListElement);
+    }
 
-		if (!pinnedFileListElement) {
-			pinnedFileListElement = document.createElement('ul');
-			pinnedFileListElement.id = '#pinned-list' + this.name;
-			pinnedFileListElement.classList.add('file-list');
-			this.parent.appendChild(pinnedFileListElement);
-		}
+    let pinnedFileListHeader = document.createElement('p');
+    pinnedFileListHeader.innerHTML = 'Pinned Files';
+    pinnedFileListElement.classList.add('file-list-header');
 
-		let pinnedFileListHeader = document.createElement('p');
-		pinnedFileListHeader.innerHTML = 'Pinned Files';
-		pinnedFileListElement.classList.add('file-list-header');
+    let fileListHeader = document.createElement('p');
+    fileListHeader.innerHTML = 'Local Files';
 
+    let fileListElement: HTMLUListElement = document.querySelector(
+      '#list-' + this.name,
+    );
 
-		let fileListHeader = document.createElement('p');
-		fileListHeader.innerHTML = 'Local Files';
+    if (!fileListElement) {
+      fileListElement = document.createElement('ul');
+      fileListElement.id = 'list-' + this.name;
+      fileListElement.classList.add('file-list');
+      this.parent.appendChild(fileListElement);
+    }
 
-		let fileListElement: HTMLUListElement = document.querySelector('#list-' + this.name);
+    pinnedFileListElement.innerHTML = '';
+    fileListElement.innerHTML = '';
 
-		if (!fileListElement) {
-			fileListElement = document.createElement('ul');
-			fileListElement.id = 'list-' + this.name;
-			fileListElement.classList.add('file-list');
-			this.parent.appendChild(fileListElement);
-		}
+    this.sortTypes.forEach((sortType: SortType<File>) => {
+      if (sortType.name == sortTypeText) {
+        this.files.sort(sortType.compareFunc);
+      }
+    });
 
-		pinnedFileListElement.innerHTML = '';
-		fileListElement.innerHTML = '';
+    this.files.forEach((file) => {
+      if (file.title.toLowerCase().indexOf(searchTerm) > -1) {
+        if (file.pinned) {
+          // @ts-ignore
+          pinnedFileListElement.prepend(pinnedFileListHeader);
+          pinnedFileListElement.appendChild(file.renderFile());
+        } else {
+          fileListElement.appendChild(file.renderFile());
+        }
+      }
+    });
+  };
 
-		this.sortTypes.forEach((sortType: SortType<File>) => {
-			if (sortType.name == sortTypeText) {
-				this.files.sort(sortType.compareFunc);
-			}
-		});
-
-		this.files.forEach(file => {
-			if (file.title.toLowerCase().indexOf(searchTerm) > -1) {
-				if (file.pinned) {
-					// @ts-ignore
-					pinnedFileListElement.prepend(pinnedFileListHeader);
-					pinnedFileListElement.appendChild(file.renderFile());
-				} else {
-					fileListElement.appendChild(file.renderFile());
-				}
-			}
-		});
-	};
-
-	constructor(name: string, description: string, files: File[], parent: HTMLDivElement, browser: typeof chrome) {
-		this.name = name;
-		this.description = description;
-		this.files = files;
-		this.parent = parent;
-		this.browser = browser;
-	}
+  constructor(
+    name: string,
+    description: string,
+    files: File[],
+    parent: HTMLDivElement,
+    browser: typeof chrome,
+  ) {
+    this.name = name;
+    this.description = description;
+    this.files = files;
+    this.parent = parent;
+    this.browser = browser;
+  }
 }
