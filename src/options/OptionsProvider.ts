@@ -19,7 +19,7 @@ export interface IOptions {
 	}
 }
 
-export let options: IOptions = {
+let options: IOptions = {
 	general: {
 		defaultTab: Tabs.Local,
 		colorTheme: ColorThemes.Light,
@@ -37,7 +37,7 @@ export class OptionsProvider {
 	constructor() {
 	}
 
-	public async fetchOptions() {
+	public async fetchOptions(): Promise<IOptions> {
 
 		const defaults = {
 			'general.defaultTab': Tabs.Local,
@@ -70,8 +70,8 @@ export class OptionsProvider {
 			}
 		}
 
-
 		this.options = options;
+		return Promise.resolve(options);
 	}
 
 	private static async fetchOption<T>(name: string, defaultValue: T): Promise<T> {

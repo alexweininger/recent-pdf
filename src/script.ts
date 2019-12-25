@@ -1,47 +1,33 @@
 /// <reference path='../node_modules/@types/chrome/index.d.ts'/>
 /// <reference path='./web-ext/index.d.ts'/>
 
-import { IMetricTelemetry, IEventTelemetry } from '@microsoft/applicationinsights-web';
-import { OptionsProvider, IOptions, ColorThemes, Tabs, options } from './options/OptionsProvider';
-import { numDaysBetween, Utils } from './utils/Utils';
+import { IEventTelemetry } from '@microsoft/applicationinsights-web';
+import { LocalFileList } from './files/LocalFileList';
+import { OnlineFileList } from './files/OnlineFileList';
+import { ColorThemes, OptionsProvider, Tabs, IOptions } from './options/OptionsProvider';
 import { Telemetry } from './utils/Telemetry';
-import { LocalFile } from './file/LocalFile';
-import { OnlineFile } from './file/OnlineFile';
-import { LocalFileList } from './file/LocalFileList';
-import { OnlineFileList } from './file/OnlineFileList';
 
 enum Tab {
 	Local = 'local',
 	Online = 'online'
 }
 
-interface OnlineFiles {
-	[url: string]: chrome.history.HistoryItem;
-}
-
-const extensionVerson: string = chrome.runtime.getManifest().version;
-
 Telemetry.appInsights.trackPageView({
 	name: 'popupView'
 });
 
-let onlineList: HTMLUListElement = <HTMLUListElement>document.getElementById('link-list'); // online file list
-let fileElement: HTMLUListElement = <HTMLUListElement>document.getElementById('file-list'); // offline (local) file list
 let onlineTabLink: HTMLLinkElement = <HTMLLinkElement>document.getElementById('online-tab-link');
 let localTabLink: HTMLLinkElement = <HTMLLinkElement>document.getElementById('local-tab-link');
-let settingsTabLink: HTMLButtonElement = <HTMLButtonElement>document.getElementById('settings-link');
+let settingsButton: HTMLButtonElement = <HTMLButtonElement>document.getElementById('settings-link');
+let sortSelector: HTMLSelectElement = <HTMLSelectElement>document.getElementById('sort-selector');
+
+let onlinePdfCount: number = 0;
+let localPdfCount: number = 0;
+
 let currentTab: Tab;
-let syncOnlineFiles: boolean = true;
-let maxFilesToStore: number = 1000;
-let daysToRemeber: number = 60;
-let onlinePdfCount: number = 0; // number of online pdf files
-let localFiles: any[] = [];
-let localPdfCount: number = 0; // number of local pdf files
-let onlineFiles: OnlineFiles = {};
 
 let localFileList: LocalFileList;
 let onlineFileList: OnlineFileList;
-let sortSelector: HTMLSelectElement = <HTMLSelectElement>document.getElementById('sort-selector');
 
 // for x-browser support
 window.browser = (() => {
@@ -49,20 +35,20 @@ window.browser = (() => {
 })();
 
 document.addEventListener('DOMContentLoaded', () => {
-	onlineList = <HTMLUListElement>document.getElementById('link-list'); // online file list
 	let onlineDiv = <HTMLDivElement>document.getElementById('link-div'); // online file list
 	let localDiv = <HTMLDivElement>document.getElementById('local-div'); // online file list
-	fileElement = <HTMLUListElement>document.getElementById('file-list'); // offline (local) file list
+	let searchBox: HTMLInputElement = document.querySelector('.search');
+
 	onlineTabLink = <HTMLLinkElement>document.getElementById('online-tab-link');
 	localTabLink = <HTMLLinkElement>document.getElementById('local-tab-link');
-	settingsTabLink = <HTMLButtonElement>document.getElementById('settings-link');
+	settingsButton = <HTMLButtonElement>document.getElementById('settings-link');
 	sortSelector = document.querySelector('#sort-select');
 
 	sortSelector.onchange = () => {
 		if (currentTab == Tab.Local) {
-			localFileList.sort(sortSelector.value);
+			localFileList.renderFileList(searchBox.value.toLocaleLowerCase(), sortSelector.value);
 		} else {
-			onlineFileList.sort(sortSelector.value);
+			onlineFileList.renderFileList(searchBox.value.toLocaleLowerCase(), sortSelector.value);
 		}
 	};
 
@@ -72,14 +58,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	indicator.style.marginLeft = indi + 'px';
 
-	for (var i = 0; i < btn.length; i++) {
+	for (let i = 0; i < btn.length; i++) {
 		const btnI: HTMLButtonElement = <HTMLButtonElement>btn[i];
 		btnI.addEventListener('click', function(e) {
-			var newRound = document.createElement('div'),
-				x,
-				y;
+			let newRound: HTMLDivElement = document.createElement('div');
+			let x: number;
+			let y: number;
 
-			newRound.className = 'cercle';
+			newRound.className = 'circle';
 			btnI.appendChild(newRound);
 
 			x = e.pageX - btnI.offsetLeft;
@@ -89,7 +75,8 @@ document.addEventListener('DOMContentLoaded', () => {
 			newRound.style.top = y + 'px';
 			newRound.className += ' anim';
 
-			indicator.style.marginLeft = indi + (parseInt(btnI.dataset.num) - 1) * 200 + 'px';
+			let tabWidth: number = window.document.body.clientWidth / btn.length;
+			indicator.style.marginLeft = indi + (parseInt(btnI.dataset.num) - 1) * tabWidth + 'px';
 
 			if (parseInt(btnI.dataset.num) == 1) {
 				openTab(null, Tab.Online);
@@ -103,8 +90,10 @@ document.addEventListener('DOMContentLoaded', () => {
 		});
 	}
 
-	loadOptions().then(() => {
-		settingsTabLink.addEventListener('click', function() {
+	let optionsProvider = new OptionsProvider();
+	optionsProvider.fetchOptions().then((options: IOptions) => {
+		applyOptions(options);
+		settingsButton.addEventListener('click', function() {
 			window.browser.runtime.openOptionsPage();
 			Telemetry.appInsights.trackEvent({ name: 'clickSettingsIcon' });
 		});
@@ -115,12 +104,26 @@ document.addEventListener('DOMContentLoaded', () => {
 		onlineFileList = new OnlineFileList('Online File List', 'online pdf links', [], onlineDiv, window.browser);
 		onlineFileList.updateFileList();
 
-		let searchBox: HTMLInputElement = document.querySelector('.search');
+		if (currentTab == Tab.Local) {
+			sortSelector.innerHTML = '';
+			localFileList.sortTypes.forEach(sortType => {
+				let option: HTMLOptionElement = document.createElement('option');
+				option.text = sortType.name;
+				option.value = sortType.name;
+				sortSelector.appendChild(option);
+			});
+		} else {
+			sortSelector.innerHTML = '';
+			onlineFileList.sortTypes.forEach(sortType => {
+				let option: HTMLOptionElement = document.createElement('option');
+				option.text = sortType.name;
+				option.value = sortType.name;
+				sortSelector.appendChild(option);
+			});
+		}
 
 		searchBox.addEventListener('keyup', (event: KeyboardEvent) => {
-			let searchText: string = searchBox.value.toLocaleLowerCase();
-
-			if (searchText == '') {
+			if (searchBox.value == '') {
 				let clearSearch: HTMLButtonElement = document.querySelector('#clear-search');
 				clearSearch.style.display = 'none';
 			} else {
@@ -129,9 +132,9 @@ document.addEventListener('DOMContentLoaded', () => {
 			}
 
 			if (currentTab == Tab.Local) {
-				localFileList.search(searchText);
+				localFileList.renderFileList(searchBox.value.toLocaleLowerCase(), sortSelector.value);
 			} else {
-				onlineFileList.search(searchText);
+				onlineFileList.renderFileList(searchBox.value.toLocaleLowerCase(), sortSelector.value);
 			}
 		});
 
@@ -210,10 +213,7 @@ function localFooter(count: number): void {
 	countDisplay.innerHTML = `Showing ${count} file${plural}`;
 }
 
-async function loadOptions() {
-	let optionsProvider = new OptionsProvider();
-
-	await optionsProvider.fetchOptions();
+function applyOptions(options: IOptions) {
 
 	if (options.general.defaultTab == Tabs.Online) {
 		onlineTabLink.click();
@@ -239,56 +239,8 @@ async function loadOptions() {
 		root.style.setProperty('--tab-font-color', '#494949');
 	}
 
-	const loadSettingsEvent: IEventTelemetry = {
+	Telemetry.appInsights.trackEvent({
 		name: 'loadSettingsEvent',
 		properties: options
-	};
-
-	Telemetry.appInsights.trackEvent(loadSettingsEvent);
-}
-
-// in the future, we should give the users the option to sync/not sync their online pdf list
-function onOnlineFilesChanged(data: any): void {
-	onlinePdfCount = 0;
-
-	onlineList.innerHTML = ''; // clear list
-
-	for (const key in data) {
-		if (data.hasOwnProperty(key)) {
-			const page: chrome.history.HistoryItem = data[key];
-			onlinePdfCount++;
-
-			if (onlinePdfCount > maxFilesToStore) {
-				break;
-			}
-
-			let onlineFile: OnlineFile = new OnlineFile(page);
-
-			// append list item to online list
-			onlineList.appendChild(onlineFile.renderFile());
-		}
-	}
-
-	let onlineFileCountMetric: IMetricTelemetry = {
-		name: 'onlineFilesCount',
-		average: onlinePdfCount
-	};
-
-	Telemetry.appInsights.trackMetric(onlineFileCountMetric, { maxFilesToShow: options.general.maxFilesToShow });
-	updateFooter();
-}
-
-function pruneOnlineFiles(data: OnlineFiles) {
-	for (const key in data) {
-		if (data.hasOwnProperty(key)) {
-			const page: chrome.history.HistoryItem = data[key];
-
-			let lastVisited: Date = new Date(page.lastVisitTime);
-
-			if (numDaysBetween(lastVisited, new Date()) > (daysToRemeber | 60)) {
-				console.log('pruning', key);
-				delete data[key];
-			}
-		}
-	}
+	});
 }

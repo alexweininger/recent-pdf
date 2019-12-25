@@ -1,7 +1,5 @@
 import { File, FileAction } from './File';
 
-export let tabs: FileList[];
-
 export interface SortType<T> {
 	name: string,
 	compareFunc: (a: T, b: T) => number;
@@ -14,6 +12,9 @@ export abstract class FileList {
 	parent: HTMLDivElement;
 	browser: typeof chrome;
 	actions: FileAction[];
+	currentSearchTerm: string = '';
+	currentSortType: string;
+
 	sortTypes: SortType<File>[] = [
 		{
 			name: 'Alphabetical',
@@ -52,7 +53,7 @@ export abstract class FileList {
 		});
 	}
 
-	renderFileList = function(this: FileList, searchTerm: string='') {
+	renderFileList = function(this: FileList, searchTerm: string='', sortTypeText: string=this.sortTypes[0].name) {
 
 		this.parent.innerHTML = '';
 
@@ -84,6 +85,12 @@ export abstract class FileList {
 
 		pinnedFileListElement.innerHTML = '';
 		fileListElement.innerHTML = '';
+
+		this.sortTypes.forEach((sortType: SortType<File>) => {
+			if (sortType.name == sortTypeText) {
+				this.files.sort(sortType.compareFunc);
+			}
+		});
 
 		this.files.forEach(file => {
 			if (file.title.toLowerCase().indexOf(searchTerm) > -1) {

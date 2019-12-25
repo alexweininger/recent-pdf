@@ -3,7 +3,7 @@ import { LocalFile } from './LocalFile';
 import { IMetricTelemetry } from '@microsoft/applicationinsights-web';
 import { Telemetry } from '../utils/Telemetry';
 import { File } from './File';
-import { options } from '../options/OptionsProvider';
+import { OptionsProvider } from '../options/OptionsProvider';
 
 export class LocalFileList extends FileList {
 
@@ -53,7 +53,7 @@ export class LocalFileList extends FileList {
 					average: this.files.length
 				};
 
-				Telemetry.appInsights.trackMetric(localFileCountMetric, { maxFilesToShow: options.general.maxFilesToShow });
+				Telemetry.appInsights.trackMetric(localFileCountMetric);
 
 				console.log(this.files);
 

@@ -1,9 +1,5 @@
-import { FileList } from './FileList';
-import { LocalFile } from './LocalFile';
-import { IMetricTelemetry } from '@microsoft/applicationinsights-web';
-import { Telemetry } from '../utils/Telemetry';
 import { File } from './File';
-import { options } from '../options/OptionsProvider';
+import { FileList } from './FileList';
 import { OnlineFile } from './OnlineFile';
 
 interface OnlineFiles {
@@ -37,8 +33,6 @@ export class OnlineFileList extends FileList {
 							}
 						}
 					});
-
-
 
 					this.renderFileList();
 				}
