@@ -1,5 +1,5 @@
 import { IEventTelemetry, Exception } from '@microsoft/applicationinsights-web';
-import { Telemetry } from './Telemetry';
+import { Telemetry } from '../utils/Telemetry';
 
 export interface FileAction {
 	name: string;

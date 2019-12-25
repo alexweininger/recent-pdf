@@ -1,12 +1,9 @@
-/// <reference path='../node_modules/@types/chrome/index.d.ts'/>
-/// <reference path='./web-ext/index.d.ts'/>
-
 import { FileList } from './FileList';
 import { LocalFile } from './LocalFile';
 import { IMetricTelemetry } from '@microsoft/applicationinsights-web';
-import { Telemetry } from './Telemetry';
+import { Telemetry } from '../utils/Telemetry';
 import { File } from './File';
-import { options } from './OptionsProvider';
+import { options } from '../options/OptionsProvider';
 
 export class LocalFileList extends FileList {
 

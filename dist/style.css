@@ -249,17 +249,7 @@ body {
 
 }
 
-select#sort-select {
-	position: absolute;
-	margin: 0 1px 3px 0;
-	font-size: 12px;
-	border-radius: 3px;
-	left: 250px;
-	width: 7pc;
-	padding-top: 3px;
-	padding-bottom: 3px;
-	z-index: 0;
-}
+
 
 .list-item {
 	cursor: pointer;
@@ -368,6 +358,25 @@ input.search {
 	padding-left: 20px;
 	padding-right: 6px;
 	z-index: 0;
+}
+
+select#sort-select {
+	position: absolute;
+	margin: 0 1px 3px 0;
+	font-size: 12px;
+	border-radius: 3px;
+	left: 250px;
+	width: 7pc;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	z-index: 0;
+	background-color: var(--main-bg-color);
+	border: none;
+	color: var(--imp-font-color);
+}
+
+select#sort-select option {
+	color: var(--imp-font-color);
 }
 
 #settings-link {

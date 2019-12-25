@@ -1,6 +1,6 @@
-import { Utils } from './Utils';
+import { Utils } from '../utils/Utils';
 import { IEventTelemetry } from '@microsoft/applicationinsights-web';
-import { Telemetry } from './Telemetry';
+import { Telemetry } from '../utils/Telemetry';
 import { File, FileAction } from './File';
 
 export class LocalFile extends File implements chrome.downloads.DownloadItem {

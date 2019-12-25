@@ -2,13 +2,13 @@
 /// <reference path='./web-ext/index.d.ts'/>
 
 import { IMetricTelemetry, IEventTelemetry } from '@microsoft/applicationinsights-web';
-import { OptionsProvider, IOptions, ColorThemes, Tabs, options } from './OptionsProvider';
-import { numDaysBetween, Utils } from './Utils';
-import { Telemetry } from './Telemetry';
-import { LocalFile } from './LocalFile';
-import { OnlineFile } from './OnlineFile';
-import { LocalFileList } from './LocalFileList';
-import { OnlineFileList } from './OnlineFileList';
+import { OptionsProvider, IOptions, ColorThemes, Tabs, options } from './options/OptionsProvider';
+import { numDaysBetween, Utils } from './utils/Utils';
+import { Telemetry } from './utils/Telemetry';
+import { LocalFile } from './file/LocalFile';
+import { OnlineFile } from './file/OnlineFile';
+import { LocalFileList } from './file/LocalFileList';
+import { OnlineFileList } from './file/OnlineFileList';
 
 enum Tab {
 	Local = 'local',

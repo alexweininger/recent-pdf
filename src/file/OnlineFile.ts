@@ -1,6 +1,6 @@
 import { IEventTelemetry } from '@microsoft/applicationinsights-web';
 import { File, FileAction } from './File';
-import { Telemetry } from './Telemetry';
+import { Telemetry } from '../utils/Telemetry';
 
 export class OnlineFile extends File implements chrome.history.HistoryItem {
 	readonly typedCount?: number;

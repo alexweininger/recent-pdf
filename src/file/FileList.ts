@@ -1,6 +1,3 @@
-/// <reference path='../node_modules/@types/chrome/index.d.ts'/>
-/// <reference path='./web-ext/index.d.ts'/>
-
 import { File, FileAction } from './File';
 
 export let tabs: FileList[];
@@ -59,7 +56,7 @@ export abstract class FileList {
 
 		this.parent.innerHTML = '';
 
-		let pinnedFileListElement = document.querySelector('#pinned-list' + this.name);
+		let pinnedFileListElement:HTMLUListElement = document.querySelector('#pinned-list' + this.name);
 
 		if (!pinnedFileListElement) {
 			pinnedFileListElement = document.createElement('ul');
@@ -76,7 +73,7 @@ export abstract class FileList {
 		let fileListHeader = document.createElement('p');
 		fileListHeader.innerHTML = 'Local Files';
 
-		let fileListElement = document.querySelector('#list-' + this.name);
+		let fileListElement: HTMLUListElement = document.querySelector('#list-' + this.name);
 
 		if (!fileListElement) {
 			fileListElement = document.createElement('ul');
@@ -91,6 +88,7 @@ export abstract class FileList {
 		this.files.forEach(file => {
 			if (file.title.toLowerCase().indexOf(searchTerm) > -1) {
 				if (file.pinned) {
+					// @ts-ignore
 					pinnedFileListElement.prepend(pinnedFileListHeader);
 					pinnedFileListElement.appendChild(file.renderFile());
 				} else {
