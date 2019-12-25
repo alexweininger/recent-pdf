@@ -19,10 +19,25 @@ export interface IOptions {
 	}
 }
 
-export class OptionsProvider {
-	constructor() {}
+export let options: IOptions = {
+	general: {
+		defaultTab: Tabs.Local,
+		colorTheme: ColorThemes.Light,
+		daysToRemember:  60,
+		maxFilesToShow: 30,
+		maxFilesToStore: 100,
+		syncOnlineFiles: true
+	}
+};
 
-	public static async fetchOptions() {
+export class OptionsProvider {
+
+	public options: IOptions;
+
+	constructor() {
+	}
+
+	public async fetchOptions() {
 
 		const defaults = {
 			'general.defaultTab': Tabs.Local,
@@ -55,7 +70,8 @@ export class OptionsProvider {
 			}
 		}
 
-		return options;
+
+		this.options = options;
 	}
 
 	private static async fetchOption<T>(name: string, defaultValue: T): Promise<T> {

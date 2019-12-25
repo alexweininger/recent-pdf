@@ -28,8 +28,11 @@
         "tabs",
         "downloads",
         "downloads.open",
-        "storage"
+        "storage",
+        "http://*/",
+        "https://*/",
+        "activeTab"
     ],
-    "content_security_policy": "img-src data: chrome://favicon; script-src 'self'; object-src 'self'",
+    "content_security_policy": "img-src data: chrome://favicon; script-src 'self' 'unsafe-eval' ; object-src 'self';",
     "offline_enabled": true
 }
