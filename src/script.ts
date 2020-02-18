@@ -65,9 +65,22 @@ function onOnlineFilesChanged(data: any): void {
 
 	onlineList.innerHTML = ''; // clear list
 
+
+
+	let sortable: chrome.history.HistoryItem[] = [];
 	for (const key in data) {
 		if (data.hasOwnProperty(key)) {
 			const page: chrome.history.HistoryItem = data[key];
+				sortable.push(page);
+		}
+	}
+
+	sortable.sort(function(a, b) {
+		return b.lastVisitTime - a.lastVisitTime;
+	});
+
+	for (let i = 0; i < sortable.length; i++) {
+			const page:chrome.history.HistoryItem = sortable[i];
 			onlinePdfCount++;
 
 			if (onlinePdfCount > maxFilesToStore) {
@@ -125,7 +138,7 @@ function onOnlineFilesChanged(data: any): void {
 
 			// append list item to online list
 			onlineList.appendChild(listItem);
-		}
+
 	}
 
 	let onlineFileCountMetric: IMetricTelemetry = {
@@ -174,7 +187,7 @@ function fetchAndUpdateOnlineFiles() {
 		window.browser.history.search(
 			{
 				text: '.pdf', // search for .pdf
-				maxResults: 10000
+				maxResults: 10000,
 			},
 			function(data: chrome.history.HistoryItem[]) {
 				// for each result
