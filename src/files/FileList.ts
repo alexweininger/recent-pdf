@@ -1,8 +1,14 @@
 import { File, FileAction } from './File';
+import { OnlineFile } from './OnlineFile';
+import { LocalFile } from './LocalFile';
 
 export interface SortType<T> {
   name: string;
   compareFunc: (a: T, b: T) => number;
+}
+
+function getAccessTimeFromFile(file: File) {
+  return (file as OnlineFile).lastVisitTime || (file as LocalFile).startTime;
 }
 
 export abstract class FileList {
@@ -16,6 +22,16 @@ export abstract class FileList {
   currentSortType: string;
 
   sortTypes: SortType<File>[] = [
+    {
+      name: 'Recently viewed',
+      compareFunc: (a: File, b: File) => {
+        if (getAccessTimeFromFile(a) < getAccessTimeFromFile(b)) {
+          return 1;
+        } else {
+          return -1;
+        }
+      },
+    },
     {
       name: 'Alphabetical',
       compareFunc: (a: File, b: File) => {
