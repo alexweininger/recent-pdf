@@ -65,22 +65,20 @@ body {
 	position: absolute;
 	margin-top: 35px;
 	margin-left: 0;
-
 	-webkit-transition: margin 0.5s ease;
-
 	transition: margin 0.5s ease;
 }
 
-.cercle {
+.circle {
 	width: 0px;
 	height: 0px;
 	position: absolute;
 }
 
-.light .cercle {
+.light .circle {
 	background: var(--main-bg-color);
 }
-.dark .cercle {
+.dark .circle {
 	background: black;
 }
 
@@ -142,7 +140,6 @@ body {
 	font-family: sans-serif;
 	color: var(--imp-font-color);
 	width: 100%;
-	max-height: 100%;
 	overflow: hidden;
 	background-color: var(--main-bg-color);
 }
@@ -193,6 +190,7 @@ body {
 	height: auto;
 	min-height: 384px;
 	max-width: 400px;
+	overflow-y: scroll;
 }
 
 .tabcontent {
@@ -229,6 +227,23 @@ body {
 	margin-bottom: 60px;
 }
 
+.file-list {
+	display: inline-block;
+	font-size: 13px;
+	list-style-type: none;
+	margin: 0;
+	min-width: 180px;
+	padding: 0;
+	width: 400px;
+	max-width: 400px;
+	margin-bottom: 6px;
+	height: 100%;
+}
+
+#local-div {
+	height: 100%;
+}
+
 .list-item {
 	cursor: pointer;
 	display: inline-block;
@@ -240,6 +255,10 @@ body {
 	border-radius: 3px;
 	background-color: var(--item-bg-color);
 	box-shadow: 1px 1px var(--shadow-color);
+}
+
+.file-list-header {
+	color: var(--link-color);
 }
 
 .link-thumb {
@@ -333,6 +352,25 @@ input.search {
 	z-index: 0;
 }
 
+select#sort-select {
+	position: absolute;
+	margin: 0 1px 3px 0;
+	font-size: 12px;
+	border-radius: 3px;
+	left: 250px;
+	width: 7pc;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	z-index: 0;
+	background-color: var(--main-bg-color);
+	border: none;
+	color: var(--imp-font-color);
+}
+
+select#sort-select option {
+	color: var(--imp-font-color);
+}
+
 #settings-link {
 	height: 16px;
 	width: 16px;
@@ -358,7 +396,7 @@ input.search {
 	padding: 20;
 	align-self: flex-start;
 	position: absolute;
-	margin-left: -11px;
+	margin-left: 2px;
 	margin-top: 1px;
 }
 
